@@ -18,6 +18,11 @@ public enum SkipReason: String, Sendable, Hashable, Codable {
 public struct SkippedBundle: Sendable, Hashable, Codable {
     public let url: URL
     public let reason: SkipReason
+
+    public init(url: URL, reason: SkipReason) {
+        self.url = url
+        self.reason = reason
+    }
 }
 
 /// Reads one `.app` bundle into an ``InstalledApp``. Never throws: a bad bundle is a skip, not a failure.

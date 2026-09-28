@@ -78,7 +78,7 @@ Why not more modules now: every module boundary in Swift costs `public` boilerpl
 
 ### 6.1 Discovery
 
-- Scan `/Applications` (depth 2, to catch `Utilities/` and vendor folders like `Adobe X/`) and `~/Applications` (depth 2). Never descend into a `.app`.
+- Scan `/Applications` (depth 2, to catch `Utilities/` and vendor folders like `Adobe X/`) and `~/Applications` (depth 2). Never descend into a `.app`. Skip only dotfiles, not Finder-hidden entries: macOS flags the `/Applications/Safari.app` symlink as hidden.
 - Read `Contents/Info.plist` with `PropertyListSerialization` (handles binary plists). Unreadable bundle → skipped with a logged reason, never a crash.
 - Skip: `com.apple.*` apps without an App Store receipt (OS updates own them; Xcode, Pages and Logic have receipts and are kept), Safari web apps (`com.apple.Safari.WebApp.*`), `Setapp/` (Setapp owns them), bundles without a bundle ID or version.
 - Detect signals by file presence: `Contents/_MASReceipt/receipt`, `Wrapper/` + `iTunesMetadata.plist` (iOS app on Apple silicon), `SUFeedURL`, `SUPublicEDKey`, `Contents/Resources/app-update.yml`.
@@ -90,6 +90,7 @@ Why not more modules now: every module boundary in Swift costs `public` boilerpl
 ```swift
 public protocol UpdateSource: Sendable {
     var id: SourceID { get }
+    func applies(to app: InstalledApp) -> Bool   // cheap, offline
     func check(_ apps: [InstalledApp], context: SourceContext) async -> [InstalledApp.ID: SourceOutcome]
 }
 ```
@@ -101,7 +102,7 @@ Authority, highest first:
 | Rank | Source | Applies when | Notes |
 |---|---|---|---|
 | 1 | **App Store** | App Store receipt or wrapped iOS app | Exclusive: an App Store app only updates through the store, so other sources are ignored for it. Batch lookup, `country` = the Mac's region. `kind != mac-software` → lower confidence. |
-| 2 | **Sparkle appcast** | `SUFeedURL` present | Exactly what the app's own updater would see. Default channel only; drop items whose `minimumSystemVersion` or `hardwareRequirements` this Mac fails; ignore `informationalUpdate`. Compare `sparkle:version` against `CFBundleVersion` (Sparkle's own rule), falling back to `shortVersionString`. |
+| 2 | **Sparkle appcast** | `SUFeedURL` present | Exactly what the app's own updater would see. Stable channel only: items with no channel or a channel named `stable`, `release`, `default`, `production` or `public` (OBS labels its stable items explicitly; an earlier version that accepted only unlabeled items picked a three-year-old release). Any other channel is opt-in inside the app; drop items whose `minimumSystemVersion` or `hardwareRequirements` this Mac fails; ignore `informationalUpdate`. Compare `sparkle:version` against `CFBundleVersion` (Sparkle's own rule), falling back to `shortVersionString`. |
 | 3 | **Electron feed** (v0.3) | `app-update.yml` present | GitHub provider or generic `latest-mac.yml`. |
 | 4 | **GitHub Releases** (v0.3) | orchard maps the app to a repo | Skip drafts and pre-releases. |
 | 5 | **Homebrew cask DB** | Match found (see below) | A version *database* for every app, not only brew-installed ones. Lowest authority because matching is heuristic. |
@@ -111,7 +112,7 @@ orchard entries (v0.2) are not a rank; they are **directives** applied before re
 **Cask matching**, the heuristic the whole product leans on:
 1. Build a compact index once per cask ETag: app filename → casks, bundle ID → casks. Bundle IDs come from `uninstall[].quit`, `uninstall[].signal`, and zap paths shaped like `~/Library/Preferences/<id>.plist` or `.../Caches/<id>`.
 2. Bundle ID match = strong. Filename match with no conflicting bundle ID = medium. Filename match whose cask names a *different* bundle ID = rejected.
-3. Several candidates: brew-installed token wins; otherwise prefer the token without `@` (stable channel).
+3. Several candidates: a cask that matches both name and bundle ID beats one that matches the bundle ID alone (`chatgpt` vs `codex-app`, which both quit `com.openai.codex`); then the brew-installed token; then the token without `@` (stable channel). Still tied with different tokens → low confidence.
 4. Resolve `variations` for this host (`arm64_<codename>` on Apple silicon, `<codename>` on Intel, else base). Skip `version: latest` and disabled casks.
 5. Split `short,build` versions: compare the short part to `CFBundleShortVersionString`, the build part to `CFBundleVersion` only when the short parts are equal.
 
@@ -140,9 +141,9 @@ Most bugs in update checkers are version bugs, so this gets its own module, an e
 ## 8. Platform: network, cache, concurrency
 
 - **HTTPClient** protocol over `URLSession`: 10 s request timeout, HTTPS required (plain-HTTP Sparkle feeds allowed for *checking* but flagged; never for downloading in v0.2), response size cap (25 MB for the cask DB, 5 MB otherwise), one retry with jitter on transient errors, `User-Agent: ripe/<version> (+https://github.com/imrajyavardhan12/ripe)`.
-- **CachingHTTPClient** decorator: on-disk cache in `~/Library/Caches/ripe/` (override `RIPE_CACHE_DIR`). Stores body, `ETag`, `Last-Modified`, fetch time. Per-source TTL (cask DB 1 h, feeds 30 min, App Store 1 h); after TTL, conditional GET; `--refresh` skips TTL. Honors the server's `max-age` as a floor.
+- **CachingHTTPClient** decorator: on-disk cache in `~/Library/Caches/ripe/` (override `RIPE_CACHE_DIR`). Stores body, `ETag`, `Last-Modified`, fetch time. Per-request TTL: feeds 30 min, App Store 1 h, cask DB 6 h (a stale catalog can only cause a missed update, never a false one, and the file changes every few minutes, so a short TTL would re-download 19 MB constantly). After the TTL, conditional GET; `--refresh` skips the TTL but still revalidates. Server `max-age` is ignored (iTunes sends 24 h, too stale for update checks). If the network fails, the expired copy is served and marked stale, so `ripe` works offline.
 - **Derived index cache**: the parsed cask index is written next to the raw body, keyed by ETag. Warm runs load the small index only.
-- **Concurrency**: Swift 6 strict concurrency. Sources are `Sendable` structs; the cache is an actor. Per-host concurrency limit (6) so Ripe is a polite client. Overall run deadline (15 s): anything still pending becomes `.failed(.timeout)` and the report ships without it.
+- **Concurrency**: Swift 6 strict concurrency. Sources are `Sendable` structs; the cache is an actor. Per-host concurrency limit (6) so Ripe is a polite client. Overall run deadline (15 s): when it fires, in-flight requests are cancelled, and every app a *late* source covers (per `applies(to:)`) gets a timeout failure instead of silently reading as "not applicable". Sources that answered in time are untouched.
 - **Host** value: macOS version and codename, CPU arch, App Store country (`Locale.current.region`), paths. Injected, so tests can pretend to be an Intel Mac on Sonoma.
 - **ProcessRunner** (v0.2+) for `brew`, `mas`, `hdiutil`, `ditto`: argument arrays only, never a shell string.
 
@@ -243,6 +244,7 @@ scripts/            accuracy.sh, release helpers
 ## 17. Open risks
 
 - **App Management TCC** may make direct installs awkward from a terminal. Mitigation: delegation first, `ripe doctor`, clear guidance.
+- **In-place updaters**: some apps update their code without touching Info.plist (Obsidian's bundle says 1.12.4 while the app runs the latest). Ripe reads the bundle, so it reports a stale version. Mitigation: orchard `ignore`/mapping entries; no generic detection yet.
 - **Scheme mismatches** (Brave-style) are the main false-positive and false-negative source. Mitigation: alignment heuristic, `unknown` fallback, orchard mappings, fixture per reported case.
 - **Upstream drift**: cask JSON and iTunes API are unversioned. Mitigation: tolerant decoding (only the fields we need, all optional), nightly live contract tests.
 - **Rate limits**: iTunes lookup is rate-limited. Mitigation: batching, 1 h cache.

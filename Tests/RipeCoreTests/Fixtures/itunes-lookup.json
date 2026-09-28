@@ -1,0 +1,38 @@
+{
+ "resultCount": 3,
+ "results": [
+  {
+   "bundleId": "me.damir.dropover-mac",
+   "currentVersionReleaseDate": "2026-09-19T17:13:27Z",
+   "kind": "mac-software",
+   "minimumOsVersion": "13.0",
+   "releaseNotes": "- Fixed an issue where shelves created through integrations such as the \"Add to ",
+   "trackId": 1355679052,
+   "trackName": "Dropover - Easier Drag & Drop",
+   "trackViewUrl": "https://apps.apple.com/in/app/dropover-easier-drag-drop/id1355679052?mt=12&uo=4",
+   "version": "5.3.1"
+  },
+  {
+   "bundleId": "net.whatsapp.WhatsApp",
+   "currentVersionReleaseDate": "2026-09-23T13:45:17Z",
+   "kind": "software",
+   "minimumOsVersion": "15.1",
+   "releaseNotes": "We update the app regularly to fix bugs, optimize performance and improve the ex",
+   "trackId": 310633997,
+   "trackName": "WhatsApp Messenger",
+   "trackViewUrl": "https://apps.apple.com/in/app/whatsapp-messenger/id310633997?uo=4",
+   "version": "26.37.76"
+  },
+  {
+   "bundleId": "com.apple.dt.Xcode",
+   "currentVersionReleaseDate": "2026-09-14T17:25:17Z",
+   "kind": "mac-software",
+   "minimumOsVersion": "26.6",
+   "releaseNotes": "Xcode 27 includes Swift 6.4 and SDKs for iOS 27, iPadOS 27, tvOS 27, watchOS 27,",
+   "trackId": 497799835,
+   "trackName": "Xcode",
+   "trackViewUrl": "https://apps.apple.com/in/app/xcode/id497799835?mt=12&uo=4",
+   "version": "27.0"
+  }
+ ]
+}

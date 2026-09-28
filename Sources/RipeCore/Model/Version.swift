@@ -85,6 +85,14 @@ public struct Version: Sendable, Hashable, CustomStringConvertible {
         self.prerelease = prerelease
     }
 
+    /// Builds a version from already-parsed parts (OS versions, scheme alignment).
+    init(release: [Int], prerelease: [Token] = [], raw: String? = nil) {
+        precondition(!release.isEmpty, "A version needs at least one numeric component")
+        self.release = release
+        self.prerelease = prerelease
+        self.raw = raw ?? release.map(String.init).joined(separator: ".")
+    }
+
     /// Splits into runs of digits and runs of letters; anything else is a separator.
     private static func words(in text: String) -> [String] {
         var words: [String] = []

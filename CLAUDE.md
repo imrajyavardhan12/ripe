@@ -10,7 +10,9 @@ Architecture, principles, pipeline, version rules and decision log (read before 
 
 ## Status
 
-Foundation in place: package layout, version comparator, app discovery, CLI shell, CI and release workflows. `ripe` lists discovered apps and their update channel. Next: platform layer (HTTP client + disk cache), then App Store, Sparkle and Homebrew cask sources, resolver, `--json`, `why`.
+v0.1 feature-complete, not yet released: App Store, Sparkle and Homebrew cask sources, resolver with evidence, disk cache with offline fallback, `ripe`, `ripe --all`, `ripe why <app>`, `--json` (schema v1). Verified against the maintainer's Mac in `docs/accuracy.md` (keep that log updated per release).
+
+Next: orchard catalog v1 (first entry: Obsidian, a known false positive), then tag v0.1.0, create the `homebrew-tap` repo and formula, then `ripe pick` (v0.2).
 
 ## Working in this repo
 

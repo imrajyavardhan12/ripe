@@ -48,12 +48,14 @@ public struct AppScanner: Sendable {
             let entries = try? FileManager.default.contentsOfDirectory(
                 at: directory,
                 includingPropertiesForKeys: keys,
-                options: [.skipsHiddenFiles, .skipsPackageDescendants]
+                // Not `.skipsHiddenFiles`: it also drops bundles with the Finder "hidden" flag, which
+                // macOS sets on the /Applications/Safari.app symlink. Only dotfiles are skipped.
+                options: [.skipsPackageDescendants]
             )
         else { return [] }
 
         var found: [URL] = []
-        for entry in entries {
+        for entry in entries where !entry.lastPathComponent.hasPrefix(".") {
             if entry.pathExtension == "app" {
                 found.append(entry)
             } else if depth < maxDepth, (try? entry.resourceValues(forKeys: Set(keys)))?.isDirectory == true {

@@ -26,7 +26,12 @@ let package = Package(
             swiftSettings: swiftSettings
         ),
         .executableTarget(name: "ripe", dependencies: ["RipeCLI"], swiftSettings: swiftSettings),
-        .testTarget(name: "RipeCoreTests", dependencies: ["RipeCore"], swiftSettings: swiftSettings),
+        .testTarget(
+            name: "RipeCoreTests",
+            dependencies: ["RipeCore"],
+            resources: [.copy("Fixtures")],
+            swiftSettings: swiftSettings
+        ),
         .testTarget(name: "RipeCLITests", dependencies: ["RipeCLI"], swiftSettings: swiftSettings),
     ]
 )

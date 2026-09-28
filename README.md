@@ -5,7 +5,7 @@
 
 ---
 
-> **Status: early development.** `ripe` currently lists your apps and how each one updates. Update checks land in v0.1. Follow the repo to catch the first release.
+> **Status: v0.1 in development.** Update checks work (App Store, Sparkle, Homebrew catalog); installing updates comes in v0.2. Follow the repo to catch the first release.
 
 ## Why
 

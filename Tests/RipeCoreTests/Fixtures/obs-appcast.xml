@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
+  <channel>
+    <title>OBS Studio</title>
+    <link>https://obsproject.com/</link>
+    <item>
+      <title>33.0.0</title>
+      <pubDate>Fri, 25 Sep 2026 22:29:57 +0000</pubDate>
+      <sparkle:releaseNotesLink>https://obsproject.com/osx_update/notes_beta.html</sparkle:releaseNotesLink>
+      <sparkle:channel>beta</sparkle:channel>
+      <sparkle:version>36194435514</sparkle:version>
+      <sparkle:shortVersionString>33.0.0</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+      <enclosure url="https://cdn-fastly.obsproject.com/downloads/obs-studio-33.0.0-beta4-macos-apple.dmg" length="208676939" type="application/octet-stream" sparkle:edSignature="w9ix1VS87Jh2LIKArZrEIeN9Sy5yZgPDZeOIaTDUFm0pRyRU5tRgnW3lj9UdtHmP+coxyWu6b7dzjZe3rpsiBQ=="/>
+      <sparkle:deltas>
+        <enclosure url="https://cdn-fastly.obsproject.com/downloads/sparkle_deltas/arm64/OBS36194435514-29532805833.delta" sparkle:deltaFrom="29532805833" length="91765358" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="977840" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="xMjIpj+Doyl8x8D6Z2/dsF5ywLTItYlThEsvivvn1dMqFZuJ/2/38GEPalOl4hvS3Djof6skC2nglQt1HUVWAg=="/>
+        <enclosure url="https://cdn-fastly.obsproject.com/downloads/sparkle_deltas/arm64/OBS36194435514-27977403179.delta" sparkle:deltaFrom="27977403179" length="93827890" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="977840" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="qrtKZuxH1gntL6J1NLIX8byT2OvkGfwITO6+a6WGbrVge9SNGExiCEPOS++Qa3LQbFU2UsUHS4f/t123iz9WAg=="/>
+        <enclosure url="https://cdn-fastly.obsproject.com/downloads/sparkle_deltas/arm64/OBS36194435514-22740798461.delta" sparkle:deltaFrom="22740798461" length="106997538" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="864784" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,en" sparkle:edSignature="VuMgGBaB/pou/LFcsMSYZV3M/Cd0ObUAbtrS66slnd6v0o9RuZuVO3L/5DxmZOjTEXaRw2EzEsheoD46Bi5YDg=="/>
+        <enclosure url="https://cdn-fastly.obsproject.com/downloads/sparkle_deltas/arm64/OBS36194435514-22692458239.delta" sparkle:deltaFrom="22692458239" length="107024802" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="864784" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,en" sparkle:edSignature="awrGlsP+LutmhpfPjQv2WKzlVjEXU06hZY+K0CVeLjG/oaZ+Dz54fR6A+6wh92mPS5PeYLDNW24az3RcIppXDg=="/>
+        <enclosure url="https://cdn-fastly.obsproject.com/downloads/sparkle_deltas/arm64/OBS36194435514-22526906693.delta" sparkle:deltaFrom="22526906693" length="107001062" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="864784" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,en" sparkle:edSignature="+GtzMPcEZcqekiTGkl/gY8BH0Q9p1QMNF56ZoBQTlZx6BKRM7IOh+eqirHcR6a88H1D8yBLoaWylTB/DYWGRCw=="/>
+      </sparkle:deltas>
+    </item>
+    <item>
+      <title>32.2.2</title>
+      <pubDate>Fri, 14 Aug 2026 22:44:16 +0000</pubDate>
+      <sparkle:releaseNotesLink>https://obsproject.com/osx_update/notes_stable.html</sparkle:releaseNotesLink>
+      <sparkle:channel>stable</sparkle:channel>
+      <sparkle:phasedRolloutInterval>86400</sparkle:phasedRolloutInterval>
+      <sparkle:version>31845296735</sparkle:version>
+      <sparkle:shortVersionString>32.2.2</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+      <enclosure url="https://cdn-fastly.obsproject.com/downloads/obs-studio-32.2.2-macos-apple.dmg" length="187703709" type="application/octet-stream" sparkle:edSignature="HJUDhp3y2uP0fIOHixl3fVDX2z21K766pmqyQbgEfPntlPQFEZiYtTImBn4Oj5QlGFocPu7SvnzEpK6ft68sDQ=="/>
+      <sparkle:deltas>
+        <enclosure url="https://cdn-fastly.obsproject.com/downloads/sparkle_deltas/arm64/OBS31845296735-30131037208.delta" sparkle:deltaFrom="30131037208" length="613602" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="977840" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="OrrQK0zybPxrU1wVqdh6Rb1gxo/78EALHgRUIdMd+IVdegPcGIuttuTrmmomVtrtgRqwzaWdoE3fRVCIIuEWCg=="/>
+        <enclosure url="https://cdn-fastly.obsproject.com/downloads/sparkle_deltas/arm64/OBS31845296735-29871169482.delta" sparkle:deltaFrom="29871169482" length="656510" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="977840" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="tdny0SaRSay27qcZrA/hK3bsXeXNgPlkZMgXilq2CecrM2y3U1Hhj58TyULZH4KcvmwVtr2Pf0G4fC/nXGWnDg=="/>
+        <enclosure url="https://cdn-fastly.obsproject.com/downloads/sparkle_deltas/arm64/OBS31845296735-24742303888.delta" sparkle:deltaFrom="24742303888" length="16656626" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="864784" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,en" sparkle:edSignature="JaGkoj5s/1hbkn5trYqXNqf15nMmdC22meMgAqHq33iNCnP7ykEQHvdWDcXZ9IPfjeU6P7n7SimchFwvxVEpAQ=="/>
+        <enclosure url="https://cdn-fastly.obsproject.com/downloads/sparkle_deltas/arm64/OBS31845296735-23916622335.delta" sparkle:deltaFrom="23916622335" length="16649418" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="864784" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,en" sparkle:edSignature="8USMaFe0qXqvbbaRUwMgtYOwrpssfqESAlPz0z3+MbhMgxTttf3In0ovDnuCYp44YVClzrXXpUxEDUV/9cowAg=="/>
+        <enclosure url="https://cdn-fastly.obsproject.com/downloads/sparkle_deltas/arm64/OBS31845296735-22826017585.delta" sparkle:deltaFrom="22826017585" length="16659282" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="864784" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,en" sparkle:edSignature="l1wX6xXB7AVM2jtI/dGvL2a06Pe0AT/HFQ/kGlCNz2rZSvS0akxx2kQstY2PJobPWJbuJzEOngVJvsO28FdsBA=="/>
+      </sparkle:deltas>
+    </item>
+    <item>
+      <title>OBS Studio 29.0.2</title>
+      <sparkle:releaseNotesLink>https://obsproject.com/osx_update/stable/notes.html</sparkle:releaseNotesLink>
+      <sparkle:minimumSystemVersion>11.0</sparkle:minimumSystemVersion>
+      <pubDate>Sat, 04 Feb 2023 04:05:49 -0800</pubDate>
+      <enclosure url="https://cdn-fastly.obsproject.com/downloads/obs-studio-29.0.2-macos-arm64.dmg" sparkle:version="4091379838" sparkle:shortVersionString="29.0.2" sparkle:dsaSignature="MCwCFHkPWpne8fCP+O5oM8VYy2wqCc9hAhQkoGrGYR0PoGAXoZDgheyj3W9hRw==" length="153250975" type="application/octet-stream"/>
+    </item>
+</channel>
+</rss>

@@ -149,6 +149,20 @@ struct AppScannerTests {
         #expect(names == ["Nested", "Top"])
     }
 
+    /// macOS flags the /Applications/Safari.app symlink as hidden; hidden-flag bundles must still be seen.
+    @Test func findsFinderHiddenBundlesButSkipsDotfiles() throws {
+        let fixture = try AppFixture()
+        defer { fixture.remove() }
+        let info = ["CFBundleIdentifier": "dev.example.hidden", "CFBundleShortVersionString": "1"]
+        var hidden = try fixture.app("Hidden.app", info: info)
+        var values = URLResourceValues()
+        values.isHidden = true
+        try hidden.setResourceValues(values)
+        try fixture.app(".Dot.app", info: ["CFBundleIdentifier": "dev.example.dot", "CFBundleShortVersionString": "1"])
+
+        #expect(AppScanner(roots: [fixture.root]).scan().apps.map(\.name) == ["Hidden"])
+    }
+
     @Test func missingRootIsNotAnError() {
         let result = AppScanner(roots: [URL(filePath: "/nonexistent-\(UUID().uuidString)")]).scan()
         #expect(result.apps.isEmpty && result.skipped.isEmpty)

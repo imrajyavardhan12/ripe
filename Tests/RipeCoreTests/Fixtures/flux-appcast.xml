@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"  xmlns:dc="http://purl.org/dc/elements/1.1/">
+   <channel>
+      <title>f.lux changelog</title>
+      <link>https://justgetflux.com/mac/macflux.xml</link>
+      <description>Most recent changes with links to updates.</description>
+      <language>en</language>
+
+<item>
+      <title>All the latest bugfixes</title>
+      <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+      <pubDate>Wed, 1 June 2023 10:00:00 +0000</pubDate>
+      <enclosure url="https://justgetflux.com/mac/Flux42.2.zip"
+               sparkle:version="42.2"
+                   type="application/octet-stream" />
+      <description>
+<![CDATA[ <h3>What's fixed and changed</h3>
+
+
+<p>What's new in this version (42.2):</p>
+<ul>
+   <li>Fixes for "fullscreen disable" on Ventura
+   <li>Fixes for "dim on disable" on Monterey and other OSes</li>
+   <li>Native support for Apple Silicon</li>
+   <li>Support for DCI-P3 wide-gamut displays. Previously, they looked a bit greenish and oversaturated, but now they look better than standard gamut displays.
+   <li>Darkroom fix on M1/Apple Silicon
+</ul>
+
+<p>f.lux is supported by user contributions. We appreciate your help!<br/>
+<a href="https://justgetflux.com/mac/contribute.html">Click this link to send us $10 (or whatever you like)</a>. Thank you!</p>
+
+
+<p>What's new in this version (39.987):</p>
+<ul>
+   <li>Fixed map popup when you change timezones (now you can tell it's f.lux)
+   <li>Automatic updater fixes
+</ul>
+
+
+<p>What's new in this version (39.983):</p>
+<ul>
+   <li>Fixes for northern latitudes
+   <li>Fixes for a startup crash
+   <li>Better transitions around sunset and sunrise
+   <li>A graph that shows your light sensitivity
+   <li>Dark Theme is back!
+   <li>Changing timezone prompts for a location change
+   <li>Fixes darkroom on 10.12.4
+</ul>
+
+<p>What's new in this version (37.7):</p>
+<ul>
+<li>Fixes a disable bug
+<li>A fix for f.lux staying active during the day on newer El Capitan builds
+</ul>
+
+<p>What's new in this version (37.2):</p>
+<ul>
+<li>Battery use is optimized
+<li>Fixes for movie mode flashing
+<li>Support for more latitudes
+<li>New Sparkle updater, and a check for updates button
+</ul>
+
+<p>If you previously downloaded 37.1, this one has a small fix for automatic brightness.</p>
+
+What's new in 36.3:
+<ul>
+   <li>Backwards alarm clock: tells you how much sleep you can still get if you go to bed now
+   <li>Dim on disable: Less painful to check colors at night
+   <li>Warmer options during the day
+   <li>Tons of bugfixes
+</ul>
+
+Read more about this update <a href="http://justgetflux.com/news/pages/mac/">here</a>.
+
+ ]]>
+</description>
+</item>
+
+
+</channel>
+</rss>
