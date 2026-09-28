@@ -14,7 +14,9 @@ v0.1 feature-complete, not yet released: App Store, Sparkle and Homebrew cask so
 
 orchard catalog v1 done: client support in `Sources/RipeCore/Catalog/`, catalog repo at `~/Developer/orchard` (github.com/imrajyavardhan12/orchard, private until launch). Test local entries with `RIPE_CATALOG_URL=file://…/orchard/dist/index.json`.
 
-Next: tag v0.1.0 and publish the Homebrew tap (needs both repos public, a launch decision), then `ripe pick` (v0.2).
+Release tooling done: `scripts/formula.sh` (verified with `brew test` and `brew audit --strict` from a throwaway local tap), release workflow updates the existing public tap `imrajyavardhan12/homebrew-tap` (shared with `margin`; don't touch `margin.rb`). Process in `docs/releasing.md`; `CHANGELOG.md` must have a section for every tag.
+
+Blocked on the maintainer: make `ripe` and `orchard` public (launch timing), add the `HOMEBREW_TAP_TOKEN` secret, then tag v0.1.0. After that: `ripe pick` (v0.2).
 
 ## Working in this repo
 
