@@ -1,0 +1,91 @@
+# Ripe
+
+Open-source successor to MacUpdater: one command that shows every outdated app on a Mac and updates them, whether they came from Homebrew, the Mac App Store, or a direct download.
+
+Tagline: **"Your apps, always ripe."**
+
+Background research, competitors and the evidence behind this project: @docs/research.md
+
+Architecture, principles, pipeline, version rules and decision log (read before changing the pipeline, a source, version comparison or output): @docs/architecture.md
+
+## Status
+
+Foundation in place: package layout, version comparator, app discovery, CLI shell, CI and release workflows. `ripe` lists discovered apps and their update channel. Next: platform layer (HTTP client + disk cache), then App Store, Sparkle and Homebrew cask sources, resolver, `--json`, `why`.
+
+## Working in this repo
+
+- `make build`, `make test`, `make lint`, `make format`, `make release`, `make run ARGS="..."`.
+- Always use `make test`, not bare `swift test`: with Command Line Tools only, the Swift Testing macro plugin must be passed explicitly.
+- `make lint` must pass (CI runs `swift format lint --strict`).
+- Local `make release` builds arm64 only; the macOS 27 toolchain has no x86_64 runtime libs. CI builds the universal binary.
+- Every accuracy fix needs a test with a real-world case (fixture or table row). When unsure, the answer is `unknown`, never `outdated`.
+
+## Name and metaphor
+
+Fruit theme throughout. Keep new commands and docs consistent with it.
+
+```
+ripe              # list apps with updates ("what's ripe?")
+ripe pick <app>   # update one app
+ripe pick --all   # update everything ("harvest")
+ripe skip <app>   # ignore an app or a specific version
+ripe why <app>    # show where version info came from and how the app updates
+```
+
+- **orchard**: the community app catalog, a separate repo (see Catalog).
+- Logo: `assets/logo.svg`, a peach with a leaf-shaped upward arrow. Deliberately not an apple (avoid resembling Apple's trademark).
+
+## Hard constraint: no paid Apple Developer account
+
+The maintainer has no $99/yr account, so nothing can be notarized.
+- Ship as a **CLI via a Homebrew formula** (own tap first: `brew install imrajyavardhan12/tap/ripe`). Formula binaries aren't quarantined, so Gatekeeper never blocks them.
+- Don't depend on anything that needs notarization or stable TCC grants for v0.x.
+- A menu bar GUI is a v1.0+ extra. If built unsigned, sign with a consistent self-signed cert so TCC grants survive updates.
+- Buying the account later is on the table if the project gets traction; signing is a trust differentiator in this crowded space.
+
+## Tech stack (decided)
+
+- **Swift 6** (toolchain 6.4 installed), Swift Package Manager. Core logic in `RipeCore` (reusable by a future SwiftUI menu bar app), commands and rendering in `RipeCLI`, and a thin `ripe` executable.
+- `swift-argument-parser` for the CLI. Otherwise Foundation only (`URLSession`, `XMLParser`, `PropertyListDecoder`); keep dependencies minimal.
+- `async/await` + task groups: checking ~200 apps should take a few seconds.
+- Security framework (`SecStaticCode`) for code-signature / Team ID checks.
+- Swift Testing for tests. GitHub Actions on macOS runners; universal binary (arm64 + x86_64).
+- Minimum macOS 14. Precedent for this distribution model: `mas` (Swift CLI shipped as a Homebrew formula).
+
+## Update sources
+
+Detect per app, in roughly this order:
+1. **Mac App Store**: `Contents/_MASReceipt` exists → iTunes lookup API by bundle ID.
+2. **Sparkle**: `SUFeedURL` in `Info.plist` → parse the appcast.
+3. **Electron**: `Contents/Resources/app-update.yml` → its provider (GitHub / generic `latest-mac.yml`).
+4. **Homebrew cask API** (`formulae.brew.sh/api/cask.json`): use it as a **version database for every app, not only brew-installed ones**. Match by app bundle name / bundle ID. This covers most apps with custom updaters (Brave, Mullvad, OBS...).
+5. **GitHub Releases**: for apps the catalog maps to a repo.
+6. **orchard overrides**: hand-written entries for odd apps.
+
+Also call `brew outdated --cask --greedy` and `mas outdated` when available. Ripe **wraps** brew and mas rather than competing with them.
+
+## Catalog (orchard)
+
+Separate GitHub repo, one small YAML file per app, added by PR and validated by CI. CI compiles everything into one JSON index served free via GitHub Pages or jsDelivr. The client caches it locally with ETag. No server, no cost. The open catalog is the answer to MacUpdater's moat (its private database).
+
+## Trust and safety (core selling point)
+
+- Before installing, verify the downloaded app's code signature and that its **Team ID matches the installed app's**. Refuse on mismatch.
+- Move the old version to the Trash, never delete it: every update is reversible.
+- Prefer delegating to the app's native path (`brew upgrade`, App Store, the app's own updater) when that applies.
+- Open risk to test early: since macOS 13, replacing another app's bundle needs the "App Management" TCC permission for the terminal. Prototype this before building `ripe pick`.
+
+## Roadmap
+
+1. **v0.1**: `ripe` lists outdated apps (App Store + Sparkle + Homebrew cask API). Read-only.
+2. **v0.2**: `ripe pick` with signature/Team ID verification; orchard catalog v1.
+3. **v0.3**: Electron + GitHub sources, `skip`.
+
+`why` and `--json` moved into v0.1: they fall out of the evidence model and are how false positives get debugged and reported.
+4. **v1.0**: optional menu bar app.
+
+Launch timing matters: MacUpdater's database goes fully dark after **2026-12-31**, and people are looking for a replacement now.
+
+## Launch checklist (later)
+
+README with a GIF in the first screen, one-line install, Show HN + r/macapps + X on the same day.

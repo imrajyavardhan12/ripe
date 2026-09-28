@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Toolchain
+        run: swift --version
+      - name: Lint
+        run: make lint
+      - name: Test
+        run: make test
+      - name: Universal release build
+        run: make release
+      - name: Smoke test
+        run: dist/ripe --version && dist/ripe --help

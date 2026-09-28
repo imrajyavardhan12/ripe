@@ -1,0 +1,29 @@
+name: Wrong version or missed update
+description: Ripe says an app is outdated when it isn't, misses an update, or can't find an update source.
+labels: [accuracy]
+body:
+  - type: input
+    id: app
+    attributes:
+      label: App
+      placeholder: OBS
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What Ripe said, and what's actually true
+      placeholder: Ripe says 33.0.0 is available, but that's a beta. Latest stable is 32.2.2.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Output of `ripe why <app> --json`
+      description: This shows every source Ripe checked and which rule decided. It contains no personal data beyond the app's path.
+      render: json
+  - type: input
+    id: versions
+    attributes:
+      label: Ripe version and macOS version
+      placeholder: ripe 0.1.0, macOS 27.0 (Apple silicon)

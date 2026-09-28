@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>Ripe</title>
+  <defs>
+    <radialGradient id="flesh" cx="36%" cy="34%" r="72%">
+      <stop offset="0" stop-color="#FFD08A"/>
+      <stop offset="0.45" stop-color="#FF9A5C"/>
+      <stop offset="1" stop-color="#E8505B"/>
+    </radialGradient>
+    <linearGradient id="leaf" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#2E9E57"/>
+      <stop offset="1" stop-color="#5BD67F"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Peach body: two soft lobes meeting at a cleft on top -->
+  <path fill="url(#flesh)" d="
+    M256 176
+    C 222 142, 150 138, 106 186
+    C 58 238, 64 334, 116 398
+    C 160 452, 216 470, 256 470
+    C 296 470, 352 452, 396 398
+    C 448 334, 454 238, 406 186
+    C 362 138, 290 142, 256 176 Z"/>
+
+  <!-- Crease -->
+  <path d="M256 180 C 232 250, 232 360, 250 462" fill="none" stroke="#C8404D" stroke-opacity="0.35" stroke-width="10" stroke-linecap="round"/>
+
+  <!-- Highlight -->
+  <ellipse cx="170" cy="250" rx="34" ry="52" fill="#FFFFFF" fill-opacity="0.28" transform="rotate(-24 170 250)"/>
+
+  <!-- Leaf shaped as an upward arrow: "an update is ready" -->
+  <g transform="rotate(14 256 168)">
+    <path fill="url(#leaf)" stroke="url(#leaf)" stroke-width="14" stroke-linejoin="round" d="
+      M256 42
+      L326 114
+      L284 114
+      L284 170
+      L228 170
+      L228 114
+      L186 114 Z"/>
+  </g>
+</svg>
