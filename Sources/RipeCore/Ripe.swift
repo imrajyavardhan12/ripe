@@ -22,7 +22,9 @@ public enum Ripe {
             context: SourceContext,
             catalogURL: URL? = nil,
             refresh: Bool = false,
-            deadline: Duration = .seconds(15)
+            // Matches URLSession's per-download limit: the first run fetches ~2 MB (gzip) of cask
+            // data, which needs ~16 s at 1 Mbps. Warm runs finish in well under a second.
+            deadline: Duration = .seconds(30)
         ) {
             self.scanner = scanner
             self.sources = sources

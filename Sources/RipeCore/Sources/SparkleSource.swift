@@ -6,6 +6,7 @@ import Foundation
 /// the way Sparkle filters them, so Ripe reports what the app would offer on this Mac.
 public struct SparkleSource: UpdateSource {
     public let id = SourceID.sparkle
+    static let maxConcurrentFeeds = 16
 
     public init() {}
 
@@ -17,12 +18,19 @@ public struct SparkleSource: UpdateSource {
     public func check(_ apps: [InstalledApp], context: SourceContext) async -> [InstalledApp.ID: SourceOutcome] {
         let eligible = apps.filter(applies(to:))
         return await withTaskGroup(of: (InstalledApp.ID, SourceOutcome).self) { group in
+            var outcomes: [InstalledApp.ID: SourceOutcome] = [:]
+            var inFlight = 0
             for app in eligible {
                 guard let feed = app.signals.sparkleFeedURL else { continue }
+                // Every feed is on a different host, so URLSession's per-host limit doesn't bound this.
+                if inFlight == Self.maxConcurrentFeeds, let (id, outcome) = await group.next() {
+                    outcomes[id] = outcome
+                    inFlight -= 1
+                }
                 let fromCatalog = app.catalog?.entry.sparkleFeed != nil
                 group.addTask { (app.id, await Self.check(feed: feed, fromCatalog: fromCatalog, context: context)) }
+                inFlight += 1
             }
-            var outcomes: [InstalledApp.ID: SourceOutcome] = [:]
             for await (id, outcome) in group {
                 outcomes[id] = outcome
             }

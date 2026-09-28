@@ -30,7 +30,8 @@ public struct CachingHTTPClient: HTTPClient {
         let key = DiskCache.key(for: request.url.absoluteString)
         let cached = await cache.load(key)
 
-        if let cached, !refresh, now().timeIntervalSince(cached.metadata.fetchedAt) < ttl {
+        // A negative age means the clock went backwards; treat the entry as expired, not fresh forever.
+        if let cached, !refresh, (0..<ttl).contains(now().timeIntervalSince(cached.metadata.fetchedAt)) {
             return response(from: cached, for: request, status: .fresh)
         }
 

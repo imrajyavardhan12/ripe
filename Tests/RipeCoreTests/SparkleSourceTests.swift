@@ -3,6 +3,23 @@ import Testing
 
 @testable import RipeCore
 
+/// Serves one body after a short delay and records the peak number of requests in flight.
+actor ConcurrencyProbe: HTTPClient {
+    let body: Data
+    private var inFlight = 0
+    private(set) var peak = 0
+
+    init(body: Data) { self.body = body }
+
+    func get(_ request: HTTPRequest) async throws -> HTTPResponse {
+        inFlight += 1
+        peak = max(peak, inFlight)
+        try? await Task.sleep(for: .milliseconds(20))
+        inFlight -= 1
+        return HTTPResponse(url: request.url, status: 200, body: body)
+    }
+}
+
 struct SparkleSourceTests {
     @Test func parsesElementsAndEnclosureAttributes() throws {
         let obs = try AppcastParser.parse(Fixture.data("obs-appcast.xml"))
@@ -78,6 +95,20 @@ struct SparkleSourceTests {
         #expect(release.build == "31845296735")
         #expect(release.comparison == .bundleVersion)
         #expect(confidence == .high)
+    }
+
+    @Test func limitsConcurrentFeedRequests() async throws {
+        let probe = ConcurrencyProbe(body: try Fixture.data("flux-appcast.xml"))
+        let apps = (0..<40).map { index in
+            InstalledApp.test(
+                "App\(index).app", bundleID: "dev.example.app\(index)", version: "1.0",
+                signals: .init(sparkleFeedURL: URL(string: "https://host\(index).example.com/appcast.xml")))
+        }
+        let outcomes = await SparkleSource().check(apps, context: SourceContext(http: probe, machine: .test()))
+        #expect(outcomes.count == 40)
+        let peak = await probe.peak
+        #expect(peak <= SparkleSource.maxConcurrentFeeds)
+        #expect(peak > 1, "feeds still run in parallel")
     }
 
     @Test func feedFailureBecomesOutcome() async {

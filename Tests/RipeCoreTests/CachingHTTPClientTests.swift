@@ -58,6 +58,16 @@ struct CachingHTTPClientTests {
         #expect(await upstream.sent.count == 1)
     }
 
+    @Test func clockGoingBackwardsExpiresTheEntry() async throws {
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let upstream = ScriptedHTTPClient([ok("v1", etag: "\"a\""), notModified])
+        let clock = TestClock()
+        let http = client(upstream, clock: clock)
+        _ = try await http.get(HTTPRequest(url: url, cacheTTL: 60))
+        clock.advance(-86_400)
+        #expect(try await http.get(HTTPRequest(url: url, cacheTTL: 60)).cache == .revalidated)
+    }
+
     @Test func revalidatesWithETagAfterTTL() async throws {
         defer { try? FileManager.default.removeItem(at: directory) }
         let upstream = ScriptedHTTPClient([ok("v1", etag: "\"a\""), notModified, ok("v2", etag: "\"b\"")])

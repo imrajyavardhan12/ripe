@@ -9,6 +9,8 @@ public struct HomebrewCaskSource: UpdateSource {
     public let id = SourceID.homebrewCask
 
     static let endpoint = URL(staticString: "https://formulae.brew.sh/api/cask.json")
+    /// Bump the suffix whenever `CaskIndex.build` changes what it extracts, so stale compact
+    /// indexes from older Ripe versions are rebuilt instead of reused.
     static let derivedIndexKey = "cask-index-v1"
 
     public init() {}
