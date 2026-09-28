@@ -1,7 +1,8 @@
 name: Release
 
-# Push a tag like v0.1.0 to publish a universal binary with a checksum and a
-# build-provenance attestation (verify with `gh attestation verify ripe-*.tar.gz -R imrajyavardhan12/ripe`).
+# Push a tag like v0.1.0 to publish a universal binary with a checksum and a build-provenance
+# attestation (verify with `gh attestation verify ripe-*.tar.gz -R imrajyavardhan12/ripe`), then
+# update the formula in imrajyavardhan12/homebrew-tap. See docs/releasing.md.
 on:
   push:
     tags: ["v*.*.*"]
@@ -14,25 +15,56 @@ permissions:
 jobs:
   release:
     runs-on: macos-latest
+    env:
+      # Fine-grained token with Contents: read and write on homebrew-tap only. Without it the
+      # release still publishes and the tap step is skipped.
+      HOMEBREW_TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
     steps:
       - uses: actions/checkout@v5
-      - name: Stamp version
+      - name: Read version
         run: |
           version="${GITHUB_REF_NAME#v}"
-          sed -i '' "s/static let version = \".*\"/static let version = \"${version}\"/" Sources/RipeCore/Ripe.swift
-          grep -q "\"${version}\"" Sources/RipeCore/Ripe.swift
+          echo "VERSION=$version" >> "$GITHUB_ENV"
+          case "$version" in *-*) echo "PRERELEASE=true" >> "$GITHUB_ENV" ;; *) echo "PRERELEASE=false" >> "$GITHUB_ENV" ;; esac
+      - name: Release notes from CHANGELOG.md
+        run: |
+          awk -v v="$VERSION" '$0 ~ "^## \\[?"v"\\]?( |$)" {found=1; next} /^## / {found=0} found' CHANGELOG.md > notes.md
+          if ! grep -q '[^[:space:]]' notes.md; then
+            echo "::error::CHANGELOG.md has no section for $VERSION"
+            exit 1
+          fi
+      - name: Stamp version
+        run: |
+          sed -i '' "s/static let version = \".*\"/static let version = \"${VERSION}\"/" Sources/RipeCore/Ripe.swift
+          grep -q "\"${VERSION}\"" Sources/RipeCore/Ripe.swift
       - run: make test
       - run: make release
       - name: Package
         run: |
-          archive="ripe-${GITHUB_REF_NAME#v}-universal-macos.tar.gz"
+          archive="ripe-${VERSION}-universal-macos.tar.gz"
           tar -czf "$archive" -C dist ripe
           shasum -a 256 "$archive" > "$archive.sha256"
           echo "ARCHIVE=$archive" >> "$GITHUB_ENV"
+          dist/ripe --version | grep -qx "$VERSION"
       - uses: actions/attest-build-provenance@v3
         with:
           subject-path: ${{ env.ARCHIVE }}
       - name: Publish
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" "$ARCHIVE" "$ARCHIVE.sha256" --generate-notes --verify-tag
+        run: |
+          flags="--verify-tag --notes-file notes.md --title v${VERSION}"
+          if [ "$PRERELEASE" = true ]; then flags="$flags --prerelease"; fi
+          gh release create "$GITHUB_REF_NAME" "$ARCHIVE" "$ARCHIVE.sha256" $flags
+      - name: Update Homebrew tap
+        if: env.HOMEBREW_TAP_TOKEN != '' && env.PRERELEASE == 'false'
+        run: |
+          sha256="$(cut -d' ' -f1 "$ARCHIVE.sha256")"
+          git clone --depth 1 "https://x-access-token:${HOMEBREW_TAP_TOKEN}@github.com/imrajyavardhan12/homebrew-tap.git" tap
+          scripts/formula.sh "$VERSION" "$sha256" > tap/Formula/ripe.rb
+          cd tap
+          git config user.name "ripe release"
+          git config user.email "ripe-release@users.noreply.github.com"
+          git add Formula/ripe.rb
+          git commit -m "ripe ${VERSION}"
+          git push
