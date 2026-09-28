@@ -11,15 +11,26 @@ public struct InstalledApp: Sendable, Hashable, Codable, Identifiable {
     public let name: String
     public let bundleID: String
     public let url: URL
-    public let version: AppVersion
-    public let signals: Signals
+    /// From Info.plist, unless an orchard entry says where the real version lives.
+    public internal(set) var version: AppVersion
+    public internal(set) var signals: Signals
+    /// What the orchard catalog changed about this app, if anything.
+    public internal(set) var catalog: CatalogApplication?
 
-    public init(name: String, bundleID: String, url: URL, version: AppVersion, signals: Signals = Signals()) {
+    public init(
+        name: String,
+        bundleID: String,
+        url: URL,
+        version: AppVersion,
+        signals: Signals = Signals(),
+        catalog: CatalogApplication? = nil
+    ) {
         self.name = name
         self.bundleID = bundleID
         self.url = url
         self.version = version
         self.signals = signals
+        self.catalog = catalog
     }
 
     /// Clues inside the bundle about where updates come from.

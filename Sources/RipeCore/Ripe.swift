@@ -10,6 +10,9 @@ public enum Ripe {
         public var scanner: AppScanner
         public var sources: [any UpdateSource]
         public var context: SourceContext
+        /// The orchard catalog (`https://` or `file://`); `nil` runs without it.
+        public var catalogURL: URL?
+        public var refresh: Bool
         /// Sources still running after this are cut off; the report ships without them.
         public var deadline: Duration
 
@@ -17,26 +20,46 @@ public enum Ripe {
             scanner: AppScanner,
             sources: [any UpdateSource],
             context: SourceContext,
+            catalogURL: URL? = nil,
+            refresh: Bool = false,
             deadline: Duration = .seconds(15)
         ) {
             self.scanner = scanner
             self.sources = sources
             self.context = context
+            self.catalogURL = catalogURL
+            self.refresh = refresh
             self.deadline = deadline
         }
 
-        public static func live(refresh: Bool = false, log: Logger = .silent) -> Environment {
-            let cache = DiskCache(directory: DiskCache.defaultDirectory())
+        public static func live(
+            refresh: Bool = false,
+            log: Logger = .silent,
+            environment: [String: String] = ProcessInfo.processInfo.environment
+        ) -> Environment {
+            let cache = DiskCache(directory: DiskCache.defaultDirectory(environment: environment))
             let http = CachingHTTPClient(upstream: URLSessionHTTPClient(), cache: cache, refresh: refresh)
             return Environment(
                 scanner: AppScanner(),
                 sources: [AppStoreSource(), SparkleSource(), HomebrewCaskSource()],
-                context: SourceContext(http: http, machine: .current(), cache: cache, log: log)
+                context: SourceContext(http: http, machine: .current(environment: environment), cache: cache, log: log),
+                catalogURL: catalogURL(environment: environment),
+                refresh: refresh
             )
+        }
+
+        /// `RIPE_CATALOG_URL` points at another catalog (a local build while writing an entry);
+        /// `none` turns the catalog off.
+        static func catalogURL(environment: [String: String]) -> URL? {
+            guard let override = environment["RIPE_CATALOG_URL"], !override.isEmpty else {
+                return CatalogLoader.defaultURL
+            }
+            return override == "none" ? nil : URL(string: override)
         }
     }
 
-    /// Discovers apps, asks every source in parallel and resolves one verdict per app.
+    /// Discovers apps, applies the orchard catalog, asks every source in parallel and resolves
+    /// one verdict per app.
     ///
     /// `including` narrows the check to some apps (`ripe why`); skipped bundles are always reported.
     public static func check(
@@ -45,11 +68,18 @@ public enum Ripe {
     ) async -> Report {
         let started = ContinuousClock.now
         let discovery = environment.scanner.scan()
-        let apps = filter.map { discovery.apps.filter($0) } ?? discovery.apps
+        var apps = filter.map { discovery.apps.filter($0) } ?? discovery.apps
         let log = environment.context.log
         log.debug(
             "found \(discovery.apps.count) apps, skipped \(discovery.skipped.count) in \(ContinuousClock.now - started)"
         )
+
+        if let url = environment.catalogURL,
+            let catalog = await CatalogLoader(url: url, refresh: environment.refresh).load(context: environment.context)
+        {
+            let enricher = CatalogEnricher(catalog: catalog, machine: environment.context.machine)
+            apps = apps.map(enricher.apply(to:))
+        }
 
         let outcomes = await querySources(apps, environment: environment)
         let resolver = Resolver(machine: environment.context.machine)

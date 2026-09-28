@@ -12,7 +12,9 @@ Architecture, principles, pipeline, version rules and decision log (read before 
 
 v0.1 feature-complete, not yet released: App Store, Sparkle and Homebrew cask sources, resolver with evidence, disk cache with offline fallback, `ripe`, `ripe --all`, `ripe why <app>`, `--json` (schema v1). Verified against the maintainer's Mac in `docs/accuracy.md` (keep that log updated per release).
 
-Next: orchard catalog v1 (first entry: Obsidian, a known false positive), then tag v0.1.0, create the `homebrew-tap` repo and formula, then `ripe pick` (v0.2).
+orchard catalog v1 done: client support in `Sources/RipeCore/Catalog/`, catalog repo at `~/Developer/orchard` (github.com/imrajyavardhan12/orchard, private until launch). Test local entries with `RIPE_CATALOG_URL=file://…/orchard/dist/index.json`.
+
+Next: tag v0.1.0 and publish the Homebrew tap (needs both repos public, a launch decision), then `ripe pick` (v0.2).
 
 ## Working in this repo
 

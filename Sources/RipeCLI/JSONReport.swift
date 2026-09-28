@@ -35,6 +35,13 @@ struct JSONReport: Encodable {
         var updateWith: UpdateWith
         var explanation: String
         var evidence: [EvidenceItem]
+        /// Present when an orchard catalog entry changed how this app was checked.
+        var orchard: Orchard?
+    }
+
+    struct Orchard: Encodable {
+        var changes: [String]
+        var notes: String?
     }
 
     struct Installed: Encodable {
@@ -128,6 +135,7 @@ extension JSONReport.App {
             case .none: JSONReport.UpdateWith(kind: "manual")
             }
         explanation = report.explanation
+        orchard = app.catalog.map { JSONReport.Orchard(changes: $0.changes, notes: $0.entry.notes) }
         evidence = report.evidence.map { item in
             switch item.outcome {
             case .found(let release, let confidence, let note):

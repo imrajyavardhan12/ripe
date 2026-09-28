@@ -70,7 +70,10 @@ struct Resolver: Sendable {
         {
             return .homebrew(token: token)
         }
-        if app.signals.sparkleFeedURL != nil || app.signals.sparklePublicEDKey != nil || app.signals.electronUpdater {
+        // An orchard `installed_version` rule exists only for apps that update themselves in place.
+        if app.signals.sparkleFeedURL != nil || app.signals.sparklePublicEDKey != nil || app.signals.electronUpdater
+            || app.catalog?.entry.installedVersion != nil
+        {
             return .selfUpdating
         }
         return .none

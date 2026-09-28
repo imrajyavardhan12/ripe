@@ -1,0 +1,66 @@
+import Foundation
+
+/// Applies catalog entries to discovered apps before any source runs, so sources stay
+/// catalog-unaware: a feed from orchard looks to `SparkleSource` like one from Info.plist.
+struct CatalogEnricher: Sendable {
+    var catalog: Catalog
+    var machine: Machine
+    var home: URL = FileManager.default.homeDirectoryForCurrentUser
+
+    func apply(to app: InstalledApp) -> InstalledApp {
+        guard let entry = catalog.entry(for: app.bundleID) else { return app }
+        var app = app
+        var changes: [String] = []
+
+        if let feed = entry.sparkleFeed?[machine.architecture.rawValue] {
+            // orchard is the correction layer, so it may replace a dead feed from Info.plist.
+            app.signals.sparkleFeedURL = feed
+            changes.append("Sparkle feed \(feed.absoluteString)")
+        }
+        if let token = entry.homebrewCask {
+            changes.append("Homebrew cask pinned to \(token)")
+        }
+        if let rule = entry.installedVersion {
+            if let found = InstalledVersionLocator.locate(glob: rule.glob, home: home) {
+                app.version = AppVersion(short: found.version.raw, build: nil)
+                changes.append("installed version \(found.version.raw) read from \(found.path)")
+            } else {
+                changes.append("no files match \(rule.glob); using the bundle's version")
+            }
+        }
+        app.catalog = CatalogApplication(entry: entry, changes: changes)
+        return app
+    }
+}
+
+/// Finds an app's real version from file names, for apps that update in place
+/// (`~/Library/Application Support/obsidian/obsidian-1.13.4.asar`). Lists one folder; never
+/// opens a file.
+enum InstalledVersionLocator {
+    /// The only places a catalog may point at. The orchard CI enforces the same rule; this is
+    /// the client's own check, because the catalog is untrusted.
+    static let allowedRoots = ["~/Library/", "/Library/", "/Applications/"]
+
+    static func locate(glob: String, home: URL) -> (version: Version, path: String)? {
+        guard allowedRoots.contains(where: glob.hasPrefix), !glob.split(separator: "/").contains("..") else {
+            return nil
+        }
+        let expanded = glob.hasPrefix("~/") ? home.path + glob.dropFirst(1) : glob
+        let directory = URL(filePath: expanded).deletingLastPathComponent()
+        let pattern = URL(filePath: expanded).lastPathComponent
+        let parts = pattern.split(separator: "*", omittingEmptySubsequences: false)
+        guard parts.count == 2 else { return nil }
+        let (prefix, suffix) = (String(parts[0]), String(parts[1]))
+
+        let names = (try? FileManager.default.contentsOfDirectory(atPath: directory.path)) ?? []
+        var best: (version: Version, path: String)?
+        for name in names
+        where name.hasPrefix(prefix) && name.hasSuffix(suffix) && name.count > prefix.count + suffix.count {
+            let middle = String(name.dropFirst(prefix.count).dropLast(suffix.count))
+            guard let version = Version(middle) else { continue }
+            if let current = best, version.order(comparedTo: current.version) != .newer { continue }
+            best = (version, glob.replacingOccurrences(of: "*", with: middle))
+        }
+        return best
+    }
+}

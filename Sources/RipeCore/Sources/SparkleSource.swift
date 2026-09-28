@@ -19,7 +19,8 @@ public struct SparkleSource: UpdateSource {
         return await withTaskGroup(of: (InstalledApp.ID, SourceOutcome).self) { group in
             for app in eligible {
                 guard let feed = app.signals.sparkleFeedURL else { continue }
-                group.addTask { (app.id, await Self.check(feed: feed, context: context)) }
+                let fromCatalog = app.catalog?.entry.sparkleFeed != nil
+                group.addTask { (app.id, await Self.check(feed: feed, fromCatalog: fromCatalog, context: context)) }
             }
             var outcomes: [InstalledApp.ID: SourceOutcome] = [:]
             for await (id, outcome) in group {
@@ -29,7 +30,7 @@ public struct SparkleSource: UpdateSource {
         }
     }
 
-    static func check(feed: URL, context: SourceContext) async -> SourceOutcome {
+    static func check(feed: URL, fromCatalog: Bool = false, context: SourceContext) async -> SourceOutcome {
         let items: [AppcastItem]
         do {
             let request = HTTPRequest(url: feed, cacheTTL: 30 * 60, allowInsecure: true)
@@ -54,8 +55,9 @@ public struct SparkleSource: UpdateSource {
             minimumSystemVersion: item.minimumSystemVersion,
             publishedAt: item.publishedAt
         )
-        let insecure = feed.scheme == "http" ? "feed is plain HTTP" : nil
-        return .found(release, .high, note: insecure)
+        let notes = [fromCatalog ? "feed from orchard" : nil, feed.scheme == "http" ? "feed is plain HTTP" : nil]
+            .compactMap { $0 }
+        return .found(release, .high, note: notes.isEmpty ? nil : notes.joined(separator: ", "))
     }
 
     /// Channel names that mean "the normal release". Sparkle offers items without a channel to

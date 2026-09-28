@@ -34,11 +34,13 @@ struct CaskIndex: Sendable, Codable {
     let casks: [Cask]
     private let byAppName: [String: [Int]]
     private let byBundleID: [String: [Int]]
+    private let byToken: [String: Int]
 
     init(casks: [Cask]) {
         self.casks = casks
         var byAppName: [String: [Int]] = [:]
         var byBundleID: [String: [Int]] = [:]
+        byToken = Dictionary(casks.enumerated().map { ($1.token, $0) }, uniquingKeysWith: { first, _ in first })
         for (index, cask) in casks.enumerated() {
             for name in Set(cask.appNames.map { $0.lowercased() }) { byAppName[name, default: []].append(index) }
             for id in Set((cask.quitIDs + cask.zapIDs).map { $0.lowercased() }) {
@@ -59,6 +61,8 @@ struct CaskIndex: Sendable, Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(casks, forKey: .casks)
     }
+
+    func cask(token: String) -> Cask? { byToken[token].map { casks[$0] } }
 
     /// Casks that mention this app by installed file name or bundle ID.
     func candidates(appName: String, bundleID: String) -> [Cask] {

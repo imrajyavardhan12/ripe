@@ -107,7 +107,15 @@ Authority, highest first:
 | 4 | **GitHub Releases** (v0.3) | orchard maps the app to a repo | Skip drafts and pre-releases. |
 | 5 | **Homebrew cask DB** | Match found (see below) | A version *database* for every app, not only brew-installed ones. Lowest authority because matching is heuristic. |
 
-orchard entries (v0.2) are not a rank; they are **directives** applied before resolution: force a source, map a version scheme, mark an app ignored, or correct a bad match. orchard is the correction layer that turns `ripe why` bug reports into fixes for everyone.
+orchard entries are not a rank; they **enrich apps after discovery and before any source runs**, so sources stay catalog-unaware (`Catalog/`). Schema v1 has three directives:
+
+| Directive | Effect | First real use |
+|---|---|---|
+| `sparkleFeed` (per CPU) | Sets the app's Sparkle feed, overriding Info.plist (fixes dead feeds). Sparkle then answers authoritatively. | Brave sets its feed in code; with it, Brave is compared by build number (196.59 = 196.59) instead of by scheme alignment. |
+| `homebrewCask` | Pins the cask; beats every matching heuristic. | Ambiguous channels, same-name apps. |
+| `installedVersion.glob` | Reads the real version from file names (lists one folder, never opens files); marks the app self-updating. | Obsidian runs `obsidian-1.13.4.asar` while its bundle says 1.12.4. |
+
+The compiled catalog (`index.json`, built and validated by the orchard repo's CI, served by GitHub Pages) is fetched with a 3 s timeout and a 6 h TTL, falls back to the cached copy, and remembers an unavailable catalog for an hour so it never slows a run. A catalog with a newer `schemaVersion` is ignored, not misread. `RIPE_CATALOG_URL` points at a local build (`file://…`) so contributors can test an entry with `ripe why` before opening a PR; `none` disables it. The catalog is untrusted: the client re-checks the path rules for version globs, and nothing in it can weaken install verification (§11). orchard is the correction layer that turns `ripe why` bug reports into fixes for everyone.
 
 **Cask matching**, the heuristic the whole product leans on:
 1. Build a compact index once per cask ETag: app filename → casks, bundle ID → casks. Bundle IDs come from `uninstall[].quit`, `uninstall[].signal`, and zap paths shaped like `~/Library/Preferences/<id>.plist` or `.../Caches/<id>`.
@@ -244,7 +252,7 @@ scripts/            accuracy.sh, release helpers
 ## 17. Open risks
 
 - **App Management TCC** may make direct installs awkward from a terminal. Mitigation: delegation first, `ripe doctor`, clear guidance.
-- **In-place updaters**: some apps update their code without touching Info.plist (Obsidian's bundle says 1.12.4 while the app runs the latest). Ripe reads the bundle, so it reports a stale version. Mitigation: orchard `ignore`/mapping entries; no generic detection yet.
+- **In-place updaters**: some apps update their code without touching Info.plist (Obsidian's bundle says 1.12.4 while it runs 1.13.4). Mitigation: orchard `installedVersion` rules, one per app; no generic detection.
 - **Scheme mismatches** (Brave-style) are the main false-positive and false-negative source. Mitigation: alignment heuristic, `unknown` fallback, orchard mappings, fixture per reported case.
 - **Upstream drift**: cask JSON and iTunes API are unversioned. Mitigation: tolerant decoding (only the fields we need, all optional), nightly live contract tests.
 - **Rate limits**: iTunes lookup is rate-limited. Mitigation: batching, 1 h cache.

@@ -70,6 +70,10 @@ public struct HomebrewCaskSource: UpdateSource {
     }
 
     static func match(_ app: InstalledApp, in index: CaskIndex, installedTokens: Set<String>) -> Match? {
+        if let token = app.catalog?.entry.homebrewCask {
+            // A human-verified mapping beats every heuristic; a pin to a missing cask matches nothing.
+            return index.cask(token: token).map { Match(cask: $0, confidence: .high, reason: "pinned by orchard") }
+        }
         let fileName = app.url.lastPathComponent
         let bundleID = app.bundleID.lowercased()
 

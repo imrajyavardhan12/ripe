@@ -9,19 +9,23 @@ public struct HTTPRequest: Sendable, Hashable {
     public var cacheTTL: TimeInterval?
     /// Plain HTTP is refused unless the caller opts in (checking, never downloading, from old Sparkle feeds).
     public var allowInsecure: Bool
+    /// Overrides the client's default request timeout, for optional data that mustn't hold up a run.
+    public var timeout: TimeInterval?
 
     public init(
         url: URL,
         headers: [String: String] = [:],
         maxBytes: Int = 5_000_000,
         cacheTTL: TimeInterval? = nil,
-        allowInsecure: Bool = false
+        allowInsecure: Bool = false,
+        timeout: TimeInterval? = nil
     ) {
         self.url = url
         self.headers = headers
         self.maxBytes = maxBytes
         self.cacheTTL = cacheTTL
         self.allowInsecure = allowInsecure
+        self.timeout = timeout
     }
 }
 
@@ -115,6 +119,7 @@ public struct URLSessionHTTPClient: HTTPClient {
             throw HTTPError.insecureURL(request.url)
         }
         var urlRequest = URLRequest(url: request.url)
+        if let timeout = request.timeout { urlRequest.timeoutInterval = timeout }
         urlRequest.setValue(userAgent, forHTTPHeaderField: "User-Agent")
         for (name, value) in request.headers {
             urlRequest.setValue(value, forHTTPHeaderField: name)

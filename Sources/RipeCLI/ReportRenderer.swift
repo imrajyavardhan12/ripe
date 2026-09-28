@@ -57,6 +57,9 @@ struct ReportRenderer {
             "",
             terminal.style("Sources, most authoritative first:", .bold),
         ]
+        if let catalog = app.catalog {
+            lines.append("  \(terminal.style("◆", .yellow)) orchard    \(catalog.changes.joined(separator: "; "))")
+        }
         if item.evidence.isEmpty {
             lines.append("  none apply. Ripe can't check this app yet; an orchard catalog entry would fix that.")
         }
@@ -74,6 +77,9 @@ struct ReportRenderer {
             case .notApplicable:
                 continue
             }
+        }
+        if let notes = app.catalog?.entry.notes {
+            lines += ["", "Note: \(notes)"]
         }
         if let url = item.verdict.release?.pageURL {
             lines += ["", "More: \(url.absoluteString)"]

@@ -13,9 +13,9 @@ Ripe's headline metric is its false-positive rate: how often it claims an update
 | Mullvad VPN | 2026.3 | ripe → 2026.5 | Homebrew (`.pkg` cask, matched by bundle ID) | ✅ real | |
 | Raycast | 1.104.24 | ripe → 2.5.3.0 | Homebrew | ✅ agrees with `brew outdated --greedy` | |
 | Cryptomator, LuLu, Mullvad Browser, LM Studio, Postman, Proton Pass, ChatGPT | | ripe | Homebrew | plausible, not individually confirmed | ChatGPT needed the name tie-break (`chatgpt` vs `codex-app`) |
-| **Obsidian** | 1.12.4 | ripe → 1.13.7 | Homebrew | ❌ **likely false positive** | Updates in place; Info.plist keeps the installer version. Needs an orchard entry. |
+| **Obsidian** | 1.12.4 (bundle) | ripe → 1.13.7 | Homebrew | ⚠️ right verdict, wrong reason → ✅ fixed | Updates in place; the bundle keeps the installer version. It really runs 1.13.4 (`obsidian-1.13.4.asar`), so 1.13.7 is a real update. Fixed by orchard `md.obsidian.yml` (`installed_version`). |
 | OBS | 32.2.2 | up to date | Sparkle | ✅ | Found a bug: stable items labeled `stable` were skipped. Fixed, `SparkleSourceTests.picksNewestStableItemForThisMac` |
-| Brave Browser | 154.1.96.59 | up to date | Homebrew 1.96.59.0 | ✅ | Scheme alignment (`VersionMatcherTests.alignsChromiumPrefixedVersions`) |
+| Brave Browser | 154.1.96.59 | up to date | Homebrew 1.96.59.0 → Sparkle via orchard | ✅ | Was scheme alignment; orchard `com.brave.Browser.yml` adds Brave's real feed, so it's now compared by build (196.59) |
 | Flux, Helium, KeePassXC, KeepingYouAwake, Stats, Xcode, Zed | | up to date | various | ✅ | |
 | Ghostty | b40acce58 | unknown (not comparable) | | ✅ correct | Tip build with a git-hash version |
 | Codenotch | 1.4.0 | unknown (source failed) | Sparkle feed 404 | ✅ correct | |
@@ -24,4 +24,4 @@ Ripe's headline metric is its false-positive rate: how often it claims an update
 
 Also observed: `brew outdated --cask --greedy` lists `llama-app` as outdated, but `/Applications/Llama.app` no longer exists (deleted by hand). Ripe checks what's on disk, so it doesn't report phantom apps.
 
-**Result: 1 likely false positive in 12 reported updates.**
+**Result: 12 reported updates. 5 confirmed real, 7 plausible but not individually confirmed, 0 known false positives** once the orchard catalog is applied. (The Obsidian verdict was right but compared the wrong version; now it's right for the right reason.)
