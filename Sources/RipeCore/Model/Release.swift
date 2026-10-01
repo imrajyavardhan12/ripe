@@ -69,6 +69,10 @@ public struct Release: Sendable, Hashable, Codable {
     public var publishedAt: Date?
     /// The Homebrew cask this came from, when `source` is `.homebrewCask`.
     public var caskToken: String?
+    /// Where to get it and how to prove the bytes are genuine. `nil` when the source has no download.
+    public var download: Download?
+    /// The App Store `trackId`, when `source` is `.appStore`.
+    public var appStoreID: Int?
 
     public init(
         version: String,
@@ -78,7 +82,9 @@ public struct Release: Sendable, Hashable, Codable {
         pageURL: URL? = nil,
         minimumSystemVersion: String? = nil,
         publishedAt: Date? = nil,
-        caskToken: String? = nil
+        caskToken: String? = nil,
+        download: Download? = nil,
+        appStoreID: Int? = nil
     ) {
         self.version = version
         self.build = build
@@ -88,6 +94,33 @@ public struct Release: Sendable, Hashable, Codable {
         self.minimumSystemVersion = minimumSystemVersion
         self.publishedAt = publishedAt
         self.caskToken = caskToken
+        self.download = download
+        self.appStoreID = appStoreID
+    }
+}
+
+/// A downloadable update and the evidence that its bytes are genuine.
+public struct Download: Sendable, Hashable, Codable {
+    public enum Integrity: Sendable, Hashable, Codable {
+        /// Published by Homebrew for the cask.
+        case sha256(String)
+        /// Sparkle's Ed25519 signature over the archive, checked against the installed app's
+        /// own `SUPublicEDKey`, so neither a feed nor the catalog can supply the key.
+        case edDSA(signature: String)
+    }
+
+    public var url: URL
+    /// `nil` means the bytes can't be verified, so Ripe won't install them itself.
+    public var integrity: Integrity?
+    public var expectedLength: Int?
+    /// A `.pkg` installer runs scripts as root: never installed directly by Ripe.
+    public var isInstallerPackage: Bool
+
+    public init(url: URL, integrity: Integrity?, expectedLength: Int? = nil, isInstallerPackage: Bool = false) {
+        self.url = url
+        self.integrity = integrity
+        self.expectedLength = expectedLength
+        self.isInstallerPackage = isInstallerPackage
     }
 }
 

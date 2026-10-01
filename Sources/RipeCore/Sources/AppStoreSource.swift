@@ -85,6 +85,7 @@ public struct AppStoreSource: UpdateSource {
         }
         struct Item: Decodable {
             var bundleId: String?
+            var trackId: Int?
             var version: String?
             var kind: String?
             var trackViewUrl: URL?
@@ -103,7 +104,8 @@ public struct AppStoreSource: UpdateSource {
                 pageURL: item.trackViewUrl,
                 // For iPhone-family records this is an iOS version, meaningless on a Mac.
                 minimumSystemVersion: item.kind == "mac-software" ? item.minimumOsVersion : nil,
-                publishedAt: item.currentVersionReleaseDate
+                publishedAt: item.currentVersionReleaseDate,
+                appStoreID: item.trackId
             )
             listings[bundleID] = Listing(release: release, kind: item.kind)
         }

@@ -15,20 +15,43 @@ struct CaskIndex: Sendable, Codable {
         /// zap stanzas also list helpers and related apps.
         var zapIDs: [String]
         var version: String
-        /// Versions pinned for other OS/CPU combinations, keyed like `arm64_big_sur` or `big_sur`.
-        var variationVersions: [String: String]
+        var url: URL?
+        /// Hex SHA-256 of the download, or `nil` for `no_check` casks (which can't be installed safely).
+        var sha256: String?
+        /// Overrides for other OS/CPU combinations, keyed like `arm64_big_sur` or `big_sur`.
+        var variations: [String: Variation]
         var homepage: URL?
         var autoUpdates: Bool
+        /// The cask runs a `.pkg` installer: never installed directly, only through Homebrew.
+        var installsPackage: Bool
+
+        struct Variation: Sendable, Codable, Hashable {
+            var version: String?
+            var url: URL?
+            var sha256: String?
+        }
+
+        /// What Homebrew would install on this Mac.
+        struct Resolved: Sendable, Hashable {
+            var version: String
+            var url: URL?
+            var sha256: String?
+        }
 
         /// `version: latest` casks always download whatever is current and can't be compared.
         var isVersioned: Bool { version != "latest" }
 
-        /// The version Homebrew would install on this Mac.
-        func version(on machine: Machine) -> String {
-            guard let codename = machine.macOSCodename else { return version }
+        func resolved(on machine: Machine) -> Resolved {
+            let base = Resolved(version: version, url: url, sha256: sha256)
+            guard let codename = machine.macOSCodename else { return base }
             let key = machine.architecture == .arm64 ? "arm64_\(codename)" : codename
-            return variationVersions[key] ?? version
+            guard let variation = variations[key] else { return base }
+            // A variation that changes the URL without a checksum must not inherit the base checksum.
+            let sha256 = variation.url == nil ? (variation.sha256 ?? base.sha256) : variation.sha256
+            return Resolved(version: variation.version ?? version, url: variation.url ?? url, sha256: sha256)
         }
+
+        func version(on machine: Machine) -> String { resolved(on: machine).version }
     }
 
     let casks: [Cask]
@@ -95,7 +118,9 @@ extension CaskIndex {
         var appNames: [String] = []
         var quitIDs: [String] = []
         var zapIDs: [String] = []
+        var installsPackage = false
         for artifact in entry["artifacts"] as? [[String: Any]] ?? [] {
+            if artifact["pkg"] != nil { installsPackage = true }
             if let app = artifact["app"] as? [Any] {
                 appNames.append(contentsOf: installedAppNames(app, target: artifact["target"] as? String))
             }
@@ -107,9 +132,15 @@ extension CaskIndex {
             }
         }
 
-        var variationVersions: [String: String] = [:]
+        var variations: [String: Cask.Variation] = [:]
         for (key, value) in entry["variations"] as? [String: Any] ?? [:] {
-            if let pinned = (value as? [String: Any])?["version"] as? String { variationVersions[key] = pinned }
+            guard let value = value as? [String: Any] else { continue }
+            let variation = Cask.Variation(
+                version: value["version"] as? String,
+                url: (value["url"] as? String).flatMap(URL.init(string:)),
+                sha256: checksum(value["sha256"])
+            )
+            if variation.version != nil || variation.url != nil { variations[key] = variation }
         }
 
         return Cask(
@@ -118,10 +149,21 @@ extension CaskIndex {
             quitIDs: quitIDs.filter(looksLikeBundleID),
             zapIDs: Array(Set(zapIDs)).sorted(),
             version: version,
-            variationVersions: variationVersions,
+            url: (entry["url"] as? String).flatMap(URL.init(string:)),
+            sha256: checksum(entry["sha256"]),
+            variations: variations,
             homepage: (entry["homepage"] as? String).flatMap(URL.init(string:)),
-            autoUpdates: entry["auto_updates"] as? Bool ?? false
+            autoUpdates: entry["auto_updates"] as? Bool ?? false,
+            installsPackage: installsPackage
         )
+    }
+
+    /// A 64-character hex SHA-256, or `nil` for `no_check` and anything malformed.
+    private static func checksum(_ value: Any?) -> String? {
+        guard let text = (value as? String)?.lowercased(), text.count == 64,
+            text.allSatisfy({ $0.isHexDigit })
+        else { return nil }
+        return text
     }
 
     /// `app` stanzas look like `["Brave Browser.app"]` or `["Thorium.app", {"target": "Thorium Browser.app"}]`,

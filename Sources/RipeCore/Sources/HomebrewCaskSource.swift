@@ -11,7 +11,7 @@ public struct HomebrewCaskSource: UpdateSource {
     static let endpoint = URL(staticString: "https://formulae.brew.sh/api/cask.json")
     /// Bump the suffix whenever `CaskIndex.build` changes what it extracts, so stale compact
     /// indexes from older Ripe versions are rebuilt instead of reused.
-    static let derivedIndexKey = "cask-index-v1"
+    static let derivedIndexKey = "cask-index-v2"
 
     public init() {}
 
@@ -58,15 +58,22 @@ public struct HomebrewCaskSource: UpdateSource {
         guard cask.isVersioned else {
             return .failed("cask \(cask.token) doesn't track versions (version: latest)")
         }
+        let resolved = cask.resolved(on: machine)
         // `29.2,42065` is `short,build`; only the short part is comparable to the app's version.
-        let parts = cask.version(on: machine).split(separator: ",", maxSplits: 1).map(String.init)
+        let parts = resolved.version.split(separator: ",", maxSplits: 1).map(String.init)
+        let download = resolved.url.map {
+            Download(
+                url: $0, integrity: resolved.sha256.map(Download.Integrity.sha256),
+                isInstallerPackage: cask.installsPackage)
+        }
         let release = Release(
             version: parts[0],
             build: parts.count > 1 ? parts[1] : nil,
             source: .homebrewCask,
             comparison: .shortVersion,
             pageURL: cask.homepage,
-            caskToken: cask.token
+            caskToken: cask.token,
+            download: download
         )
         return .found(release, match.confidence, note: "cask \(cask.token), \(match.reason)")
     }

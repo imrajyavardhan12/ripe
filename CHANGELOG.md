@@ -4,7 +4,7 @@ All notable changes to Ripe. The release workflow publishes each version's secti
 
 ## [Unreleased]
 
-First release: read-only update checks.
+First release: see what's outdated, and update it safely.
 
 - `ripe` lists apps with updates: App Store apps, Sparkle apps and anything in Homebrew's cask database, whether or not Homebrew installed it.
 - `ripe --all` shows every app with its status; `ripe why <app>` shows every source consulted and the rule that decided.
@@ -13,3 +13,5 @@ First release: read-only update checks.
 - Understands Sparkle channels, per-CPU and minimum-macOS rules, Homebrew per-OS variations, and Chromium-style version prefixes.
 - orchard catalog support: community entries add missing Sparkle feeds, pin Homebrew casks and read the real version of apps that update in place. `RIPE_CATALOG_URL` tests a local catalog.
 - Fast and offline-friendly: about 1 s cold and 0.2 s warm for 30 apps; cached answers are used when the network is down.
+- `ripe pick <app>…` and `ripe pick --all` update apps. Homebrew apps go through `brew upgrade --cask`, App Store apps through `mas` or the App Store. Other apps are downloaded and installed only after every check passes: SHA-256 or Sparkle EdDSA signature, strict code signature, the **same Team ID as the installed app**, Gatekeeper, no downgrade. The app is quit politely and reopened, the old version goes to the Trash, and an interrupted update is recovered on the next run. `.pkg` installers are never run. Shows the plan and asks first; `--dry-run` and `--yes` for scripts.
+- Needs no special macOS permission: Ripe only moves whole app bundles, which App Management allows.

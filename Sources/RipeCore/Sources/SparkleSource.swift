@@ -54,6 +54,14 @@ public struct SparkleSource: UpdateSource {
         guard let version = item.shortVersion ?? item.version else {
             return .failed("newest feed item has no version")
         }
+        let download = item.enclosureURL.map { url in
+            Download(
+                url: url,
+                integrity: item.edSignature.map { Download.Integrity.edDSA(signature: $0) },
+                expectedLength: item.length,
+                isInstallerPackage: item.installationType == "package" || url.pathExtension.lowercased() == "pkg"
+            )
+        }
         let release = Release(
             version: version,
             build: item.version,
@@ -61,7 +69,8 @@ public struct SparkleSource: UpdateSource {
             comparison: .bundleVersion,
             pageURL: item.releaseNotesURL,
             minimumSystemVersion: item.minimumSystemVersion,
-            publishedAt: item.publishedAt
+            publishedAt: item.publishedAt,
+            download: download
         )
         let notes = [fromCatalog ? "feed from orchard" : nil, feed.scheme == "http" ? "feed is plain HTTP" : nil]
             .compactMap { $0 }

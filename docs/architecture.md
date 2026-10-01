@@ -173,14 +173,35 @@ A run succeeds when discovery succeeds. Everything after that degrades per app: 
 - Feeds are untrusted input. `XMLParser` with external entities off, size caps, no code execution, nothing from a feed is ever passed to a shell.
 - No telemetry. The only data leaving the Mac is what each app already sends (its feed request) plus bundle IDs to Apple's lookup API and one download of the public cask DB.
 
-**Write path (v0.2), designed now so v0.1 doesn't paint us into a corner:**
-- Files downloaded by a CLI through `URLSession` are **not quarantined**, so Gatekeeper never checks them. Ripe bypasses Gatekeeper by construction and therefore owes the user its own verification, all of which must pass:
-  1. Integrity: cask `sha256`, or Sparkle `sparkle:edSignature` verified against the installed app's `SUPublicEDKey` (Ed25519 via CryptoKit). Same bar as Sparkle itself.
-  2. Code signature valid (`SecStaticCodeCheckValidity`, strict) and **Team ID equals the installed app's**. Refuse on mismatch; no override flag in v0.2.
-  3. Gatekeeper assessment of the new bundle (`SecAssessment`), so an un-notarized update of a notarized app is refused.
-- Install is a transaction: quit the app politely, move old bundle to the Trash, move new bundle in, relaunch if it was running. Any failure rolls back.
-- Delegation first: brew-managed → `brew upgrade --cask <token>`; App Store → `mas` or open the store page; Ripe installs directly only when it can do all three checks.
-- App Management TCC (macOS 13+) may block replacing bundles from the terminal. `ripe doctor` will detect it and explain the one-time grant. Prototype before building `pick`.
+**Write path (`ripe pick`, `Install/`):**
+
+Planning is separate from doing (`Planner`, pure): every selected app gets a method before anything runs, the plan is shown, and nothing changes until the person confirms (`--yes` for scripts; non-interactive runs without it are refused). Methods, in order of preference (principle 6):
+
+| Method | When | What runs |
+|---|---|---|
+| Homebrew | `managedBy == .homebrew` | `brew upgrade --cask --greedy <token>` (greedy: a named auto-updating cask is otherwise skipped) |
+| App Store | App Store app | `mas upgrade <id>` if `mas` exists, else opens the store page for the person to click Update |
+| Direct | a download **with** integrity data: cask SHA-256, or Sparkle EdDSA plus the installed app's `SUPublicEDKey` | the pipeline below |
+| Manual | anything else (`.pkg`, `no_check` casks, no download, no key) | nothing; tells the person why and where to get it |
+
+Direct installs: every check that can refuse comes before every step that can change anything, so a refusal always means "nothing was changed".
+1. The installed app must be signed by an identified developer (Team ID, not ad-hoc): it's the anchor for trust.
+2. Download over HTTPS only (plain-HTTP feeds may be *checked*, never downloaded from; HTTPS→HTTP redirects refused), 4 GB cap, declared length enforced.
+3. Integrity: SHA-256 (streamed) or Ed25519 via CryptoKit against the **installed** app's key, so neither a feed nor the catalog can supply the key.
+4. Unpack by content sniffing, not file name: the UDIF `koly` trailer first (a DMG can start with `BZh`, found on GrandPerspective 3.8.1), then zip (`ditto`, which preserves bundle symlinks), tar (`bsdtar`, refuses `..`), xar → refused (`.pkg` runs root scripts). Exactly one app with the installed bundle ID, or refuse.
+5. Verify the new bundle: newer than installed (no downgrades); `SecStaticCodeCheckValidity` strict, all architectures, nested code; **Team ID equals the installed app's**, no override flag; if Gatekeeper accepts the installed app it must accept the new one; native architecture unless the installed version wasn't native either.
+6. Quit politely (`NSRunningApplication.terminate`, 20 s), never force. An app that won't quit (unsaved work) stops the install.
+7. Replace as a journaled transaction (`Replacer`): stage the new bundle as a hidden sibling (same volume, so the final step is a rename), journal, move the old bundle to the Trash, journal, rename into place; on failure the old bundle comes back from the Trash. `recoverInterrupted()` runs before every `pick`: it restores the old version, finishes with the already-verified staged copy, or removes leftovers, depending on where the crash happened.
+8. Relaunch if it was running; report the version now on disk.
+
+**App Management TCC, measured on macOS 27 (2026-10-01)** with a notarized third-party app, from a terminal *without* the App Management permission:
+
+| Operation | Before the app's first launch | After it |
+|---|---|---|
+| Write inside the bundle / edit Info.plist | allowed | **blocked** (error 513) |
+| Rename, trash, or move the whole bundle; move a new bundle in | allowed | allowed |
+
+So Ripe never needs the permission, under one rule: **only ever move whole bundles; never write inside one.** Homebrew documents the same behavior. End-to-end check on a real Mac: GrandPerspective 3.6.1 (running) → 3.8.1 via `ripe pick`: SHA-256, DMG, Team ID `3Z75QZGN66`, Gatekeeper, quit, swap, relaunch; nothing left behind.
 
 **Supply chain for Ripe itself:** no notarization is possible, so releases carry SHA-256 checksums and GitHub build-provenance attestations (`actions/attest-build-provenance`); users can verify with `gh attestation verify`. Dependencies: ArgumentParser only, pinned by `Package.resolved`.
 
@@ -222,9 +243,11 @@ Sources/
     Discovery/      AppScanner, BundleInspector
     Sources/        UpdateSource, AppStoreSource, SparkleSource (+AppcastParser), HomebrewCaskSource (+CaskIndex)
     Resolution/     Resolver, ResolutionPolicy
-    Platform/       HTTPClient, CachingHTTPClient, DiskCache, Host, ProcessRunner, Logger
+    Catalog/        Catalog, CatalogLoader, CatalogEnricher (orchard)
+    Install/        Planner, Installer, Downloader, Integrity, Unpacker, CodeSignature, Replacer, RunningApps
+    Platform/       HTTPClient, CachingHTTPClient, DiskCache, Machine, ProcessRunner, Logger
     Ripe.swift      public façade: Ripe.check(options) async -> Report
-  RipeCLI/          RootCommand, ListCommand, WhyCommand, renderers, Terminal
+  RipeCLI/          RootCommand (list, why), PickCommand, renderers, JSONReport, Terminal
   ripe/             main.swift
 Tests/
   RipeCoreTests/    (+ Fixtures/)
@@ -251,7 +274,7 @@ scripts/            accuracy.sh, release helpers
 
 ## 17. Open risks
 
-- **App Management TCC** may make direct installs awkward from a terminal. Mitigation: delegation first, `ripe doctor`, clear guidance.
+- **App Management TCC**: resolved by measurement (§11). Whole-bundle moves need no permission; a future change that writes inside a bundle would break on every launched app, so tests and review must keep that rule.
 - **In-place updaters**: some apps update their code without touching Info.plist (Obsidian's bundle says 1.12.4 while it runs 1.13.4). Mitigation: orchard `installedVersion` rules, one per app; no generic detection.
 - **Scheme mismatches** (Brave-style) are the main false-positive and false-negative source. Mitigation: alignment heuristic, `unknown` fallback, orchard mappings, fixture per reported case.
 - **Upstream drift**: cask JSON and iTunes API are unversioned. Mitigation: tolerant decoding (only the fields we need, all optional), nightly live contract tests.

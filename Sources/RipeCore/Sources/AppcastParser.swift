@@ -17,6 +17,11 @@ struct AppcastItem: Sendable, Hashable {
     var operatingSystem: String?
     var releaseNotesURL: URL?
     var publishedAt: Date?
+    /// `sparkle:edSignature` on the enclosure: Ed25519 over the archive, base64.
+    var edSignature: String?
+    var length: Int?
+    /// `sparkle:installationType`; `package` means a `.pkg` installer.
+    var installationType: String?
 }
 
 /// Parses Sparkle appcasts. Feeds are untrusted input: external entities stay unresolved and
@@ -65,6 +70,9 @@ enum AppcastParser {
                 // Older feeds put versions on the enclosure instead of in elements.
                 current?.enclosureURL = attributes["url"].flatMap(URL.init(string:))
                 current?.operatingSystem = attributes["sparkle:os"]
+                current?.edSignature = attributes["sparkle:edSignature"]?.nilIfBlank
+                current?.length = attributes["length"].flatMap { Int($0) }
+                if let type = attributes["sparkle:installationType"] { current?.installationType = type }
                 if current?.version == nil { current?.version = attributes["sparkle:version"]?.nilIfBlank }
                 if current?.shortVersion == nil {
                     current?.shortVersion = attributes["sparkle:shortVersionString"]?.nilIfBlank
@@ -93,6 +101,7 @@ enum AppcastParser {
             case "sparkle:version": current?.version = value ?? current?.version
             case "sparkle:shortVersionString": current?.shortVersion = value ?? current?.shortVersion
             case "sparkle:channel": current?.channel = value
+            case "sparkle:installationType": current?.installationType = value
             case "sparkle:minimumSystemVersion": current?.minimumSystemVersion = value
             case "sparkle:maximumSystemVersion": current?.maximumSystemVersion = value
             case "sparkle:hardwareRequirements":

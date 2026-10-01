@@ -34,7 +34,13 @@ struct HomebrewCaskSourceTests {
         #expect(keepass.quitIDs == ["org.keepassxc.keepassxc"])
 
         let vscode = try #require(index.casks.first { $0.token == "visual-studio-code" })
-        #expect(vscode.variationVersions["arm64_big_sur"] == "1.106.3")
+        #expect(vscode.variations["arm64_big_sur"]?.version == "1.106.3")
+        #expect(vscode.sha256?.count == 64)
+        #expect(vscode.url?.host() == "update.code.visualstudio.com")
+
+        let mullvad = try #require(index.casks.first { $0.token == "mullvad-vpn" })
+        #expect(mullvad.installsPackage)
+        #expect(!keepass.installsPackage)
     }
 
     @Test func usesInstalledNameWhenACaskRenamesTheApp() throws {

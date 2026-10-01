@@ -5,7 +5,7 @@
 
 ---
 
-> **Status: v0.1 in development.** Update checks work (App Store, Sparkle, Homebrew catalog); installing updates comes in v0.2. Follow the repo to catch the first release.
+> **Status: pre-release.** Checking and updating work; the first release is close. Follow the repo to catch it.
 
 ## Why
 
@@ -15,8 +15,8 @@ Ripe checks them all in one place:
 
 ```
 ripe              # what's ripe? (apps with updates)
-ripe pick <app>   # update one app            (v0.2)
-ripe pick --all   # harvest everything        (v0.2)
+ripe pick <app>   # update one app
+ripe pick --all   # harvest everything
 ripe why <app>    # where the version info came from and how the app updates
 ```
 
