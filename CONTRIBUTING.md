@@ -12,6 +12,7 @@ make test      # all tests (works with Command Line Tools only)
 make lint      # swift-format, same check as CI
 make format    # fix formatting in place
 make run ARGS="--help"
+make install   # optimized build to ~/.local/bin/ripe (PREFIX=… to change)
 ```
 
 ## Ground rules

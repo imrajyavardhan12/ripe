@@ -4,7 +4,7 @@ TESTING_PLUGINS := $(shell xcode-select -p)/usr/lib/swift/host/plugins/testing
 TEST_FLAGS := $(if $(wildcard $(TESTING_PLUGINS)),-Xswiftc -plugin-path -Xswiftc $(TESTING_PLUGINS))
 SOURCES := Package.swift Sources Tests
 
-.PHONY: build test lint format release run clean
+.PHONY: build test lint format release install uninstall run clean
 
 build:
 	swift build
@@ -29,6 +29,16 @@ release:
 	cp "$$(swift build -c release $(ARCH_FLAGS) --show-bin-path)/ripe" dist/ripe
 	strip -rSTx dist/ripe
 	lipo -info dist/ripe
+
+# Install the optimized binary for local use until the Homebrew formula is public.
+PREFIX ?= $(HOME)/.local
+install: release
+	mkdir -p "$(PREFIX)/bin"
+	install -m 755 dist/ripe "$(PREFIX)/bin/ripe"
+	@echo "installed $(PREFIX)/bin/ripe ($$("$(PREFIX)/bin/ripe" --version))"
+
+uninstall:
+	rm -f "$(PREFIX)/bin/ripe"
 
 run:
 	swift run ripe $(ARGS)
