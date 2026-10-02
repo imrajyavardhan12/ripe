@@ -6,8 +6,15 @@ name: Accuracy
 # only show up there. Results go to each job's summary; record notable runs in docs/accuracy.md.
 on:
   workflow_dispatch:
+    inputs:
+      list:
+        description: Which apps
+        type: choice
+        options: [core, extended]
+        default: core
   schedule:
-    - cron: "0 6 * * 1"  # Mondays: catches upstream format drift and new version schemes
+    - cron: "0 6 * * 1"  # Mondays, core list: catches upstream format drift and new version schemes
+    - cron: "0 6 15 * *"  # the 15th, extended list: a wider net
 
 permissions:
   contents: read
@@ -45,7 +52,9 @@ jobs:
         run: |
           chmod +x dist/ripe
           dist/ripe --version
-          scripts/accuracy/run.sh dist/ripe "$RUNNER_TEMP/accuracy"
+          scripts/accuracy/run.sh dist/ripe "$RUNNER_TEMP/accuracy" "scripts/accuracy/$LIST"
+        env:
+          LIST: ${{ (inputs.list == 'extended' || github.event.schedule == '0 6 15 * *') && 'casks-extended.txt' || 'casks.txt' }}
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
         if: always()
         with:

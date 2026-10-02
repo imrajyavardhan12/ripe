@@ -3,7 +3,7 @@
 # that folder, and grade the result. A freshly installed latest version must never be reported
 # as outdated, so every such report is a false positive or Homebrew lagging an upstream feed.
 #
-#   scripts/accuracy/run.sh <ripe binary> <work dir>
+#   scripts/accuracy/run.sh <ripe binary> <work dir> [cask list, default casks.txt]
 #
 # CI only (the Accuracy workflow): it installs casks, which changes the machine's Homebrew state.
 # Never run it on a Mac someone uses.
@@ -12,6 +12,8 @@ set -euo pipefail
 ripe=$1
 work=$2
 here=$(cd "$(dirname "$0")" && pwd)
+list=${3:-$here/casks.txt}
+expected=$(grep -cv '^#' "$list")
 apps="$work/Applications"
 mkdir -p "$apps"
 : > "$work/installed.tsv"   # token, app name, cask version
@@ -21,7 +23,7 @@ mkdir -p "$apps"
 brew update --quiet
 export HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 HOMEBREW_NO_ANALYTICS=1
 
-grep -v '^#' "$here/casks.txt" | while read -r token; do
+grep -v '^#' "$list" | while read -r token; do
     [ -n "$token" ] || continue
     before=$(ls "$apps")
     if ! brew install --cask --appdir="$apps" "$token" < /dev/null > "$work/install-$token.log" 2>&1; then
@@ -35,4 +37,4 @@ grep -v '^#' "$here/casks.txt" | while read -r token; do
 done
 
 RIPE_APPLICATIONS_DIR="$apps" "$ripe" --all --json > "$work/report.json"
-python3 "$here/evaluate.py" "$work/installed.tsv" "$work/report.json"
+python3 "$here/evaluate.py" "$work/installed.tsv" "$work/report.json" "$expected"

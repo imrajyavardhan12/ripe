@@ -1,6 +1,6 @@
 """Grades an accuracy run: Ripe's report on freshly installed casks.
 
-    python3 scripts/accuracy/evaluate.py installed.tsv report.json
+    python3 scripts/accuracy/evaluate.py installed.tsv report.json [casks expected]
 
 Every app was just installed at the cask's current version, so:
 - outdated, decided by the Homebrew cask itself, to the version just installed: impossible unless
@@ -21,7 +21,6 @@ import json
 import os
 import sys
 
-MIN_INSTALLED = 40  # of the 80 in casks.txt
 
 
 def same_version(latest: str | None, cask_version: str) -> bool:
@@ -36,7 +35,8 @@ def same_version(latest: str | None, cask_version: str) -> bool:
     return latest is not None and norm(latest) == norm(cask_version)
 
 
-def main(installed_path: str, report_path: str) -> int:
+def main(installed_path: str, report_path: str, expected: str = "80") -> int:
+    min_installed = int(expected) // 2
     installed, elsewhere = {}, []
     with open(installed_path, encoding="utf-8") as handle:
         for line in handle:
@@ -101,8 +101,8 @@ def main(installed_path: str, report_path: str) -> int:
             handle.write(summary + "\n")
     print(f"precision: {reported - len(false_positives)}/{reported} reported updates not known to be false", file=sys.stderr)
     # A run that installed little proves nothing; never let a broken harness pass as clean.
-    if len(installed) < MIN_INSTALLED:
-        print(f"only {len(installed)} casks installed (need {MIN_INSTALLED}); the harness itself is broken", file=sys.stderr)
+    if len(installed) < min_installed:
+        print(f"only {len(installed)} casks installed (need {min_installed}); the harness itself is broken", file=sys.stderr)
         return 2
     if len(stale) > len(installed) // 10:
         print(f"{len(stale)} stale installs; the machine's cask data is out of date", file=sys.stderr)
@@ -111,4 +111,4 @@ def main(installed_path: str, report_path: str) -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main(*sys.argv[1:3]))
+    sys.exit(main(*sys.argv[1:4]))
