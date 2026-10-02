@@ -1,0 +1,28 @@
+name: Demo
+
+# Records assets/demo.gif on a clean Mac: the demo performs a real update, so it runs on a
+# throwaway machine instead of anyone's own. Download the artifact, inspect it, commit it.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  record:
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09  # v5.1.0
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_26.6.app
+      - name: Install VHS
+        env:
+          HOMEBREW_NO_AUTO_UPDATE: "1"
+        run: brew install vhs
+      - name: Record
+        run: make demo
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
+        with:
+          name: demo
+          path: assets/demo.gif
+          if-no-files-found: error

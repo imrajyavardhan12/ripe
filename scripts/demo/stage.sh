@@ -46,4 +46,15 @@ app "Amphetamine" com.if.Amphetamine 5.3.0
 mkdir -p "$root/Amphetamine.app/Contents/_MASReceipt" && : > "$root/Amphetamine.app/Contents/_MASReceipt/receipt"
 app "Notes Helper" dev.example.notes-helper 0.3.1
 
+# One real, signed app at an old version, so the demo can show a genuine `ripe pick`: download,
+# SHA-256, code signature and Team ID check, swap. Pinned by checksum; never the recording Mac's copy.
+old_dmg="$(mktemp -d)/GrandPerspective-3_6_1.dmg"
+curl -sSL -o "$old_dmg" "https://downloads.sourceforge.net/grandperspectiv/grandperspective/3.6.1/GrandPerspective-3_6_1.dmg"
+echo "3a320532ae5759649f7083474d275762785c87786a478d303a704442876cd22f  $old_dmg" | shasum -a 256 -c - >/dev/null
+mount="$(mktemp -d)"
+hdiutil attach -nobrowse -readonly -mountpoint "$mount" "$old_dmg" -quiet
+ditto "$mount/GrandPerspective.app" "$root/GrandPerspective.app"
+hdiutil detach "$mount" -quiet
+rm -f "$old_dmg"
+
 echo "staged $(ls "$root" | wc -l | tr -d ' ') demo apps in $root"

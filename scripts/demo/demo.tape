@@ -1,4 +1,6 @@
-# The README demo. Re-record after a release with `make demo` (needs vhs: brew install vhs).
+# The README demo. Re-record after a release by running the "Demo" workflow on GitHub (it records
+# on a clean Mac and uploads the GIF), or locally with `make demo` (needs vhs). The demo really
+# updates a staged GrandPerspective, so locally the old copy lands in your Trash.
 #
 # Ripe scans a staged Applications folder (scripts/demo/stage.sh), with its own cache and
 # config, so nothing from the recording Mac appears in the GIF. Versions shown are whatever the
@@ -47,3 +49,17 @@ Type "ripe pick --all --dry-run"
 Sleep 400ms
 Enter
 Sleep 6s
+
+# A real update of a real, signed app (staged at an old version).
+Type "clear"
+Enter
+Type "ripe pick grandperspective"
+Sleep 400ms
+Enter
+Wait+Screen@30s /\[y\/N\]/
+Sleep 1.5s
+Type "y"
+Sleep 300ms
+Enter
+Wait+Screen@90s /picked/
+Sleep 5s
