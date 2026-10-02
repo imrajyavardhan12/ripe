@@ -4,7 +4,7 @@ Ripe's headline metric is its false-positive rate: how often it claims an update
 
 ## 2026-10-02 (evening) · maintainer's Mac · 0.4.0-dev with the seeded orchard catalog
 
-27 apps, local catalog with 571 seeded fallback feeds. 12 ripe, 9 up to date, 6 unknown, identical to the same build without the seeded entries. Two apps got a seeded feed: **KeepingYouAwake** is now decided by its own Sparkle feed (build 1060800 = 1060800, still current); **Ghostty** (tip build, version `0081d4530`) stays unknown, now because its version is a commit hash. The importer's bundle IDs matched all 4 of this Mac's apps that it covers. No false positives.
+27 apps, local catalog with 571 seeded fallback feeds. 12 ripe, 9 up to date, 6 unknown, identical to the same build without the seeded entries. Two apps got a seeded feed: **KeepingYouAwake** is now decided by its own Sparkle feed (build 1060800 = 1060800, still current); **Ghostty** (tip build, version `0081d4530`) stays unknown, now because its version is a commit hash. The importer's bundle IDs matched all 4 of this Mac's apps that it covers. No false positives. (The bulk set was withdrawn the same day to keep orchard curated; only the Ghostty and KeepingYouAwake entries were kept.)
 
 ## 2026-10-02 (later) · maintainer's Mac · pre-release v0.3.0
 
