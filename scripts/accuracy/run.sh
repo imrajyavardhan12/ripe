@@ -16,6 +16,9 @@ apps="$work/Applications"
 mkdir -p "$apps"
 : > "$work/installed.tsv"   # token, app name, cask version
 
+# Runner images carry weeks-old cask data: refresh it once, or brew installs stale versions that
+# Ripe (correctly) reports as outdated.
+brew update --quiet
 export HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 HOMEBREW_NO_ANALYTICS=1
 
 grep -v '^#' "$here/casks.txt" | while read -r token; do
