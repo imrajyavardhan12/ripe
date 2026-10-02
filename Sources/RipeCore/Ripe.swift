@@ -3,7 +3,7 @@ import Foundation
 /// Entry point for anything that embeds Ripe: the CLI today, a menu bar app later.
 public enum Ripe {
     /// Replaced by the release workflow from the git tag.
-    public static let version = "0.3.0-dev"
+    public static let version = "0.4.0-dev"
 
     /// Everything a check depends on. `live` for real use; tests assemble their own.
     public struct Environment: Sendable {

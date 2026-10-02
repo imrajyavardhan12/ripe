@@ -18,7 +18,9 @@ Release tooling done: `scripts/formula.sh` (verified with `brew test` and `brew 
 
 `ripe pick` done (`Sources/RipeCore/Install/`, design and the measured App Management rule in docs/architecture.md §11): hand-off to brew/mas, direct installs only after integrity + strict signature + matching Team ID + Gatekeeper, journaled whole-bundle swap. **Never write inside an app bundle** (blocked by App Management once an app has launched); only move whole bundles. Verified end to end on a throwaway app; never test `pick` on the maintainer's real apps without asking.
 
-**v0.2.0 released 2026-10-02** (both repos public; `brew install imrajyavardhan12/tap/ripe`; release workflow verified end to end: universal binary, checksum, SLSA attestation, tap commit). The maintainer uses the Homebrew install, not `make install`. Next: `ripe skip`, `ripe doctor`, Electron and GitHub sources (v0.3).
+**Released:** v0.2.0 (2026-10-02, first public release) and v0.3.0 (2026-10-02, `ripe skip`/`unskip`). Install: `brew install imrajyavardhan12/tap/ripe`. The maintainer uses the Homebrew install, not `make install`. Release pipeline is hardened (pinned macos-26 + Xcode 26.6, actions pinned by SHA with Dependabot, formula checked before publishing, tap install verified on a clean machine after); `main` carries the next `-dev` version.
+
+Priorities (the maintainer delegated prioritization, 2026-10-02): launch kit next (README demo GIF, launch post drafts; posting itself is the maintainer's call), then catalog coverage (seed orchard from Homebrew livecheck Sparkle URLs), `ripe doctor`, Electron and GitHub sources. Next: `ripe skip`, `ripe doctor`, Electron and GitHub sources (v0.3).
 
 ## Working in this repo
 
@@ -87,7 +89,7 @@ Separate GitHub repo, one small YAML file per app, added by PR and validated by 
 
 1. **v0.1**: `ripe` lists outdated apps (App Store + Sparkle + Homebrew cask API). Read-only.
 2. **v0.2**: `ripe pick` with signature/Team ID verification; orchard catalog v1.
-3. **v0.3**: Electron + GitHub sources, `skip`.
+3. **v0.3**: `skip` (shipped 2026-10-02). Electron + GitHub sources move to v0.4.
 
 `why` and `--json` moved into v0.1: they fall out of the evidence model and are how false positives get debugged and reported.
 4. **v1.0**: optional menu bar app.
