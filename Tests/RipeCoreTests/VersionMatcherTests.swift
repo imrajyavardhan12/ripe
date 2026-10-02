@@ -69,6 +69,36 @@ struct VersionMatcherTests {
         #expect(result.basis == "build 154000 vs 12: numbering schemes differ")
     }
 
+    // MARK: Homebrew more precise than the app (accuracy run, extended list, 2026-10-02)
+
+    @Test func appBuildCarriesTheFullVersion() {
+        // Opera shows 136.0; its CFBundleVersion is the full 136.0.6008.80.
+        #expect(order("136.0", build: "136.0.6008.80", vs: release("136.0.6008.80")) == .same)
+        #expect(order("136.0", build: "136.0.6008.40", vs: release("136.0.6008.80")) == .older)
+    }
+
+    @Test func matchingCaskBuildMeansSameRelease() {
+        // WeChat 4.1.15 (270102), cask `4.1.15.22,270102`.
+        #expect(order("4.1.15", build: "270102", vs: release("4.1.15.22", build: "270102")) == .same)
+    }
+
+    @Test func extraBuildNumberTheAppDoesntShowIsUnknown() {
+        // CapCut shows 9.5.0 (build 9.5.0); Homebrew says 9.5.0.4590.
+        #expect(order("9.5.0", build: "9.5.0", vs: release("9.5.0.4590")) == nil)
+        // A plain patch release is still an update.
+        #expect(order("1.2", build: "1.2", vs: release("1.2.1")) == .older)
+        #expect(order("4.1.15", build: "1", vs: release("4.1.15.22")) == .older)
+        #expect(order("9.5.0", vs: release("9.5.1.4590")) == .older)
+    }
+
+    @Test func placeholderVersionsAreUnknown() {
+        // Hermes' bundle says 0.0.1 (npm's default) whatever it runs; Homebrew says 0.21.2.
+        #expect(order("0.0.1", build: "0.0.1", vs: release("0.21.2")) == nil)
+        #expect(order("0.0.0", vs: release("1.0")) == nil)
+        #expect(order("0.0.1", vs: release("0.0.1")) == .same)
+        #expect(order("0.0.2", vs: release("0.1.0")) == .older)
+    }
+
     @Test func caskBuildPartIsDisplayOnly() {
         // `6.0,9001`: the build part may be a download ID, never compared.
         #expect(order("6.0", build: "1", vs: release("6.0", build: "9001")) == .same)

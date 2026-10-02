@@ -32,7 +32,54 @@ enum VersionMatcher {
         guard let releaseVersion = Version(release.version) else {
             return Result(order: nil, basis: "latest version \"\(release.version)\" isn't a comparable version")
         }
+        if release.comparison == .shortVersion,
+            let refined = refine(installed, installedVersion, against: release, releaseVersion)
+        {
+            return refined
+        }
         return compareAcrossSchemes(installedVersion, releaseVersion)
+    }
+
+    /// Cases where a catalog's version and the app's visible version don't line up one to one,
+    /// each seen on real apps. `nil` falls through to the plain comparison.
+    static func refine(
+        _ installed: AppVersion, _ version: Version, against release: Release, _ latest: Version
+    ) -> Result? {
+        let basis = "version \(version.raw) vs \(latest.raw)"
+        let mine = version.release
+        let theirs = latest.release
+        // npm's and Xcode's defaults, left unchanged by apps that never set a version (Hermes says
+        // 0.0.1 whatever it runs). Nothing can be concluded from them.
+        if version.prerelease.isEmpty, [[0, 0, 0], [0, 0, 1]].contains(padded(mine, to: 3)), mine.count <= 3,
+            version.order(comparedTo: latest) != .same
+        {
+            return Result(order: nil, basis: "\(basis): \(version.raw) looks like a placeholder the app never set")
+        }
+        let isPrefix = theirs.count > mine.count && Array(theirs.prefix(mine.count)) == mine
+        // WeChat 4.1.15 (270102) against `4.1.15.22,270102`: the same build is the same release.
+        if isPrefix || theirs == mine, let build = installed.build, let releaseBuild = release.build,
+            build == releaseBuild
+        {
+            return Result(order: .same, basis: "\(basis), same build \(build)")
+        }
+        guard isPrefix, latest.prerelease.isEmpty else { return nil }
+        // Opera shows 136.0 but its CFBundleVersion is the full 136.0.6008.80.
+        if let build = installed.parsedBuild, build.release.count >= theirs.count, build.release.starts(with: mine) {
+            return compareAcrossSchemes(build, latest, field: "build")
+        }
+        // CapCut shows 9.5.0 while Homebrew says 9.5.0.4590: the extra part is a build number the
+        // app doesn't expose, so whether this copy is that build can't be known. A small extra
+        // part (1.2 against 1.2.1) is an ordinary release and compares normally.
+        if theirs[mine.count] >= 100 {
+            return Result(
+                order: nil,
+                basis: "\(basis): \(latest.raw) adds a build number (\(theirs[mine.count])) that the app doesn't show")
+        }
+        return nil
+    }
+
+    private static func padded(_ parts: [Int], to count: Int) -> [Int] {
+        parts + Array(repeating: 0, count: max(0, count - parts.count))
     }
 
     /// Both fields, each guarded against scheme mismatches; an answer only when they agree. A feed

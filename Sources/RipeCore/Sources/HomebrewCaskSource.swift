@@ -126,8 +126,19 @@ public struct HomebrewCaskSource: UpdateSource {
             if nameMatch { return Match(cask: cask, confidence: .medium, reason: "app name matches", nameMatch: true) }
             return Match(cask: cask, confidence: .low, reason: "bundle ID appears in the cask's cleanup paths")
         }
-        guard let best = matches.map(\.strength).max() else { return nil }
-        let top = matches.filter { $0.strength == best }
+        // Homebrew installed one of them: that cask describes exactly what's on disk.
+        let installed = matches.filter {
+            installedTokens.contains($0.cask.token) && ($0.nameMatch || $0.confidence == .high)
+        }
+        var pool = installed.isEmpty ? matches : installed
+        // A channel cask (`@nightly`, `@beta`) never beats a stable cask that also matches. Freelens:
+        // only the nightly lists the bundle ID in its zap paths, which made it the stronger match
+        // and offered a nightly to everyone running the stable app.
+        if installed.isEmpty, pool.contains(where: { !$0.cask.token.contains("@") && $0.confidence >= .medium }) {
+            pool.removeAll { $0.cask.token.contains("@") }
+        }
+        guard let best = pool.map(\.strength).max() else { return nil }
+        let top = pool.filter { $0.strength == best }
         if top.count == 1 { return top[0] }
 
         // Several casks install the same app (stable, @beta, @nightly). The one Homebrew

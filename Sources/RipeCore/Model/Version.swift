@@ -77,6 +77,18 @@ public struct Version: Sendable, Hashable, CustomStringConvertible {
                 text = String(text[..<dash])
             }
         }
+        // A packaging revision after a full version (`154.0.8037.57-1.1`, ungoogled-chromium;
+        // `155.0.1-1`, LibreWolf) isn't part of the upstream version. Only after three or more
+        // parts, so dates (`2026-09-30`) and short versions keep their dash.
+        if let dash = text.lastIndex(of: "-") {
+            let base = text[..<dash]
+            let suffix = text[text.index(after: dash)...]
+            if base.filter({ $0 == "." }).count >= 2, base.allSatisfy({ $0.isASCIINumber || $0 == "." }),
+                !suffix.isEmpty, suffix.allSatisfy({ $0.isASCIINumber || $0 == "." })
+            {
+                text = String(base)
+            }
+        }
         // A commit hash isn't a version, even one that starts with digits (Ghostty tip `0081d4530`
         // would otherwise read as 81 plus a tag, and `1a2b3c4` as a 1.x release).
         if (7...40).contains(text.count), text.allSatisfy(\.isHexDigit), text.contains(where: \.isLetter) {
@@ -153,11 +165,18 @@ public struct Version: Sendable, Hashable, CustomStringConvertible {
         return Self.orderPrerelease(prerelease, other.prerelease)
     }
 
+    private static func isUnknownTag(_ token: Token) -> Bool {
+        if case .tag(.other) = token { return true }
+        return false
+    }
+
     private static func orderPrerelease(_ lhs: [Token], _ rhs: [Token]) -> VersionOrder? {
         switch (lhs.isEmpty, rhs.isEmpty) {
         case (true, true): return .same
-        case (true, false): return .newer  // 1.0 is newer than 1.0b3
-        case (false, true): return .older
+        // A word Ripe doesn't know (`-latest` on Lens, `.CE` on MySQL Workbench) may be an
+        // edition or a label, not a pre-release: equal numbers then can't be ordered.
+        case (true, false): return rhs.first.map(isUnknownTag) == true ? nil : .newer  // 1.0 is newer than 1.0b3
+        case (false, true): return lhs.first.map(isUnknownTag) == true ? nil : .older
         case (false, false): break
         }
         for index in 0..<max(lhs.count, rhs.count) {

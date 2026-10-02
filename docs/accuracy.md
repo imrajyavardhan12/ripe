@@ -2,6 +2,23 @@
 
 Ripe's headline metric is its false-positive rate: how often it claims an update that isn't real. Each release gets a verification run on real Macs, recorded here. When a verdict is wrong, the fix lands with a test (fixture or table row), and the row below links to it.
 
+## 2026-10-03 · Accuracy workflow, extended list (120 more apps) · 0.4.0-dev
+
+macOS 26: 120 installed, 107 current, 3 unknown. Intel: 114 installed, same findings. (macOS 15 hit the job timeout; raised.) **8 false positives, all fixed with tests:**
+
+| App | Installed | Ripe said | Cause | Fix |
+|---|---|---|---|---|
+| Lens | 2026.9.181013-latest | 2026.9.181013 | `latest` read as a pre-release | unknown words don't rank |
+| MySQL Workbench | 8.0.47.CE | 8.0.47 | `CE` read as a pre-release | same |
+| ungoogled-Chromium | 154.0.8037.57 | 154.0.8037.57-1.1 | packaging revision read as more version | revision dropped |
+| Opera | 136.0 (136.0.6008.80) | 136.0.6008.80 | short version less precise than the cask | compare the build |
+| WeChat | 4.1.15 (270102) | 4.1.15.22,270102 | same | equal build = same release |
+| CapCut | 9.5.0 | 9.5.0.4590 | build number only Homebrew shows | unknown |
+| Hermes | 0.0.1 | 0.21.2 | bundle never sets its version | placeholder = unknown |
+| Freelens | 1.10.3 | 2.0.0-0-nightly | `freelens@nightly` outranked `freelens` | stable cask wins |
+
+Also reported: OpenClaw (Sparkle feed ahead of the cask: real) and Paseo (cask updated mid-run). On the maintainer's Mac the fixes changed no verdict.
+
 ## 2026-10-02 (night) · Accuracy workflow on three machines · 0.4.0-dev
 
 Same 80 apps, one universal binary, three clean runners. **0 false positives on all three.**

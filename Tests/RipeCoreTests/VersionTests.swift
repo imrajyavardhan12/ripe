@@ -52,10 +52,19 @@ struct VersionTests {
         Case(installed: "3.6.5", latest: "3.6.6-8b85519e", expected: .older),
         Case(installed: "3.6.6-13b57bd2", latest: "3.6.6-8b85519e", expected: .same),
         Case(installed: "0.21.3-Beta", latest: "0.21.3-beta2", expected: .older),  // tags still count
+        // Packaging revision after a three-part version (accuracy run, extended list, 2026-10-02)
+        Case(installed: "154.0.8037.57", latest: "154.0.8037.57-1.1", expected: .same),  // ungoogled-chromium
+        Case(installed: "155.0.1-1", latest: "157.0", expected: .older),  // LibreWolf
+        Case(installed: "2026-09-30", latest: "2026-10-01", expected: .older),  // a date is not a revision
         // Unknown tags can't be ordered against each other
         Case(installed: "1.0-foo", latest: "1.0-bar", expected: nil),
         Case(installed: "1.0-foo", latest: "1.0-foo", expected: .same),
-        Case(installed: "1.0-foo", latest: "1.0", expected: .older),
+        // A word Ripe doesn't know isn't a pre-release marker: equal numbers can't be ordered.
+        Case(installed: "1.0-foo", latest: "1.0", expected: nil),
+        Case(installed: "2026.9.181013-latest", latest: "2026.9.181013", expected: nil),  // Lens
+        Case(installed: "8.0.47.CE", latest: "8.0.47", expected: nil),  // MySQL Workbench
+        Case(installed: "8.0.47.CE", latest: "8.0.48", expected: .older),
+        Case(installed: "1.0", latest: "1.0-nightly", expected: .newer),  // known markers still rank
         // A number against a tag at the same position
         Case(installed: "1.0b2", latest: "1.0b-rc", expected: nil),
     ])

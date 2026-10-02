@@ -1,1470 +1,1618 @@
 [
- {
-  "artifacts": [
-   {
-    "app": [
-     "Brave Browser.app"
-    ],
-    "target": "/Applications/Brave Browser.app"
-   },
-   {
-    "zap": [
-     {
-      "rmdir": [
-       "~/Library/Application Support/BraveSoftware",
-       "~/Library/Caches/BraveSoftware"
-      ],
-      "trash": [
-       "~/Library/Application Support/BraveSoftware/Brave-Browser",
-       "~/Library/Caches/BraveSoftware/Brave-Browser",
-       "~/Library/Caches/com.brave.Browser",
-       "~/Library/HTTPStorages/com.brave.Browser",
-       "~/Library/Preferences/com.brave.Browser.plist",
-       "~/Library/Saved Application State/com.brave.Browser.savedState"
-      ]
-     }
-    ]
-   }
-  ],
-  "auto_updates": true,
-  "autobump": true,
-  "bundle_short_version": null,
-  "bundle_version": null,
-  "depends_on": {
-   "macos": {
-    ">=": [
-     "13"
-    ]
-   }
-  },
-  "deprecate_args": null,
-  "deprecated": false,
-  "deprecation_date": null,
-  "deprecation_reason": null,
-  "deprecation_replacement_cask": null,
-  "deprecation_replacement_formula": null,
-  "desc": "Web browser focusing on privacy",
-  "disable_args": null,
-  "disable_date": null,
-  "disable_reason": null,
-  "disable_replacement_cask": null,
-  "disable_replacement_formula": null,
-  "disabled": false,
-  "full_token": "brave-browser",
-  "homepage": "https://brave.com/",
-  "name": [
-   "Brave"
-  ],
-  "no_autobump_message": null,
-  "sha256": "57690cf24e5ce5e15768b220d46621e575e0caabd3d651bdad5afc2b184f118a",
-  "skip_livecheck": false,
-  "supported_platforms": [
-   "golden_gate",
-   "arm64_golden_gate",
-   "tahoe",
-   "arm64_tahoe",
-   "sequoia",
-   "arm64_sequoia",
-   "sonoma",
-   "arm64_sonoma",
-   "ventura",
-   "arm64_ventura"
-  ],
-  "tap": "homebrew/cask",
-  "token": "brave-browser",
-  "url": "https://updates-cdn.bravesoftware.com/sparkle/Brave-Browser/stable-arm64/196.59/Brave-Browser-arm64.dmg",
-  "variations": {
-   "arm64_linux": {
-    "sha256": null
-   },
-   "golden_gate": {
-    "sha256": "fbeca8107c308993d343cd33857f40ab1812d51ee0502ac86872aaf7e7f5bdd8",
-    "url": "https://updates-cdn.bravesoftware.com/sparkle/Brave-Browser/stable/196.59/Brave-Browser-x64.dmg"
-   },
-   "sequoia": {
-    "sha256": "fbeca8107c308993d343cd33857f40ab1812d51ee0502ac86872aaf7e7f5bdd8",
-    "url": "https://updates-cdn.bravesoftware.com/sparkle/Brave-Browser/stable/196.59/Brave-Browser-x64.dmg"
-   },
-   "sonoma": {
-    "sha256": "fbeca8107c308993d343cd33857f40ab1812d51ee0502ac86872aaf7e7f5bdd8",
-    "url": "https://updates-cdn.bravesoftware.com/sparkle/Brave-Browser/stable/196.59/Brave-Browser-x64.dmg"
-   },
-   "tahoe": {
-    "sha256": "fbeca8107c308993d343cd33857f40ab1812d51ee0502ac86872aaf7e7f5bdd8",
-    "url": "https://updates-cdn.bravesoftware.com/sparkle/Brave-Browser/stable/196.59/Brave-Browser-x64.dmg"
-   },
-   "ventura": {
-    "sha256": "fbeca8107c308993d343cd33857f40ab1812d51ee0502ac86872aaf7e7f5bdd8",
-    "url": "https://updates-cdn.bravesoftware.com/sparkle/Brave-Browser/stable/196.59/Brave-Browser-x64.dmg"
-   },
-   "x86_64_linux": {
-    "sha256": null,
-    "url": "https://updates-cdn.bravesoftware.com/sparkle/Brave-Browser/stable/196.59/Brave-Browser-x64.dmg"
-   }
-  },
-  "version": "1.96.59.0"
- },
- {
-  "artifacts": [
-   {
-    "uninstall": [
-     {
-      "quit": "org.keepassxc.keepassxc"
-     }
-    ]
-   },
-   {
-    "app": [
-     "KeePassXC.app"
-    ],
-    "target": "/Applications/KeePassXC.app"
-   },
-   {
-    "binary": [
-     "$APPDIR/KeePassXC.app/Contents/MacOS/keepassxc-cli"
-    ],
-    "target": "$HOMEBREW_PREFIX/bin/keepassxc-cli"
-   },
-   {
-    "manpage": [
-     "$APPDIR/KeePassXC.app/Contents/Resources/man/man1/keepassxc.1"
-    ],
-    "target": "$HOMEBREW_PREFIX/share/man/man1/keepassxc.1"
-   },
-   {
-    "manpage": [
-     "$APPDIR/KeePassXC.app/Contents/Resources/man/man1/keepassxc-cli.1"
-    ],
-    "target": "$HOMEBREW_PREFIX/share/man/man1/keepassxc-cli.1"
-   },
-   {
-    "zap": [
-     {
-      "trash": [
-       "~/.keepassxc",
-       "~/Library/Application Support/CrashReporter/KeePassXC_*.plist",
-       "~/Library/Application Support/keepassxc",
-       "~/Library/Caches/org.keepassx.keepassxc",
-       "~/Library/Logs/DiagnosticReports/KeePassXC_*.crash",
-       "~/Library/Preferences/keepassxc.keepassxc.plist",
-       "~/Library/Preferences/org.keepassx.keepassxc.plist",
-       "~/Library/Saved Application State/org.keepassx.keepassxc.savedState"
-      ]
-     }
-    ]
-   }
-  ],
-  "auto_updates": null,
-  "autobump": true,
-  "bundle_short_version": null,
-  "bundle_version": null,
-  "depends_on": {
-   "macos": {
-    ">=": [
-     "12"
-    ]
-   }
-  },
-  "deprecate_args": null,
-  "deprecated": false,
-  "deprecation_date": null,
-  "deprecation_reason": null,
-  "deprecation_replacement_cask": null,
-  "deprecation_replacement_formula": null,
-  "desc": "Password manager app",
-  "disable_args": null,
-  "disable_date": null,
-  "disable_reason": null,
-  "disable_replacement_cask": null,
-  "disable_replacement_formula": null,
-  "disabled": false,
-  "full_token": "keepassxc",
-  "homepage": "https://keepassxc.org/",
-  "name": [
-   "KeePassXC"
-  ],
-  "no_autobump_message": null,
-  "sha256": "65f4f63607180c0a15794b4a4068f85e99ed5391c87c1fb9312648f1b36fed40",
-  "skip_livecheck": false,
-  "supported_platforms": [
-   "golden_gate",
-   "arm64_golden_gate",
-   "tahoe",
-   "arm64_tahoe",
-   "sequoia",
-   "arm64_sequoia",
-   "sonoma",
-   "arm64_sonoma",
-   "ventura",
-   "arm64_ventura",
-   "monterey",
-   "arm64_monterey",
-   "x86_64_linux"
-  ],
-  "tap": "homebrew/cask",
-  "token": "keepassxc",
-  "url": "https://github.com/keepassxreboot/keepassxc/releases/download/2.7.12/KeePassXC-2.7.12-arm64.dmg",
-  "variations": {
-   "arm64_linux": {
+  {
     "artifacts": [
-     {
-      "app_image": [
-       "KeePassXC-2.7.12-arm64.AppImage",
-       {
-        "target": "KeePassXC.AppImage"
-       }
-      ],
-      "target": "/$HOME/Applications/KeePassXC.AppImage"
-     },
-     {
-      "zap": [
-       {
-        "trash": [
-         "~/.cache/keepassxc",
-         "~/.config/keepassxc"
-        ]
-       }
-      ]
-     }
-    ],
-    "depends_on": {
-     "arch": [
       {
-       "bits": 64,
-       "type": "intel"
-      }
-     ]
-    },
-    "sha256": null,
-    "url": "https://github.com/keepassxreboot/keepassxc/releases/download/2.7.12/KeePassXC-2.7.12-arm64.AppImage"
-   },
-   "big_sur": {
-    "sha256": "f55737bf759b7ea622967ae979e8fd0ef06a8133104124c24861fd11a3fe14b5",
-    "url": "https://github.com/keepassxreboot/keepassxc/releases/download/2.7.12/KeePassXC-2.7.12-x86_64.dmg"
-   },
-   "golden_gate": {
-    "sha256": "f55737bf759b7ea622967ae979e8fd0ef06a8133104124c24861fd11a3fe14b5",
-    "url": "https://github.com/keepassxreboot/keepassxc/releases/download/2.7.12/KeePassXC-2.7.12-x86_64.dmg"
-   },
-   "monterey": {
-    "sha256": "f55737bf759b7ea622967ae979e8fd0ef06a8133104124c24861fd11a3fe14b5",
-    "url": "https://github.com/keepassxreboot/keepassxc/releases/download/2.7.12/KeePassXC-2.7.12-x86_64.dmg"
-   },
-   "sequoia": {
-    "sha256": "f55737bf759b7ea622967ae979e8fd0ef06a8133104124c24861fd11a3fe14b5",
-    "url": "https://github.com/keepassxreboot/keepassxc/releases/download/2.7.12/KeePassXC-2.7.12-x86_64.dmg"
-   },
-   "sonoma": {
-    "sha256": "f55737bf759b7ea622967ae979e8fd0ef06a8133104124c24861fd11a3fe14b5",
-    "url": "https://github.com/keepassxreboot/keepassxc/releases/download/2.7.12/KeePassXC-2.7.12-x86_64.dmg"
-   },
-   "tahoe": {
-    "sha256": "f55737bf759b7ea622967ae979e8fd0ef06a8133104124c24861fd11a3fe14b5",
-    "url": "https://github.com/keepassxreboot/keepassxc/releases/download/2.7.12/KeePassXC-2.7.12-x86_64.dmg"
-   },
-   "ventura": {
-    "sha256": "f55737bf759b7ea622967ae979e8fd0ef06a8133104124c24861fd11a3fe14b5",
-    "url": "https://github.com/keepassxreboot/keepassxc/releases/download/2.7.12/KeePassXC-2.7.12-x86_64.dmg"
-   },
-   "x86_64_linux": {
-    "artifacts": [
-     {
-      "app_image": [
-       "KeePassXC-2.7.12-x86_64.AppImage",
-       {
-        "target": "KeePassXC.AppImage"
-       }
-      ],
-      "target": "/$HOME/Applications/KeePassXC.AppImage"
-     },
-     {
-      "zap": [
-       {
-        "trash": [
-         "~/.cache/keepassxc",
-         "~/.config/keepassxc"
-        ]
-       }
-      ]
-     }
-    ],
-    "depends_on": {
-     "arch": [
-      {
-       "bits": 64,
-       "type": "intel"
-      }
-     ]
-    },
-    "sha256": "564fe8b751b9ef7aa057e4d3d0b2878db24eaa0f6b1c855c82e699ab0913ae49",
-    "url": "https://github.com/keepassxreboot/keepassxc/releases/download/2.7.12/KeePassXC-2.7.12-x86_64.AppImage"
-   }
-  },
-  "version": "2.7.12"
- },
- {
-  "artifacts": [
-   {
-    "uninstall": [
-     {
-      "delete": [
-       "/Library/Caches/mullvad-vpn",
-       "/opt/homebrew/share/fish/vendor_completions.d/mullvad.fish",
-       "/opt/homebrew/share/zsh/site-functions/_mullvad",
-       "/usr/local/bin/mullvad",
-       "/usr/local/bin/mullvad-problem-report",
-       "/usr/local/share/fish/vendor_completions.d/mullvad.fish",
-       "/usr/local/share/zsh/site-functions/_mullvad",
-       "/var/log/mullvad-vpn"
-      ],
-      "launchctl": "net.mullvad.daemon",
-      "pkgutil": "net.mullvad.vpn",
-      "quit": "net.mullvad.vpn"
-     }
-    ]
-   },
-   {
-    "pkg": [
-     "MullvadVPN-2026.5.pkg"
-    ]
-   },
-   {
-    "zap": [
-     {
-      "script": {
-       "args": [
-        "reset-firewall"
-       ],
-       "executable": "/Applications/Mullvad VPN.app/Contents/Resources/mullvad-setup",
-       "must_succeed": false,
-       "sudo": true
+        "app": [
+          "Brave Browser.app"
+        ],
+        "target": "/Applications/Brave Browser.app"
       },
-      "trash": [
-       "/etc/mullvad-vpn",
-       "~/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.ApplicationRecentDocuments/net.mullvad.vpn.sfl*",
-       "~/Library/Application Support/Mullvad VPN",
-       "~/Library/Logs/Mullvad VPN",
-       "~/Library/Preferences/net.mullvad.vpn.helper.plist",
-       "~/Library/Preferences/net.mullvad.vpn.plist"
-      ]
-     }
-    ]
-   }
-  ],
-  "auto_updates": true,
-  "autobump": true,
-  "bundle_short_version": null,
-  "bundle_version": null,
-  "depends_on": {
-   "macos": {
-    ">=": [
-     "12"
-    ]
-   }
-  },
-  "deprecate_args": null,
-  "deprecated": false,
-  "deprecation_date": null,
-  "deprecation_reason": null,
-  "deprecation_replacement_cask": null,
-  "deprecation_replacement_formula": null,
-  "desc": "VPN client",
-  "disable_args": null,
-  "disable_date": null,
-  "disable_reason": null,
-  "disable_replacement_cask": null,
-  "disable_replacement_formula": null,
-  "disabled": false,
-  "full_token": "mullvad-vpn",
-  "homepage": "https://mullvad.net/",
-  "name": [
-   "Mullvad VPN"
-  ],
-  "no_autobump_message": null,
-  "sha256": "7c68dd93ae01c1b56ce29c48b293a6ecb29ad61769ee90619887fa71a7dd867b",
-  "skip_livecheck": false,
-  "supported_platforms": [
-   "golden_gate",
-   "arm64_golden_gate",
-   "tahoe",
-   "arm64_tahoe",
-   "sequoia",
-   "arm64_sequoia",
-   "sonoma",
-   "arm64_sonoma",
-   "ventura",
-   "arm64_ventura",
-   "monterey",
-   "arm64_monterey"
-  ],
-  "tap": "homebrew/cask",
-  "token": "mullvad-vpn",
-  "url": "https://cdn.mullvad.net/app/desktop/releases/2026.5/MullvadVPN-2026.5.pkg",
-  "variations": {},
-  "version": "2026.5"
- },
- {
-  "artifacts": [
-   {
-    "uninstall": [
-     {
-      "launchctl": "com.microsoft.VSCode.ShipIt",
-      "quit": "com.microsoft.VSCode"
-     }
-    ]
-   },
-   {
-    "app": [
-     "Visual Studio Code.app"
+      {
+        "zap": [
+          {
+            "rmdir": [
+              "~/Library/Application Support/BraveSoftware",
+              "~/Library/Caches/BraveSoftware"
+            ],
+            "trash": [
+              "~/Library/Application Support/BraveSoftware/Brave-Browser",
+              "~/Library/Caches/BraveSoftware/Brave-Browser",
+              "~/Library/Caches/com.brave.Browser",
+              "~/Library/HTTPStorages/com.brave.Browser",
+              "~/Library/Preferences/com.brave.Browser.plist",
+              "~/Library/Saved Application State/com.brave.Browser.savedState"
+            ]
+          }
+        ]
+      }
     ],
-    "target": "/Applications/Visual Studio Code.app"
-   },
-   {
-    "binary": [
-     "$APPDIR/Visual Studio Code.app/Contents/Resources/app/bin/code"
+    "auto_updates": true,
+    "autobump": true,
+    "bundle_short_version": null,
+    "bundle_version": null,
+    "depends_on": {
+      "macos": {
+        ">=": [
+          "13"
+        ]
+      }
+    },
+    "deprecate_args": null,
+    "deprecated": false,
+    "deprecation_date": null,
+    "deprecation_reason": null,
+    "deprecation_replacement_cask": null,
+    "deprecation_replacement_formula": null,
+    "desc": "Web browser focusing on privacy",
+    "disable_args": null,
+    "disable_date": null,
+    "disable_reason": null,
+    "disable_replacement_cask": null,
+    "disable_replacement_formula": null,
+    "disabled": false,
+    "full_token": "brave-browser",
+    "homepage": "https://brave.com/",
+    "name": [
+      "Brave"
     ],
-    "target": "$HOMEBREW_PREFIX/bin/code"
-   },
-   {
-    "binary": [
-     "$APPDIR/Visual Studio Code.app/Contents/Resources/app/bin/code-tunnel"
+    "no_autobump_message": null,
+    "sha256": "57690cf24e5ce5e15768b220d46621e575e0caabd3d651bdad5afc2b184f118a",
+    "skip_livecheck": false,
+    "supported_platforms": [
+      "golden_gate",
+      "arm64_golden_gate",
+      "tahoe",
+      "arm64_tahoe",
+      "sequoia",
+      "arm64_sequoia",
+      "sonoma",
+      "arm64_sonoma",
+      "ventura",
+      "arm64_ventura"
     ],
-    "target": "$HOMEBREW_PREFIX/bin/code-tunnel"
-   },
-   {
-    "zap": [
-     {
-      "trash": [
-       "~/.vscode",
-       "~/Library/Application Support/Code",
-       "~/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.ApplicationRecentDocuments/com.microsoft.vscode.sfl*",
-       "~/Library/Caches/com.microsoft.VSCode",
-       "~/Library/Caches/com.microsoft.VSCode.ShipIt",
-       "~/Library/HTTPStorages/com.microsoft.VSCode",
-       "~/Library/Preferences/ByHost/com.microsoft.VSCode.ShipIt.*.plist",
-       "~/Library/Preferences/com.microsoft.VSCode.helper.plist",
-       "~/Library/Preferences/com.microsoft.VSCode.plist",
-       "~/Library/Saved Application State/com.microsoft.VSCode.savedState"
-      ]
-     }
-    ]
-   }
-  ],
-  "auto_updates": true,
-  "autobump": true,
-  "bundle_short_version": null,
-  "bundle_version": null,
-  "depends_on": {
-   "macos": {}
+    "tap": "homebrew/cask",
+    "token": "brave-browser",
+    "url": "https://updates-cdn.bravesoftware.com/sparkle/Brave-Browser/stable-arm64/196.59/Brave-Browser-arm64.dmg",
+    "variations": {
+      "arm64_linux": {
+        "sha256": null
+      },
+      "golden_gate": {
+        "sha256": "fbeca8107c308993d343cd33857f40ab1812d51ee0502ac86872aaf7e7f5bdd8",
+        "url": "https://updates-cdn.bravesoftware.com/sparkle/Brave-Browser/stable/196.59/Brave-Browser-x64.dmg"
+      },
+      "sequoia": {
+        "sha256": "fbeca8107c308993d343cd33857f40ab1812d51ee0502ac86872aaf7e7f5bdd8",
+        "url": "https://updates-cdn.bravesoftware.com/sparkle/Brave-Browser/stable/196.59/Brave-Browser-x64.dmg"
+      },
+      "sonoma": {
+        "sha256": "fbeca8107c308993d343cd33857f40ab1812d51ee0502ac86872aaf7e7f5bdd8",
+        "url": "https://updates-cdn.bravesoftware.com/sparkle/Brave-Browser/stable/196.59/Brave-Browser-x64.dmg"
+      },
+      "tahoe": {
+        "sha256": "fbeca8107c308993d343cd33857f40ab1812d51ee0502ac86872aaf7e7f5bdd8",
+        "url": "https://updates-cdn.bravesoftware.com/sparkle/Brave-Browser/stable/196.59/Brave-Browser-x64.dmg"
+      },
+      "ventura": {
+        "sha256": "fbeca8107c308993d343cd33857f40ab1812d51ee0502ac86872aaf7e7f5bdd8",
+        "url": "https://updates-cdn.bravesoftware.com/sparkle/Brave-Browser/stable/196.59/Brave-Browser-x64.dmg"
+      },
+      "x86_64_linux": {
+        "sha256": null,
+        "url": "https://updates-cdn.bravesoftware.com/sparkle/Brave-Browser/stable/196.59/Brave-Browser-x64.dmg"
+      }
+    },
+    "version": "1.96.59.0"
   },
-  "deprecate_args": null,
-  "deprecated": false,
-  "deprecation_date": null,
-  "deprecation_reason": null,
-  "deprecation_replacement_cask": null,
-  "deprecation_replacement_formula": null,
-  "desc": "Open-source code editor",
-  "disable_args": null,
-  "disable_date": null,
-  "disable_reason": null,
-  "disable_replacement_cask": null,
-  "disable_replacement_formula": null,
-  "disabled": false,
-  "full_token": "visual-studio-code",
-  "homepage": "https://code.visualstudio.com/",
-  "name": [
-   "Microsoft Visual Studio Code",
-   "VS Code"
-  ],
-  "no_autobump_message": null,
-  "sha256": "923080bebc194ec178c2a06b61bcb138376776406c23b8bd3e4fc3286f91cba2",
-  "skip_livecheck": false,
-  "supported_platforms": [
-   "golden_gate",
-   "arm64_golden_gate",
-   "tahoe",
-   "arm64_tahoe",
-   "sequoia",
-   "arm64_sequoia",
-   "sonoma",
-   "arm64_sonoma",
-   "ventura",
-   "arm64_ventura",
-   "monterey",
-   "arm64_monterey",
-   "big_sur",
-   "arm64_big_sur"
-  ],
-  "tap": "homebrew/cask",
-  "token": "visual-studio-code",
-  "url": "https://update.code.visualstudio.com/1.139.1/darwin-arm64/stable",
-  "variations": {
-   "arm64_big_sur": {
-    "sha256": "35dd438808dde1dd1f65490ffe7713ed64102324c0809efbec0b4eb2809b218b",
-    "skip_livecheck": true,
-    "url": "https://update.code.visualstudio.com/1.106.3/darwin-arm64/stable",
-    "version": "1.106.3"
-   },
-   "arm64_linux": {
-    "sha256": null,
-    "url": "https://update.code.visualstudio.com//darwin-arm64/stable",
-    "version": null
-   },
-   "big_sur": {
-    "sha256": "c41872149a205f3a3be3e5d3a8f04920407a0762531e607f78dc93f4d4813cda",
-    "skip_livecheck": true,
-    "url": "https://update.code.visualstudio.com/1.106.3/darwin/stable",
-    "version": "1.106.3"
-   },
-   "golden_gate": {
-    "sha256": "7818d91a5cca2b7ae1557954923e8975cd6393526f9361091e40de02c2e2e58f",
-    "url": "https://update.code.visualstudio.com/1.139.1/darwin/stable"
-   },
-   "monterey": {
-    "sha256": "7818d91a5cca2b7ae1557954923e8975cd6393526f9361091e40de02c2e2e58f",
-    "url": "https://update.code.visualstudio.com/1.139.1/darwin/stable"
-   },
-   "sequoia": {
-    "sha256": "7818d91a5cca2b7ae1557954923e8975cd6393526f9361091e40de02c2e2e58f",
-    "url": "https://update.code.visualstudio.com/1.139.1/darwin/stable"
-   },
-   "sonoma": {
-    "sha256": "7818d91a5cca2b7ae1557954923e8975cd6393526f9361091e40de02c2e2e58f",
-    "url": "https://update.code.visualstudio.com/1.139.1/darwin/stable"
-   },
-   "tahoe": {
-    "sha256": "7818d91a5cca2b7ae1557954923e8975cd6393526f9361091e40de02c2e2e58f",
-    "url": "https://update.code.visualstudio.com/1.139.1/darwin/stable"
-   },
-   "ventura": {
-    "sha256": "7818d91a5cca2b7ae1557954923e8975cd6393526f9361091e40de02c2e2e58f",
-    "url": "https://update.code.visualstudio.com/1.139.1/darwin/stable"
-   },
-   "x86_64_linux": {
-    "sha256": null,
-    "url": "https://update.code.visualstudio.com//darwin/stable",
-    "version": null
-   }
-  },
-  "version": "1.139.1"
- },
- {
-  "artifacts": [
-   {
-    "uninstall": [
-     {
-      "delete": "/Library/CoreMediaIO/Plug-Ins/DAL/obs-mac-virtualcam.plugin",
-      "quit": "com.obsproject.obs-studio"
-     }
-    ]
-   },
-   {
-    "app": [
-     "OBS.app"
+  {
+    "artifacts": [
+      {
+        "uninstall": [
+          {
+            "quit": "org.keepassxc.keepassxc"
+          }
+        ]
+      },
+      {
+        "app": [
+          "KeePassXC.app"
+        ],
+        "target": "/Applications/KeePassXC.app"
+      },
+      {
+        "binary": [
+          "$APPDIR/KeePassXC.app/Contents/MacOS/keepassxc-cli"
+        ],
+        "target": "$HOMEBREW_PREFIX/bin/keepassxc-cli"
+      },
+      {
+        "manpage": [
+          "$APPDIR/KeePassXC.app/Contents/Resources/man/man1/keepassxc.1"
+        ],
+        "target": "$HOMEBREW_PREFIX/share/man/man1/keepassxc.1"
+      },
+      {
+        "manpage": [
+          "$APPDIR/KeePassXC.app/Contents/Resources/man/man1/keepassxc-cli.1"
+        ],
+        "target": "$HOMEBREW_PREFIX/share/man/man1/keepassxc-cli.1"
+      },
+      {
+        "zap": [
+          {
+            "trash": [
+              "~/.keepassxc",
+              "~/Library/Application Support/CrashReporter/KeePassXC_*.plist",
+              "~/Library/Application Support/keepassxc",
+              "~/Library/Caches/org.keepassx.keepassxc",
+              "~/Library/Logs/DiagnosticReports/KeePassXC_*.crash",
+              "~/Library/Preferences/keepassxc.keepassxc.plist",
+              "~/Library/Preferences/org.keepassx.keepassxc.plist",
+              "~/Library/Saved Application State/org.keepassx.keepassxc.savedState"
+            ]
+          }
+        ]
+      }
     ],
-    "target": "/Applications/OBS.app"
-   },
-   {
-    "command_wrapper": [
-     "obs",
-     {
-      "executable": "$APPDIR/OBS.app/Contents/MacOS/OBS"
-     }
+    "auto_updates": null,
+    "autobump": true,
+    "bundle_short_version": null,
+    "bundle_version": null,
+    "depends_on": {
+      "macos": {
+        ">=": [
+          "12"
+        ]
+      }
+    },
+    "deprecate_args": null,
+    "deprecated": false,
+    "deprecation_date": null,
+    "deprecation_reason": null,
+    "deprecation_replacement_cask": null,
+    "deprecation_replacement_formula": null,
+    "desc": "Password manager app",
+    "disable_args": null,
+    "disable_date": null,
+    "disable_reason": null,
+    "disable_replacement_cask": null,
+    "disable_replacement_formula": null,
+    "disabled": false,
+    "full_token": "keepassxc",
+    "homepage": "https://keepassxc.org/",
+    "name": [
+      "KeePassXC"
     ],
-    "target": "$HOMEBREW_PREFIX/bin/obs"
-   },
-   {
-    "zap": [
-     {
-      "trash": [
-       "~/Library/Application Support/obs-studio",
-       "~/Library/HTTPStorages/com.obsproject.obs-studio",
-       "~/Library/Preferences/com.obsproject.obs-studio.plist",
-       "~/Library/Saved Application State/com.obsproject.obs-studio.savedState"
-      ]
-     }
-    ]
-   }
-  ],
-  "auto_updates": true,
-  "autobump": true,
-  "bundle_short_version": null,
-  "bundle_version": null,
-  "depends_on": {
-   "macos": {
-    ">=": [
-     "13"
-    ]
-   }
-  },
-  "deprecate_args": null,
-  "deprecated": false,
-  "deprecation_date": null,
-  "deprecation_reason": null,
-  "deprecation_replacement_cask": null,
-  "deprecation_replacement_formula": null,
-  "desc": "Open-source software for live streaming and screen recording",
-  "disable_args": null,
-  "disable_date": null,
-  "disable_reason": null,
-  "disable_replacement_cask": null,
-  "disable_replacement_formula": null,
-  "disabled": false,
-  "full_token": "obs",
-  "homepage": "https://obsproject.com/",
-  "name": [
-   "OBS"
-  ],
-  "no_autobump_message": null,
-  "sha256": "920d6f26703d2df6e4085bd3c1cbed30488325084136c7a6e9e37021fbd6aaf7",
-  "skip_livecheck": false,
-  "supported_platforms": [
-   "golden_gate",
-   "arm64_golden_gate",
-   "tahoe",
-   "arm64_tahoe",
-   "sequoia",
-   "arm64_sequoia",
-   "sonoma",
-   "arm64_sonoma",
-   "ventura",
-   "arm64_ventura"
-  ],
-  "tap": "homebrew/cask",
-  "token": "obs",
-  "url": "https://cdn-fastly.obsproject.com/downloads/obs-studio-32.2.2-macos-apple.dmg",
-  "variations": {
-   "arm64_linux": {
-    "sha256": null
-   },
-   "golden_gate": {
-    "sha256": "f8d8afe3dffdc86efa0698c02ff0c997866bac3e6208ddaf56d37108baacf197",
-    "url": "https://cdn-fastly.obsproject.com/downloads/obs-studio-32.2.2-macos-intel.dmg"
-   },
-   "sequoia": {
-    "sha256": "f8d8afe3dffdc86efa0698c02ff0c997866bac3e6208ddaf56d37108baacf197",
-    "url": "https://cdn-fastly.obsproject.com/downloads/obs-studio-32.2.2-macos-intel.dmg"
-   },
-   "sonoma": {
-    "sha256": "f8d8afe3dffdc86efa0698c02ff0c997866bac3e6208ddaf56d37108baacf197",
-    "url": "https://cdn-fastly.obsproject.com/downloads/obs-studio-32.2.2-macos-intel.dmg"
-   },
-   "tahoe": {
-    "sha256": "f8d8afe3dffdc86efa0698c02ff0c997866bac3e6208ddaf56d37108baacf197",
-    "url": "https://cdn-fastly.obsproject.com/downloads/obs-studio-32.2.2-macos-intel.dmg"
-   },
-   "ventura": {
-    "sha256": "f8d8afe3dffdc86efa0698c02ff0c997866bac3e6208ddaf56d37108baacf197",
-    "url": "https://cdn-fastly.obsproject.com/downloads/obs-studio-32.2.2-macos-intel.dmg"
-   },
-   "x86_64_linux": {
-    "sha256": null,
-    "url": "https://cdn-fastly.obsproject.com/downloads/obs-studio-32.2.2-macos-intel.dmg"
-   }
-  },
-  "version": "32.2.2"
- },
- {
-  "artifacts": [
-   {
-    "uninstall": [
-     {
-      "launchctl": [
-       "2BUA8C4S2C.com.1password.browser-helper",
-       "com.1password.1password-launcher"
-      ],
-      "quit": "com.1password.1password"
-     }
-    ]
-   },
-   {
-    "app": [
-     "1Password.app"
+    "no_autobump_message": null,
+    "sha256": "65f4f63607180c0a15794b4a4068f85e99ed5391c87c1fb9312648f1b36fed40",
+    "skip_livecheck": false,
+    "supported_platforms": [
+      "golden_gate",
+      "arm64_golden_gate",
+      "tahoe",
+      "arm64_tahoe",
+      "sequoia",
+      "arm64_sequoia",
+      "sonoma",
+      "arm64_sonoma",
+      "ventura",
+      "arm64_ventura",
+      "monterey",
+      "arm64_monterey",
+      "x86_64_linux"
     ],
-    "target": "/Applications/1Password.app"
-   },
-   {
-    "zap": [
-     {
-      "trash": [
-       "~/Library/Application Scripts/2BUA8C4S2C.com.1password*",
-       "~/Library/Application Scripts/2BUA8C4S2C.com.agilebits",
-       "~/Library/Application Scripts/com.1password.1password-launcher",
-       "~/Library/Application Scripts/com.1password.browser-support",
-       "~/Library/Application Support/1Password",
-       "~/Library/Application Support/Arc/User Data/NativeMessagingHosts/com.1password.1password.json",
-       "~/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.ApplicationRecentDocuments/com.1password.1password.sfl*",
-       "~/Library/Application Support/CrashReporter/1Password*",
-       "~/Library/Application Support/Google/Chrome Beta/NativeMessagingHosts/com.1password.1password.json",
-       "~/Library/Application Support/Google/Chrome Canary/NativeMessagingHosts/com.1password.1password.json",
-       "~/Library/Application Support/Google/Chrome Dev/NativeMessagingHosts/com.1password.1password.json",
-       "~/Library/Application Support/Google/Chrome/NativeMessagingHosts/com.1password.1password.json",
-       "~/Library/Application Support/Microsoft Edge Beta/NativeMessagingHosts/com.1password.1password.json",
-       "~/Library/Application Support/Microsoft Edge Canary/NativeMessagingHosts/com.1password.1password.json",
-       "~/Library/Application Support/Microsoft Edge Dev/NativeMessagingHosts/com.1password.1password.json",
-       "~/Library/Application Support/Microsoft Edge/NativeMessagingHosts/com.1password.1password.json",
-       "~/Library/Application Support/Mozilla/NativeMessagingHosts/com.1password.1password.json",
-       "~/Library/Application Support/Vivaldi/NativeMessagingHosts/com.1password.1password.json",
-       "~/Library/Containers/2BUA8C4S2C.com.1password.browser-helper",
-       "~/Library/Containers/com.1password.1password*",
-       "~/Library/Containers/com.1password.browser-support",
-       "~/Library/Group Containers/2BUA8C4S2C.com.1password",
-       "~/Library/Group Containers/2BUA8C4S2C.com.agilebits",
-       "~/Library/Logs/1Password",
-       "~/Library/Preferences/com.1password.1password.plist",
-       "~/Library/Preferences/group.com.1password.plist",
-       "~/Library/Saved Application State/com.1password.1password.savedState"
-      ]
-     }
-    ]
-   }
-  ],
-  "auto_updates": true,
-  "autobump": true,
-  "bundle_short_version": null,
-  "bundle_version": null,
-  "depends_on": {
-   "macos": {
-    ">=": [
-     "12"
-    ]
-   }
-  },
-  "deprecate_args": null,
-  "deprecated": false,
-  "deprecation_date": null,
-  "deprecation_reason": null,
-  "deprecation_replacement_cask": null,
-  "deprecation_replacement_formula": null,
-  "desc": "Password manager that keeps all passwords secure behind one password",
-  "disable_args": null,
-  "disable_date": null,
-  "disable_reason": null,
-  "disable_replacement_cask": null,
-  "disable_replacement_formula": null,
-  "disabled": false,
-  "full_token": "1password",
-  "homepage": "https://1password.com/",
-  "name": [
-   "1Password"
-  ],
-  "no_autobump_message": null,
-  "sha256": "77d57273afbde862c814860623f0d1145fb85a73fb7e3202e2d1cc49a8372ce4",
-  "skip_livecheck": false,
-  "supported_platforms": [
-   "golden_gate",
-   "arm64_golden_gate",
-   "tahoe",
-   "arm64_tahoe",
-   "sequoia",
-   "arm64_sequoia",
-   "sonoma",
-   "arm64_sonoma",
-   "ventura",
-   "arm64_ventura",
-   "monterey",
-   "arm64_monterey"
-  ],
-  "tap": "homebrew/cask",
-  "token": "1password",
-  "url": "https://downloads.1password.com/mac/1Password-8.12.36-aarch64.zip",
-  "variations": {
-   "arm64_linux": {
-    "sha256": null
-   },
-   "golden_gate": {
-    "sha256": "1f117efbe8ab79386be1bb881496f0cb7d4b82d51a07e17ee1166fb38cc08506",
-    "url": "https://downloads.1password.com/mac/1Password-8.12.36-x86_64.zip"
-   },
-   "monterey": {
-    "sha256": "1f117efbe8ab79386be1bb881496f0cb7d4b82d51a07e17ee1166fb38cc08506",
-    "url": "https://downloads.1password.com/mac/1Password-8.12.36-x86_64.zip"
-   },
-   "sequoia": {
-    "sha256": "1f117efbe8ab79386be1bb881496f0cb7d4b82d51a07e17ee1166fb38cc08506",
-    "url": "https://downloads.1password.com/mac/1Password-8.12.36-x86_64.zip"
-   },
-   "sonoma": {
-    "sha256": "1f117efbe8ab79386be1bb881496f0cb7d4b82d51a07e17ee1166fb38cc08506",
-    "url": "https://downloads.1password.com/mac/1Password-8.12.36-x86_64.zip"
-   },
-   "tahoe": {
-    "sha256": "1f117efbe8ab79386be1bb881496f0cb7d4b82d51a07e17ee1166fb38cc08506",
-    "url": "https://downloads.1password.com/mac/1Password-8.12.36-x86_64.zip"
-   },
-   "ventura": {
-    "sha256": "1f117efbe8ab79386be1bb881496f0cb7d4b82d51a07e17ee1166fb38cc08506",
-    "url": "https://downloads.1password.com/mac/1Password-8.12.36-x86_64.zip"
-   },
-   "x86_64_linux": {
-    "sha256": null,
-    "url": "https://downloads.1password.com/mac/1Password-8.12.36-x86_64.zip"
-   }
-  },
-  "version": "8.12.36"
- },
- {
-  "artifacts": [
-   {
-    "uninstall": [
-     {
-      "launchctl": [
-       "2BUA8C4S2C.com.1password.browser-helper",
-       "com.1password.1password-launcher"
-      ],
-      "quit": "com.1password.1password"
-     }
-    ]
-   },
-   {
-    "app": [
-     "1Password.app"
-    ],
-    "target": "/Applications/1Password.app"
-   },
-   {
-    "zap": [
-     {
-      "trash": [
-       "~/Library/Application Scripts/2BUA8C4S2C.com.1password*",
-       "~/Library/Application Scripts/2BUA8C4S2C.com.agilebits",
-       "~/Library/Application Scripts/com.1password.1password-launcher",
-       "~/Library/Application Scripts/com.1password.browser-support",
-       "~/Library/Application Support/1Password",
-       "~/Library/Application Support/Arc/User Data/NativeMessagingHosts/com.1password.1password.json",
-       "~/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.ApplicationRecentDocuments/com.1password.1password.sfl*",
-       "~/Library/Application Support/CrashReporter/1Password*",
-       "~/Library/Application Support/Google/Chrome Beta/NativeMessagingHosts/com.1password.1password.json",
-       "~/Library/Application Support/Google/Chrome Canary/NativeMessagingHosts/com.1password.1password.json",
-       "~/Library/Application Support/Google/Chrome Dev/NativeMessagingHosts/com.1password.1password.json",
-       "~/Library/Application Support/Google/Chrome/NativeMessagingHosts/com.1password.1password.json",
-       "~/Library/Application Support/Microsoft Edge Beta/NativeMessagingHosts/com.1password.1password.json",
-       "~/Library/Application Support/Microsoft Edge Canary/NativeMessagingHosts/com.1password.1password.json",
-       "~/Library/Application Support/Microsoft Edge Dev/NativeMessagingHosts/com.1password.1password.json",
-       "~/Library/Application Support/Microsoft Edge/NativeMessagingHosts/com.1password.1password.json",
-       "~/Library/Application Support/Mozilla/NativeMessagingHosts/com.1password.1password.json",
-       "~/Library/Application Support/Vivaldi/NativeMessagingHosts/com.1password.1password.json",
-       "~/Library/Containers/2BUA8C4S2C.com.1password.browser-helper",
-       "~/Library/Containers/com.1password.1password*",
-       "~/Library/Containers/com.1password.browser-support",
-       "~/Library/Group Containers/2BUA8C4S2C.com.1password",
-       "~/Library/Group Containers/2BUA8C4S2C.com.agilebits",
-       "~/Library/Logs/1Password",
-       "~/Library/Preferences/com.1password.1password.plist",
-       "~/Library/Preferences/group.com.1password.plist",
-       "~/Library/Saved Application State/com.1password.1password.savedState"
-      ]
-     }
-    ]
-   }
-  ],
-  "auto_updates": true,
-  "autobump": true,
-  "bundle_short_version": null,
-  "bundle_version": null,
-  "depends_on": {
-   "macos": {
-    ">=": [
-     "12"
-    ]
-   }
-  },
-  "deprecate_args": null,
-  "deprecated": false,
-  "deprecation_date": null,
-  "deprecation_reason": null,
-  "deprecation_replacement_cask": null,
-  "deprecation_replacement_formula": null,
-  "desc": "Password manager",
-  "disable_args": null,
-  "disable_date": null,
-  "disable_reason": null,
-  "disable_replacement_cask": null,
-  "disable_replacement_formula": null,
-  "disabled": false,
-  "full_token": "1password@beta",
-  "homepage": "https://1password.com/",
-  "name": [
-   "1Password"
-  ],
-  "no_autobump_message": null,
-  "sha256": "3609d3ddd5c01484b6ce4789dce9fe4af69e5abeddea022c4e3eb7065db906c3",
-  "skip_livecheck": false,
-  "supported_platforms": [
-   "golden_gate",
-   "arm64_golden_gate",
-   "tahoe",
-   "arm64_tahoe",
-   "sequoia",
-   "arm64_sequoia",
-   "sonoma",
-   "arm64_sonoma",
-   "ventura",
-   "arm64_ventura",
-   "monterey",
-   "arm64_monterey"
-  ],
-  "tap": "homebrew/cask",
-  "token": "1password@beta",
-  "url": "https://downloads.1password.com/mac/1Password-8.12.40-23.BETA-aarch64.zip",
-  "variations": {
-   "arm64_linux": {
-    "sha256": null
-   },
-   "golden_gate": {
-    "sha256": "e2361668ea4079a7030c09fd56110c457c59ef0374e49d279ae81ee43bf39443",
-    "url": "https://downloads.1password.com/mac/1Password-8.12.40-23.BETA-x86_64.zip"
-   },
-   "monterey": {
-    "sha256": "e2361668ea4079a7030c09fd56110c457c59ef0374e49d279ae81ee43bf39443",
-    "url": "https://downloads.1password.com/mac/1Password-8.12.40-23.BETA-x86_64.zip"
-   },
-   "sequoia": {
-    "sha256": "e2361668ea4079a7030c09fd56110c457c59ef0374e49d279ae81ee43bf39443",
-    "url": "https://downloads.1password.com/mac/1Password-8.12.40-23.BETA-x86_64.zip"
-   },
-   "sonoma": {
-    "sha256": "e2361668ea4079a7030c09fd56110c457c59ef0374e49d279ae81ee43bf39443",
-    "url": "https://downloads.1password.com/mac/1Password-8.12.40-23.BETA-x86_64.zip"
-   },
-   "tahoe": {
-    "sha256": "e2361668ea4079a7030c09fd56110c457c59ef0374e49d279ae81ee43bf39443",
-    "url": "https://downloads.1password.com/mac/1Password-8.12.40-23.BETA-x86_64.zip"
-   },
-   "ventura": {
-    "sha256": "e2361668ea4079a7030c09fd56110c457c59ef0374e49d279ae81ee43bf39443",
-    "url": "https://downloads.1password.com/mac/1Password-8.12.40-23.BETA-x86_64.zip"
-   },
-   "x86_64_linux": {
-    "sha256": null,
-    "url": "https://downloads.1password.com/mac/1Password-8.12.40-23.BETA-x86_64.zip"
-   }
-  },
-  "version": "8.12.40-23.BETA"
- },
- {
-  "artifacts": [
-   {
-    "app": [
-     "Thorium.app"
-    ],
-    "target": "/Applications/Thorium.app"
-   },
-   {
-    "zap": [
-     {
-      "trash": [
-       "~/Library/Application Support/EDRLab.ThoriumReader",
-       "~/Library/Preferences/io.github.edrlab.thorium.plist"
-      ]
-     }
-    ]
-   }
-  ],
-  "auto_updates": null,
-  "autobump": true,
-  "bundle_short_version": null,
-  "bundle_version": null,
-  "depends_on": {
-   "macos": {
-    ">=": [
-     "12"
-    ]
-   }
-  },
-  "deprecate_args": null,
-  "deprecated": false,
-  "deprecation_date": null,
-  "deprecation_reason": null,
-  "deprecation_replacement_cask": null,
-  "deprecation_replacement_formula": null,
-  "desc": "Epub reader",
-  "disable_args": null,
-  "disable_date": null,
-  "disable_reason": null,
-  "disable_replacement_cask": null,
-  "disable_replacement_formula": null,
-  "disabled": false,
-  "full_token": "thorium",
-  "homepage": "https://www.edrlab.org/software/thorium-reader/",
-  "name": [
-   "Thorium Reader"
-  ],
-  "no_autobump_message": null,
-  "sha256": "2f19dcaf4b717330626ebce7148653da399945467699bef7f0843d7b5f512030",
-  "skip_livecheck": false,
-  "supported_platforms": [
-   "golden_gate",
-   "arm64_golden_gate",
-   "tahoe",
-   "arm64_tahoe",
-   "sequoia",
-   "arm64_sequoia",
-   "sonoma",
-   "arm64_sonoma",
-   "ventura",
-   "arm64_ventura",
-   "monterey",
-   "arm64_monterey"
-  ],
-  "tap": "homebrew/cask",
-  "token": "thorium",
-  "url": "https://github.com/edrlab/thorium-reader/releases/download/v3.4.0/Thorium-3.4.0-arm64.dmg",
-  "variations": {
-   "arm64_linux": {
-    "sha256": null
-   },
-   "golden_gate": {
-    "sha256": "ef1e798792e0b2fc76348e2376453ce21cb7bb8607e8b8dff6d3c2298d69c239",
-    "url": "https://github.com/edrlab/thorium-reader/releases/download/v3.4.0/Thorium-3.4.0.dmg"
-   },
-   "monterey": {
-    "sha256": "ef1e798792e0b2fc76348e2376453ce21cb7bb8607e8b8dff6d3c2298d69c239",
-    "url": "https://github.com/edrlab/thorium-reader/releases/download/v3.4.0/Thorium-3.4.0.dmg"
-   },
-   "sequoia": {
-    "sha256": "ef1e798792e0b2fc76348e2376453ce21cb7bb8607e8b8dff6d3c2298d69c239",
-    "url": "https://github.com/edrlab/thorium-reader/releases/download/v3.4.0/Thorium-3.4.0.dmg"
-   },
-   "sonoma": {
-    "sha256": "ef1e798792e0b2fc76348e2376453ce21cb7bb8607e8b8dff6d3c2298d69c239",
-    "url": "https://github.com/edrlab/thorium-reader/releases/download/v3.4.0/Thorium-3.4.0.dmg"
-   },
-   "tahoe": {
-    "sha256": "ef1e798792e0b2fc76348e2376453ce21cb7bb8607e8b8dff6d3c2298d69c239",
-    "url": "https://github.com/edrlab/thorium-reader/releases/download/v3.4.0/Thorium-3.4.0.dmg"
-   },
-   "ventura": {
-    "sha256": "ef1e798792e0b2fc76348e2376453ce21cb7bb8607e8b8dff6d3c2298d69c239",
-    "url": "https://github.com/edrlab/thorium-reader/releases/download/v3.4.0/Thorium-3.4.0.dmg"
-   },
-   "x86_64_linux": {
-    "sha256": null,
-    "url": "https://github.com/edrlab/thorium-reader/releases/download/v3.4.0/Thorium-3.4.0.dmg"
-   }
-  },
-  "version": "3.4.0"
- },
- {
-  "artifacts": [
-   {
-    "app": [
-     "Thorium.app",
-     {
-      "target": "Thorium Browser.app"
-     }
-    ],
-    "target": "/Applications/Thorium Browser.app"
-   },
-   {
-    "command_wrapper": [
-     "thorium",
-     {
-      "executable": "$APPDIR/Thorium Browser.app/Contents/MacOS/Thorium"
-     }
-    ],
-    "target": "$HOMEBREW_PREFIX/bin/thorium"
-   },
-   {
-    "zap": [
-     {
-      "trash": [
-       "~/Library/Application Support/Thorium",
-       "~/Library/Caches/Thorium",
-       "~/Library/Preferences/org.chromium.Thorium.plist",
-       "~/Library/Saved Application State/org.chromium.Thorium.savedState"
-      ]
-     }
-    ]
-   }
-  ],
-  "auto_updates": null,
-  "autobump": true,
-  "bundle_short_version": null,
-  "bundle_version": null,
-  "depends_on": {
-   "macos": {}
-  },
-  "deprecate_args": null,
-  "deprecated": false,
-  "deprecation_date": null,
-  "deprecation_reason": null,
-  "deprecation_replacement_cask": null,
-  "deprecation_replacement_formula": null,
-  "desc": "Chromium-based web browser",
-  "disable_args": {
-   "because": "fails_gatekeeper_check",
-   "date": "2026-09-01",
-   "replacement_cask": null,
-   "replacement_formula": null
-  },
-  "disable_date": "2026-09-01",
-  "disable_reason": "fails_gatekeeper_check",
-  "disable_replacement_cask": null,
-  "disable_replacement_formula": null,
-  "disabled": true,
-  "full_token": "alex313031-thorium",
-  "homepage": "https://thorium.rocks/",
-  "name": [
-   "Thorium"
-  ],
-  "no_autobump_message": null,
-  "sha256": "01f77352f40445e5c39a838c6e48198a09b64c14b0ec423c83fd9b461e0d7069",
-  "skip_livecheck": false,
-  "supported_platforms": [
-   "golden_gate",
-   "arm64_golden_gate",
-   "tahoe",
-   "arm64_tahoe",
-   "sequoia",
-   "arm64_sequoia",
-   "sonoma",
-   "arm64_sonoma",
-   "ventura",
-   "arm64_ventura",
-   "monterey",
-   "arm64_monterey",
-   "big_sur",
-   "arm64_big_sur"
-  ],
-  "tap": "homebrew/cask",
-  "token": "alex313031-thorium",
-  "url": "https://github.com/Alex313031/Thorium-MacOS/releases/download/M138.0.7204.303/Thorium_MacOS_ARM64.dmg",
-  "variations": {
-   "arm64_linux": {
-    "sha256": null
-   },
-   "big_sur": {
-    "sha256": "9a31c4d3fea1f6a49f2943f30d3400ef7cffbb8ab815567e83049b88652b8778",
-    "url": "https://github.com/Alex313031/Thorium-MacOS/releases/download/M138.0.7204.303/Thorium_MacOS_x64.dmg"
-   },
-   "golden_gate": {
-    "sha256": "9a31c4d3fea1f6a49f2943f30d3400ef7cffbb8ab815567e83049b88652b8778",
-    "url": "https://github.com/Alex313031/Thorium-MacOS/releases/download/M138.0.7204.303/Thorium_MacOS_x64.dmg"
-   },
-   "monterey": {
-    "sha256": "9a31c4d3fea1f6a49f2943f30d3400ef7cffbb8ab815567e83049b88652b8778",
-    "url": "https://github.com/Alex313031/Thorium-MacOS/releases/download/M138.0.7204.303/Thorium_MacOS_x64.dmg"
-   },
-   "sequoia": {
-    "sha256": "9a31c4d3fea1f6a49f2943f30d3400ef7cffbb8ab815567e83049b88652b8778",
-    "url": "https://github.com/Alex313031/Thorium-MacOS/releases/download/M138.0.7204.303/Thorium_MacOS_x64.dmg"
-   },
-   "sonoma": {
-    "sha256": "9a31c4d3fea1f6a49f2943f30d3400ef7cffbb8ab815567e83049b88652b8778",
-    "url": "https://github.com/Alex313031/Thorium-MacOS/releases/download/M138.0.7204.303/Thorium_MacOS_x64.dmg"
-   },
-   "tahoe": {
-    "sha256": "9a31c4d3fea1f6a49f2943f30d3400ef7cffbb8ab815567e83049b88652b8778",
-    "url": "https://github.com/Alex313031/Thorium-MacOS/releases/download/M138.0.7204.303/Thorium_MacOS_x64.dmg"
-   },
-   "ventura": {
-    "sha256": "9a31c4d3fea1f6a49f2943f30d3400ef7cffbb8ab815567e83049b88652b8778",
-    "url": "https://github.com/Alex313031/Thorium-MacOS/releases/download/M138.0.7204.303/Thorium_MacOS_x64.dmg"
-   },
-   "x86_64_linux": {
-    "sha256": null,
-    "url": "https://github.com/Alex313031/Thorium-MacOS/releases/download/M138.0.7204.303/Thorium_MacOS_x64.dmg"
-   }
-  },
-  "version": "M138.0.7204.303"
- },
- {
-  "artifacts": [
-   {
-    "app": [
-     "Google Chrome.app"
-    ],
-    "target": "/Applications/Google Chrome.app"
-   },
-   {
-    "zap": [
-     {
-      "launchctl": [
-       "com.google.keystone.agent",
-       "com.google.keystone.daemon"
-      ],
-      "rmdir": [
-       "/Library/Google",
-       "~/Library/Application Support/Google",
-       "~/Library/Caches/Google",
-       "~/Library/Google"
-      ],
-      "trash": [
-       "/Library/Caches/com.google.SoftwareUpdate.*",
-       "/Library/Google/Google Chrome Brand.plist",
-       "/Library/Google/GoogleSoftwareUpdate",
-       "~/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.ApplicationRecentDocuments/com.google.chrome.app.*.sfl*",
-       "~/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.ApplicationRecentDocuments/com.google.chrome.sfl*",
-       "~/Library/Application Support/Google/Chrome",
-       "~/Library/Caches/com.google.Chrome",
-       "~/Library/Caches/com.google.Chrome.helper.*",
-       "~/Library/Caches/com.google.Keystone",
-       "~/Library/Caches/com.google.Keystone.Agent",
-       "~/Library/Caches/com.google.SoftwareUpdate",
-       "~/Library/Caches/Google/Chrome",
-       "~/Library/Google/Google Chrome Brand.plist",
-       "~/Library/Google/GoogleSoftwareUpdate",
-       "~/Library/LaunchAgents/com.google.keystone.agent.plist",
-       "~/Library/LaunchAgents/com.google.keystone.xpcservice.plist",
-       "~/Library/Logs/GoogleSoftwareUpdateAgent.log",
-       "~/Library/Preferences/com.google.Chrome.plist",
-       "~/Library/Preferences/com.google.Keystone.Agent.plist",
-       "~/Library/Saved Application State/com.google.Chrome.app.*.savedState",
-       "~/Library/Saved Application State/com.google.Chrome.savedState",
-       "~/Library/WebKit/com.google.Chrome"
-      ]
-     }
-    ]
-   }
-  ],
-  "auto_updates": true,
-  "autobump": true,
-  "bundle_short_version": "152.0.7977.83",
-  "bundle_version": "7977.83",
-  "depends_on": {
-   "macos": {
-    ">=": [
-     "13"
-    ]
-   }
-  },
-  "deprecate_args": null,
-  "deprecated": false,
-  "deprecation_date": null,
-  "deprecation_reason": null,
-  "deprecation_replacement_cask": null,
-  "deprecation_replacement_formula": null,
-  "desc": "Web browser",
-  "disable_args": null,
-  "disable_date": null,
-  "disable_reason": null,
-  "disable_replacement_cask": null,
-  "disable_replacement_formula": null,
-  "disabled": false,
-  "full_token": "google-chrome",
-  "homepage": "https://www.google.com/chrome/",
-  "name": [
-   "Google Chrome"
-  ],
-  "no_autobump_message": null,
-  "sha256": "no_check",
-  "skip_livecheck": false,
-  "supported_platforms": [
-   "golden_gate",
-   "arm64_golden_gate",
-   "tahoe",
-   "arm64_tahoe",
-   "sequoia",
-   "arm64_sequoia",
-   "sonoma",
-   "arm64_sonoma",
-   "ventura",
-   "arm64_ventura"
-  ],
-  "tap": "homebrew/cask",
-  "token": "google-chrome",
-  "url": "https://dl.google.com/chrome/mac/universal/stable/GGRO/googlechrome.dmg",
-  "variations": {},
-  "version": "154.0.8037.58"
- },
- {
-  "artifacts": [
-   {
-    "app": [
-     "1Password.app"
-    ],
-    "target": "/Applications/1Password.app"
-   },
-   {
-    "zap": [
-     {
-      "trash": [
-       "~/Library/Application Scripts/2BUA8C4S2C.com.1password",
-       "~/Library/Application Scripts/2BUA8C4S2C.com.1password.browser-helper",
-       "~/Library/Application Scripts/com.1password.1password-launcher",
-       "~/Library/Application Scripts/com.1password.browser-support",
-       "~/Library/Application Support/1Password",
-       "~/Library/Application Support/CrashReporter/1Password*.plist",
-       "~/Library/Containers/2BUA8C4S2C.com.1password.browser-helper",
-       "~/Library/Containers/com.1password.1password-launcher",
-       "~/Library/Containers/com.1password.browser-support",
-       "~/Library/Group Containers/*.com.1password",
-       "~/Library/Group Containers/*.com.agilebits",
-       "~/Library/Logs/DiagnosticReports/1Password*",
-       "~/Library/Preferences/*1password.plist",
-       "~/Library/Saved Application State/com.1password.1password.savedState"
-      ]
-     }
-    ]
-   }
-  ],
-  "auto_updates": null,
-  "autobump": false,
-  "bundle_short_version": null,
-  "bundle_version": null,
-  "depends_on": {
-   "macos": {
-    ">=": [
-     "12"
-    ]
-   }
-  },
-  "deprecate_args": null,
-  "deprecated": false,
-  "deprecation_date": null,
-  "deprecation_reason": null,
-  "deprecation_replacement_cask": null,
-  "deprecation_replacement_formula": null,
-  "desc": "Password manager",
-  "disable_args": null,
-  "disable_date": null,
-  "disable_reason": null,
-  "disable_replacement_cask": null,
-  "disable_replacement_formula": null,
-  "disabled": false,
-  "full_token": "1password@nightly",
-  "homepage": "https://1password.com/",
-  "name": [
-   "1Password Nightly"
-  ],
-  "no_autobump_message": "latest_version",
-  "sha256": "no_check",
-  "skip_livecheck": false,
-  "supported_platforms": [
-   "golden_gate",
-   "arm64_golden_gate",
-   "tahoe",
-   "arm64_tahoe",
-   "sequoia",
-   "arm64_sequoia",
-   "sonoma",
-   "arm64_sonoma",
-   "ventura",
-   "arm64_ventura",
-   "monterey",
-   "arm64_monterey"
-  ],
-  "tap": "homebrew/cask",
-  "token": "1password@nightly",
-  "url": "https://c.1password.com/dist/1P/mac8/1Password-latest.NIGHTLY-aarch64.zip",
-  "variations": {
-   "golden_gate": {
-    "url": "https://c.1password.com/dist/1P/mac8/1Password-latest.NIGHTLY-x86_64.zip"
-   },
-   "monterey": {
-    "url": "https://c.1password.com/dist/1P/mac8/1Password-latest.NIGHTLY-x86_64.zip"
-   },
-   "sequoia": {
-    "url": "https://c.1password.com/dist/1P/mac8/1Password-latest.NIGHTLY-x86_64.zip"
-   },
-   "sonoma": {
-    "url": "https://c.1password.com/dist/1P/mac8/1Password-latest.NIGHTLY-x86_64.zip"
-   },
-   "tahoe": {
-    "url": "https://c.1password.com/dist/1P/mac8/1Password-latest.NIGHTLY-x86_64.zip"
-   },
-   "ventura": {
-    "url": "https://c.1password.com/dist/1P/mac8/1Password-latest.NIGHTLY-x86_64.zip"
-   },
-   "x86_64_linux": {
-    "url": "https://c.1password.com/dist/1P/mac8/1Password-latest.NIGHTLY-x86_64.zip"
-   }
-  },
-  "version": "latest"
- },
- {
-  "artifacts": [
-   {
-    "preflight_steps": [
-     {
-      "steps": [
-       {
-        "path": {
-         "base": "home",
-         "path": "Library/Application Support/net.86box.86Box/roms"
+    "tap": "homebrew/cask",
+    "token": "keepassxc",
+    "url": "https://github.com/keepassxreboot/keepassxc/releases/download/2.7.12/KeePassXC-2.7.12-arm64.dmg",
+    "variations": {
+      "arm64_linux": {
+        "artifacts": [
+          {
+            "app_image": [
+              "KeePassXC-2.7.12-arm64.AppImage",
+              {
+                "target": "KeePassXC.AppImage"
+              }
+            ],
+            "target": "/$HOME/Applications/KeePassXC.AppImage"
+          },
+          {
+            "zap": [
+              {
+                "trash": [
+                  "~/.cache/keepassxc",
+                  "~/.config/keepassxc"
+                ]
+              }
+            ]
+          }
+        ],
+        "depends_on": {
+          "arch": [
+            {
+              "bits": 64,
+              "type": "intel"
+            }
+          ]
         },
-        "type": "mkdir_p"
-       }
-      ]
-     }
-    ]
-   },
-   {
-    "uninstall": [
-     {
-      "trash": "$APPDIR/86box"
-     }
-    ]
-   },
-   {
-    "app": [
-     "86Box.app"
-    ],
-    "target": "/Applications/86Box.app"
-   },
-   {
-    "zap": [
-     {
-      "trash": [
-       "~/Library/Application Support/86Box",
-       "~/Library/Application Support/net.86box.86Box",
-       "~/Library/Preferences/86Box",
-       "~/Library/Preferences/net.86Box.86Box.plist",
-       "~/Library/Saved Application State/net.86Box.86Box.savedState"
-      ]
-     }
-    ]
-   }
-  ],
-  "auto_updates": null,
-  "autobump": true,
-  "bundle_short_version": null,
-  "bundle_version": null,
-  "depends_on": {
-   "macos": {}
+        "sha256": null,
+        "url": "https://github.com/keepassxreboot/keepassxc/releases/download/2.7.12/KeePassXC-2.7.12-arm64.AppImage"
+      },
+      "big_sur": {
+        "sha256": "f55737bf759b7ea622967ae979e8fd0ef06a8133104124c24861fd11a3fe14b5",
+        "url": "https://github.com/keepassxreboot/keepassxc/releases/download/2.7.12/KeePassXC-2.7.12-x86_64.dmg"
+      },
+      "golden_gate": {
+        "sha256": "f55737bf759b7ea622967ae979e8fd0ef06a8133104124c24861fd11a3fe14b5",
+        "url": "https://github.com/keepassxreboot/keepassxc/releases/download/2.7.12/KeePassXC-2.7.12-x86_64.dmg"
+      },
+      "monterey": {
+        "sha256": "f55737bf759b7ea622967ae979e8fd0ef06a8133104124c24861fd11a3fe14b5",
+        "url": "https://github.com/keepassxreboot/keepassxc/releases/download/2.7.12/KeePassXC-2.7.12-x86_64.dmg"
+      },
+      "sequoia": {
+        "sha256": "f55737bf759b7ea622967ae979e8fd0ef06a8133104124c24861fd11a3fe14b5",
+        "url": "https://github.com/keepassxreboot/keepassxc/releases/download/2.7.12/KeePassXC-2.7.12-x86_64.dmg"
+      },
+      "sonoma": {
+        "sha256": "f55737bf759b7ea622967ae979e8fd0ef06a8133104124c24861fd11a3fe14b5",
+        "url": "https://github.com/keepassxreboot/keepassxc/releases/download/2.7.12/KeePassXC-2.7.12-x86_64.dmg"
+      },
+      "tahoe": {
+        "sha256": "f55737bf759b7ea622967ae979e8fd0ef06a8133104124c24861fd11a3fe14b5",
+        "url": "https://github.com/keepassxreboot/keepassxc/releases/download/2.7.12/KeePassXC-2.7.12-x86_64.dmg"
+      },
+      "ventura": {
+        "sha256": "f55737bf759b7ea622967ae979e8fd0ef06a8133104124c24861fd11a3fe14b5",
+        "url": "https://github.com/keepassxreboot/keepassxc/releases/download/2.7.12/KeePassXC-2.7.12-x86_64.dmg"
+      },
+      "x86_64_linux": {
+        "artifacts": [
+          {
+            "app_image": [
+              "KeePassXC-2.7.12-x86_64.AppImage",
+              {
+                "target": "KeePassXC.AppImage"
+              }
+            ],
+            "target": "/$HOME/Applications/KeePassXC.AppImage"
+          },
+          {
+            "zap": [
+              {
+                "trash": [
+                  "~/.cache/keepassxc",
+                  "~/.config/keepassxc"
+                ]
+              }
+            ]
+          }
+        ],
+        "depends_on": {
+          "arch": [
+            {
+              "bits": 64,
+              "type": "intel"
+            }
+          ]
+        },
+        "sha256": "564fe8b751b9ef7aa057e4d3d0b2878db24eaa0f6b1c855c82e699ab0913ae49",
+        "url": "https://github.com/keepassxreboot/keepassxc/releases/download/2.7.12/KeePassXC-2.7.12-x86_64.AppImage"
+      }
+    },
+    "version": "2.7.12"
   },
-  "deprecate_args": null,
-  "deprecated": false,
-  "deprecation_date": null,
-  "deprecation_reason": null,
-  "deprecation_replacement_cask": null,
-  "deprecation_replacement_formula": null,
-  "desc": "Emulator of x86-based machines based on PCem",
-  "disable_args": null,
-  "disable_date": null,
-  "disable_reason": null,
-  "disable_replacement_cask": null,
-  "disable_replacement_formula": null,
-  "disabled": false,
-  "full_token": "86box",
-  "homepage": "https://86box.net/",
-  "name": [
-   "86Box"
-  ],
-  "no_autobump_message": null,
-  "sha256": "fc66fc97225012af20145ae04193911bbf689fc75f89590774a904483140a5a9",
-  "skip_livecheck": false,
-  "supported_platforms": [
-   "golden_gate",
-   "arm64_golden_gate",
-   "tahoe",
-   "arm64_tahoe",
-   "sequoia",
-   "arm64_sequoia",
-   "sonoma",
-   "arm64_sonoma",
-   "ventura",
-   "arm64_ventura",
-   "monterey",
-   "arm64_monterey",
-   "big_sur",
-   "arm64_big_sur"
-  ],
-  "tap": "homebrew/cask",
-  "token": "86box",
-  "url": "https://github.com/86Box/86Box/releases/download/v6.0/86Box-macOS-x86_64+arm64-b9001.zip",
-  "variations": {},
-  "version": "6.0,9001"
- }
+  {
+    "artifacts": [
+      {
+        "uninstall": [
+          {
+            "delete": [
+              "/Library/Caches/mullvad-vpn",
+              "/opt/homebrew/share/fish/vendor_completions.d/mullvad.fish",
+              "/opt/homebrew/share/zsh/site-functions/_mullvad",
+              "/usr/local/bin/mullvad",
+              "/usr/local/bin/mullvad-problem-report",
+              "/usr/local/share/fish/vendor_completions.d/mullvad.fish",
+              "/usr/local/share/zsh/site-functions/_mullvad",
+              "/var/log/mullvad-vpn"
+            ],
+            "launchctl": "net.mullvad.daemon",
+            "pkgutil": "net.mullvad.vpn",
+            "quit": "net.mullvad.vpn"
+          }
+        ]
+      },
+      {
+        "pkg": [
+          "MullvadVPN-2026.5.pkg"
+        ]
+      },
+      {
+        "zap": [
+          {
+            "script": {
+              "args": [
+                "reset-firewall"
+              ],
+              "executable": "/Applications/Mullvad VPN.app/Contents/Resources/mullvad-setup",
+              "must_succeed": false,
+              "sudo": true
+            },
+            "trash": [
+              "/etc/mullvad-vpn",
+              "~/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.ApplicationRecentDocuments/net.mullvad.vpn.sfl*",
+              "~/Library/Application Support/Mullvad VPN",
+              "~/Library/Logs/Mullvad VPN",
+              "~/Library/Preferences/net.mullvad.vpn.helper.plist",
+              "~/Library/Preferences/net.mullvad.vpn.plist"
+            ]
+          }
+        ]
+      }
+    ],
+    "auto_updates": true,
+    "autobump": true,
+    "bundle_short_version": null,
+    "bundle_version": null,
+    "depends_on": {
+      "macos": {
+        ">=": [
+          "12"
+        ]
+      }
+    },
+    "deprecate_args": null,
+    "deprecated": false,
+    "deprecation_date": null,
+    "deprecation_reason": null,
+    "deprecation_replacement_cask": null,
+    "deprecation_replacement_formula": null,
+    "desc": "VPN client",
+    "disable_args": null,
+    "disable_date": null,
+    "disable_reason": null,
+    "disable_replacement_cask": null,
+    "disable_replacement_formula": null,
+    "disabled": false,
+    "full_token": "mullvad-vpn",
+    "homepage": "https://mullvad.net/",
+    "name": [
+      "Mullvad VPN"
+    ],
+    "no_autobump_message": null,
+    "sha256": "7c68dd93ae01c1b56ce29c48b293a6ecb29ad61769ee90619887fa71a7dd867b",
+    "skip_livecheck": false,
+    "supported_platforms": [
+      "golden_gate",
+      "arm64_golden_gate",
+      "tahoe",
+      "arm64_tahoe",
+      "sequoia",
+      "arm64_sequoia",
+      "sonoma",
+      "arm64_sonoma",
+      "ventura",
+      "arm64_ventura",
+      "monterey",
+      "arm64_monterey"
+    ],
+    "tap": "homebrew/cask",
+    "token": "mullvad-vpn",
+    "url": "https://cdn.mullvad.net/app/desktop/releases/2026.5/MullvadVPN-2026.5.pkg",
+    "variations": {},
+    "version": "2026.5"
+  },
+  {
+    "artifacts": [
+      {
+        "uninstall": [
+          {
+            "launchctl": "com.microsoft.VSCode.ShipIt",
+            "quit": "com.microsoft.VSCode"
+          }
+        ]
+      },
+      {
+        "app": [
+          "Visual Studio Code.app"
+        ],
+        "target": "/Applications/Visual Studio Code.app"
+      },
+      {
+        "binary": [
+          "$APPDIR/Visual Studio Code.app/Contents/Resources/app/bin/code"
+        ],
+        "target": "$HOMEBREW_PREFIX/bin/code"
+      },
+      {
+        "binary": [
+          "$APPDIR/Visual Studio Code.app/Contents/Resources/app/bin/code-tunnel"
+        ],
+        "target": "$HOMEBREW_PREFIX/bin/code-tunnel"
+      },
+      {
+        "zap": [
+          {
+            "trash": [
+              "~/.vscode",
+              "~/Library/Application Support/Code",
+              "~/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.ApplicationRecentDocuments/com.microsoft.vscode.sfl*",
+              "~/Library/Caches/com.microsoft.VSCode",
+              "~/Library/Caches/com.microsoft.VSCode.ShipIt",
+              "~/Library/HTTPStorages/com.microsoft.VSCode",
+              "~/Library/Preferences/ByHost/com.microsoft.VSCode.ShipIt.*.plist",
+              "~/Library/Preferences/com.microsoft.VSCode.helper.plist",
+              "~/Library/Preferences/com.microsoft.VSCode.plist",
+              "~/Library/Saved Application State/com.microsoft.VSCode.savedState"
+            ]
+          }
+        ]
+      }
+    ],
+    "auto_updates": true,
+    "autobump": true,
+    "bundle_short_version": null,
+    "bundle_version": null,
+    "depends_on": {
+      "macos": {}
+    },
+    "deprecate_args": null,
+    "deprecated": false,
+    "deprecation_date": null,
+    "deprecation_reason": null,
+    "deprecation_replacement_cask": null,
+    "deprecation_replacement_formula": null,
+    "desc": "Open-source code editor",
+    "disable_args": null,
+    "disable_date": null,
+    "disable_reason": null,
+    "disable_replacement_cask": null,
+    "disable_replacement_formula": null,
+    "disabled": false,
+    "full_token": "visual-studio-code",
+    "homepage": "https://code.visualstudio.com/",
+    "name": [
+      "Microsoft Visual Studio Code",
+      "VS Code"
+    ],
+    "no_autobump_message": null,
+    "sha256": "923080bebc194ec178c2a06b61bcb138376776406c23b8bd3e4fc3286f91cba2",
+    "skip_livecheck": false,
+    "supported_platforms": [
+      "golden_gate",
+      "arm64_golden_gate",
+      "tahoe",
+      "arm64_tahoe",
+      "sequoia",
+      "arm64_sequoia",
+      "sonoma",
+      "arm64_sonoma",
+      "ventura",
+      "arm64_ventura",
+      "monterey",
+      "arm64_monterey",
+      "big_sur",
+      "arm64_big_sur"
+    ],
+    "tap": "homebrew/cask",
+    "token": "visual-studio-code",
+    "url": "https://update.code.visualstudio.com/1.139.1/darwin-arm64/stable",
+    "variations": {
+      "arm64_big_sur": {
+        "sha256": "35dd438808dde1dd1f65490ffe7713ed64102324c0809efbec0b4eb2809b218b",
+        "skip_livecheck": true,
+        "url": "https://update.code.visualstudio.com/1.106.3/darwin-arm64/stable",
+        "version": "1.106.3"
+      },
+      "arm64_linux": {
+        "sha256": null,
+        "url": "https://update.code.visualstudio.com//darwin-arm64/stable",
+        "version": null
+      },
+      "big_sur": {
+        "sha256": "c41872149a205f3a3be3e5d3a8f04920407a0762531e607f78dc93f4d4813cda",
+        "skip_livecheck": true,
+        "url": "https://update.code.visualstudio.com/1.106.3/darwin/stable",
+        "version": "1.106.3"
+      },
+      "golden_gate": {
+        "sha256": "7818d91a5cca2b7ae1557954923e8975cd6393526f9361091e40de02c2e2e58f",
+        "url": "https://update.code.visualstudio.com/1.139.1/darwin/stable"
+      },
+      "monterey": {
+        "sha256": "7818d91a5cca2b7ae1557954923e8975cd6393526f9361091e40de02c2e2e58f",
+        "url": "https://update.code.visualstudio.com/1.139.1/darwin/stable"
+      },
+      "sequoia": {
+        "sha256": "7818d91a5cca2b7ae1557954923e8975cd6393526f9361091e40de02c2e2e58f",
+        "url": "https://update.code.visualstudio.com/1.139.1/darwin/stable"
+      },
+      "sonoma": {
+        "sha256": "7818d91a5cca2b7ae1557954923e8975cd6393526f9361091e40de02c2e2e58f",
+        "url": "https://update.code.visualstudio.com/1.139.1/darwin/stable"
+      },
+      "tahoe": {
+        "sha256": "7818d91a5cca2b7ae1557954923e8975cd6393526f9361091e40de02c2e2e58f",
+        "url": "https://update.code.visualstudio.com/1.139.1/darwin/stable"
+      },
+      "ventura": {
+        "sha256": "7818d91a5cca2b7ae1557954923e8975cd6393526f9361091e40de02c2e2e58f",
+        "url": "https://update.code.visualstudio.com/1.139.1/darwin/stable"
+      },
+      "x86_64_linux": {
+        "sha256": null,
+        "url": "https://update.code.visualstudio.com//darwin/stable",
+        "version": null
+      }
+    },
+    "version": "1.139.1"
+  },
+  {
+    "artifacts": [
+      {
+        "uninstall": [
+          {
+            "delete": "/Library/CoreMediaIO/Plug-Ins/DAL/obs-mac-virtualcam.plugin",
+            "quit": "com.obsproject.obs-studio"
+          }
+        ]
+      },
+      {
+        "app": [
+          "OBS.app"
+        ],
+        "target": "/Applications/OBS.app"
+      },
+      {
+        "command_wrapper": [
+          "obs",
+          {
+            "executable": "$APPDIR/OBS.app/Contents/MacOS/OBS"
+          }
+        ],
+        "target": "$HOMEBREW_PREFIX/bin/obs"
+      },
+      {
+        "zap": [
+          {
+            "trash": [
+              "~/Library/Application Support/obs-studio",
+              "~/Library/HTTPStorages/com.obsproject.obs-studio",
+              "~/Library/Preferences/com.obsproject.obs-studio.plist",
+              "~/Library/Saved Application State/com.obsproject.obs-studio.savedState"
+            ]
+          }
+        ]
+      }
+    ],
+    "auto_updates": true,
+    "autobump": true,
+    "bundle_short_version": null,
+    "bundle_version": null,
+    "depends_on": {
+      "macos": {
+        ">=": [
+          "13"
+        ]
+      }
+    },
+    "deprecate_args": null,
+    "deprecated": false,
+    "deprecation_date": null,
+    "deprecation_reason": null,
+    "deprecation_replacement_cask": null,
+    "deprecation_replacement_formula": null,
+    "desc": "Open-source software for live streaming and screen recording",
+    "disable_args": null,
+    "disable_date": null,
+    "disable_reason": null,
+    "disable_replacement_cask": null,
+    "disable_replacement_formula": null,
+    "disabled": false,
+    "full_token": "obs",
+    "homepage": "https://obsproject.com/",
+    "name": [
+      "OBS"
+    ],
+    "no_autobump_message": null,
+    "sha256": "920d6f26703d2df6e4085bd3c1cbed30488325084136c7a6e9e37021fbd6aaf7",
+    "skip_livecheck": false,
+    "supported_platforms": [
+      "golden_gate",
+      "arm64_golden_gate",
+      "tahoe",
+      "arm64_tahoe",
+      "sequoia",
+      "arm64_sequoia",
+      "sonoma",
+      "arm64_sonoma",
+      "ventura",
+      "arm64_ventura"
+    ],
+    "tap": "homebrew/cask",
+    "token": "obs",
+    "url": "https://cdn-fastly.obsproject.com/downloads/obs-studio-32.2.2-macos-apple.dmg",
+    "variations": {
+      "arm64_linux": {
+        "sha256": null
+      },
+      "golden_gate": {
+        "sha256": "f8d8afe3dffdc86efa0698c02ff0c997866bac3e6208ddaf56d37108baacf197",
+        "url": "https://cdn-fastly.obsproject.com/downloads/obs-studio-32.2.2-macos-intel.dmg"
+      },
+      "sequoia": {
+        "sha256": "f8d8afe3dffdc86efa0698c02ff0c997866bac3e6208ddaf56d37108baacf197",
+        "url": "https://cdn-fastly.obsproject.com/downloads/obs-studio-32.2.2-macos-intel.dmg"
+      },
+      "sonoma": {
+        "sha256": "f8d8afe3dffdc86efa0698c02ff0c997866bac3e6208ddaf56d37108baacf197",
+        "url": "https://cdn-fastly.obsproject.com/downloads/obs-studio-32.2.2-macos-intel.dmg"
+      },
+      "tahoe": {
+        "sha256": "f8d8afe3dffdc86efa0698c02ff0c997866bac3e6208ddaf56d37108baacf197",
+        "url": "https://cdn-fastly.obsproject.com/downloads/obs-studio-32.2.2-macos-intel.dmg"
+      },
+      "ventura": {
+        "sha256": "f8d8afe3dffdc86efa0698c02ff0c997866bac3e6208ddaf56d37108baacf197",
+        "url": "https://cdn-fastly.obsproject.com/downloads/obs-studio-32.2.2-macos-intel.dmg"
+      },
+      "x86_64_linux": {
+        "sha256": null,
+        "url": "https://cdn-fastly.obsproject.com/downloads/obs-studio-32.2.2-macos-intel.dmg"
+      }
+    },
+    "version": "32.2.2"
+  },
+  {
+    "artifacts": [
+      {
+        "uninstall": [
+          {
+            "launchctl": [
+              "2BUA8C4S2C.com.1password.browser-helper",
+              "com.1password.1password-launcher"
+            ],
+            "quit": "com.1password.1password"
+          }
+        ]
+      },
+      {
+        "app": [
+          "1Password.app"
+        ],
+        "target": "/Applications/1Password.app"
+      },
+      {
+        "zap": [
+          {
+            "trash": [
+              "~/Library/Application Scripts/2BUA8C4S2C.com.1password*",
+              "~/Library/Application Scripts/2BUA8C4S2C.com.agilebits",
+              "~/Library/Application Scripts/com.1password.1password-launcher",
+              "~/Library/Application Scripts/com.1password.browser-support",
+              "~/Library/Application Support/1Password",
+              "~/Library/Application Support/Arc/User Data/NativeMessagingHosts/com.1password.1password.json",
+              "~/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.ApplicationRecentDocuments/com.1password.1password.sfl*",
+              "~/Library/Application Support/CrashReporter/1Password*",
+              "~/Library/Application Support/Google/Chrome Beta/NativeMessagingHosts/com.1password.1password.json",
+              "~/Library/Application Support/Google/Chrome Canary/NativeMessagingHosts/com.1password.1password.json",
+              "~/Library/Application Support/Google/Chrome Dev/NativeMessagingHosts/com.1password.1password.json",
+              "~/Library/Application Support/Google/Chrome/NativeMessagingHosts/com.1password.1password.json",
+              "~/Library/Application Support/Microsoft Edge Beta/NativeMessagingHosts/com.1password.1password.json",
+              "~/Library/Application Support/Microsoft Edge Canary/NativeMessagingHosts/com.1password.1password.json",
+              "~/Library/Application Support/Microsoft Edge Dev/NativeMessagingHosts/com.1password.1password.json",
+              "~/Library/Application Support/Microsoft Edge/NativeMessagingHosts/com.1password.1password.json",
+              "~/Library/Application Support/Mozilla/NativeMessagingHosts/com.1password.1password.json",
+              "~/Library/Application Support/Vivaldi/NativeMessagingHosts/com.1password.1password.json",
+              "~/Library/Containers/2BUA8C4S2C.com.1password.browser-helper",
+              "~/Library/Containers/com.1password.1password*",
+              "~/Library/Containers/com.1password.browser-support",
+              "~/Library/Group Containers/2BUA8C4S2C.com.1password",
+              "~/Library/Group Containers/2BUA8C4S2C.com.agilebits",
+              "~/Library/Logs/1Password",
+              "~/Library/Preferences/com.1password.1password.plist",
+              "~/Library/Preferences/group.com.1password.plist",
+              "~/Library/Saved Application State/com.1password.1password.savedState"
+            ]
+          }
+        ]
+      }
+    ],
+    "auto_updates": true,
+    "autobump": true,
+    "bundle_short_version": null,
+    "bundle_version": null,
+    "depends_on": {
+      "macos": {
+        ">=": [
+          "12"
+        ]
+      }
+    },
+    "deprecate_args": null,
+    "deprecated": false,
+    "deprecation_date": null,
+    "deprecation_reason": null,
+    "deprecation_replacement_cask": null,
+    "deprecation_replacement_formula": null,
+    "desc": "Password manager that keeps all passwords secure behind one password",
+    "disable_args": null,
+    "disable_date": null,
+    "disable_reason": null,
+    "disable_replacement_cask": null,
+    "disable_replacement_formula": null,
+    "disabled": false,
+    "full_token": "1password",
+    "homepage": "https://1password.com/",
+    "name": [
+      "1Password"
+    ],
+    "no_autobump_message": null,
+    "sha256": "77d57273afbde862c814860623f0d1145fb85a73fb7e3202e2d1cc49a8372ce4",
+    "skip_livecheck": false,
+    "supported_platforms": [
+      "golden_gate",
+      "arm64_golden_gate",
+      "tahoe",
+      "arm64_tahoe",
+      "sequoia",
+      "arm64_sequoia",
+      "sonoma",
+      "arm64_sonoma",
+      "ventura",
+      "arm64_ventura",
+      "monterey",
+      "arm64_monterey"
+    ],
+    "tap": "homebrew/cask",
+    "token": "1password",
+    "url": "https://downloads.1password.com/mac/1Password-8.12.36-aarch64.zip",
+    "variations": {
+      "arm64_linux": {
+        "sha256": null
+      },
+      "golden_gate": {
+        "sha256": "1f117efbe8ab79386be1bb881496f0cb7d4b82d51a07e17ee1166fb38cc08506",
+        "url": "https://downloads.1password.com/mac/1Password-8.12.36-x86_64.zip"
+      },
+      "monterey": {
+        "sha256": "1f117efbe8ab79386be1bb881496f0cb7d4b82d51a07e17ee1166fb38cc08506",
+        "url": "https://downloads.1password.com/mac/1Password-8.12.36-x86_64.zip"
+      },
+      "sequoia": {
+        "sha256": "1f117efbe8ab79386be1bb881496f0cb7d4b82d51a07e17ee1166fb38cc08506",
+        "url": "https://downloads.1password.com/mac/1Password-8.12.36-x86_64.zip"
+      },
+      "sonoma": {
+        "sha256": "1f117efbe8ab79386be1bb881496f0cb7d4b82d51a07e17ee1166fb38cc08506",
+        "url": "https://downloads.1password.com/mac/1Password-8.12.36-x86_64.zip"
+      },
+      "tahoe": {
+        "sha256": "1f117efbe8ab79386be1bb881496f0cb7d4b82d51a07e17ee1166fb38cc08506",
+        "url": "https://downloads.1password.com/mac/1Password-8.12.36-x86_64.zip"
+      },
+      "ventura": {
+        "sha256": "1f117efbe8ab79386be1bb881496f0cb7d4b82d51a07e17ee1166fb38cc08506",
+        "url": "https://downloads.1password.com/mac/1Password-8.12.36-x86_64.zip"
+      },
+      "x86_64_linux": {
+        "sha256": null,
+        "url": "https://downloads.1password.com/mac/1Password-8.12.36-x86_64.zip"
+      }
+    },
+    "version": "8.12.36"
+  },
+  {
+    "artifacts": [
+      {
+        "uninstall": [
+          {
+            "launchctl": [
+              "2BUA8C4S2C.com.1password.browser-helper",
+              "com.1password.1password-launcher"
+            ],
+            "quit": "com.1password.1password"
+          }
+        ]
+      },
+      {
+        "app": [
+          "1Password.app"
+        ],
+        "target": "/Applications/1Password.app"
+      },
+      {
+        "zap": [
+          {
+            "trash": [
+              "~/Library/Application Scripts/2BUA8C4S2C.com.1password*",
+              "~/Library/Application Scripts/2BUA8C4S2C.com.agilebits",
+              "~/Library/Application Scripts/com.1password.1password-launcher",
+              "~/Library/Application Scripts/com.1password.browser-support",
+              "~/Library/Application Support/1Password",
+              "~/Library/Application Support/Arc/User Data/NativeMessagingHosts/com.1password.1password.json",
+              "~/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.ApplicationRecentDocuments/com.1password.1password.sfl*",
+              "~/Library/Application Support/CrashReporter/1Password*",
+              "~/Library/Application Support/Google/Chrome Beta/NativeMessagingHosts/com.1password.1password.json",
+              "~/Library/Application Support/Google/Chrome Canary/NativeMessagingHosts/com.1password.1password.json",
+              "~/Library/Application Support/Google/Chrome Dev/NativeMessagingHosts/com.1password.1password.json",
+              "~/Library/Application Support/Google/Chrome/NativeMessagingHosts/com.1password.1password.json",
+              "~/Library/Application Support/Microsoft Edge Beta/NativeMessagingHosts/com.1password.1password.json",
+              "~/Library/Application Support/Microsoft Edge Canary/NativeMessagingHosts/com.1password.1password.json",
+              "~/Library/Application Support/Microsoft Edge Dev/NativeMessagingHosts/com.1password.1password.json",
+              "~/Library/Application Support/Microsoft Edge/NativeMessagingHosts/com.1password.1password.json",
+              "~/Library/Application Support/Mozilla/NativeMessagingHosts/com.1password.1password.json",
+              "~/Library/Application Support/Vivaldi/NativeMessagingHosts/com.1password.1password.json",
+              "~/Library/Containers/2BUA8C4S2C.com.1password.browser-helper",
+              "~/Library/Containers/com.1password.1password*",
+              "~/Library/Containers/com.1password.browser-support",
+              "~/Library/Group Containers/2BUA8C4S2C.com.1password",
+              "~/Library/Group Containers/2BUA8C4S2C.com.agilebits",
+              "~/Library/Logs/1Password",
+              "~/Library/Preferences/com.1password.1password.plist",
+              "~/Library/Preferences/group.com.1password.plist",
+              "~/Library/Saved Application State/com.1password.1password.savedState"
+            ]
+          }
+        ]
+      }
+    ],
+    "auto_updates": true,
+    "autobump": true,
+    "bundle_short_version": null,
+    "bundle_version": null,
+    "depends_on": {
+      "macos": {
+        ">=": [
+          "12"
+        ]
+      }
+    },
+    "deprecate_args": null,
+    "deprecated": false,
+    "deprecation_date": null,
+    "deprecation_reason": null,
+    "deprecation_replacement_cask": null,
+    "deprecation_replacement_formula": null,
+    "desc": "Password manager",
+    "disable_args": null,
+    "disable_date": null,
+    "disable_reason": null,
+    "disable_replacement_cask": null,
+    "disable_replacement_formula": null,
+    "disabled": false,
+    "full_token": "1password@beta",
+    "homepage": "https://1password.com/",
+    "name": [
+      "1Password"
+    ],
+    "no_autobump_message": null,
+    "sha256": "3609d3ddd5c01484b6ce4789dce9fe4af69e5abeddea022c4e3eb7065db906c3",
+    "skip_livecheck": false,
+    "supported_platforms": [
+      "golden_gate",
+      "arm64_golden_gate",
+      "tahoe",
+      "arm64_tahoe",
+      "sequoia",
+      "arm64_sequoia",
+      "sonoma",
+      "arm64_sonoma",
+      "ventura",
+      "arm64_ventura",
+      "monterey",
+      "arm64_monterey"
+    ],
+    "tap": "homebrew/cask",
+    "token": "1password@beta",
+    "url": "https://downloads.1password.com/mac/1Password-8.12.40-23.BETA-aarch64.zip",
+    "variations": {
+      "arm64_linux": {
+        "sha256": null
+      },
+      "golden_gate": {
+        "sha256": "e2361668ea4079a7030c09fd56110c457c59ef0374e49d279ae81ee43bf39443",
+        "url": "https://downloads.1password.com/mac/1Password-8.12.40-23.BETA-x86_64.zip"
+      },
+      "monterey": {
+        "sha256": "e2361668ea4079a7030c09fd56110c457c59ef0374e49d279ae81ee43bf39443",
+        "url": "https://downloads.1password.com/mac/1Password-8.12.40-23.BETA-x86_64.zip"
+      },
+      "sequoia": {
+        "sha256": "e2361668ea4079a7030c09fd56110c457c59ef0374e49d279ae81ee43bf39443",
+        "url": "https://downloads.1password.com/mac/1Password-8.12.40-23.BETA-x86_64.zip"
+      },
+      "sonoma": {
+        "sha256": "e2361668ea4079a7030c09fd56110c457c59ef0374e49d279ae81ee43bf39443",
+        "url": "https://downloads.1password.com/mac/1Password-8.12.40-23.BETA-x86_64.zip"
+      },
+      "tahoe": {
+        "sha256": "e2361668ea4079a7030c09fd56110c457c59ef0374e49d279ae81ee43bf39443",
+        "url": "https://downloads.1password.com/mac/1Password-8.12.40-23.BETA-x86_64.zip"
+      },
+      "ventura": {
+        "sha256": "e2361668ea4079a7030c09fd56110c457c59ef0374e49d279ae81ee43bf39443",
+        "url": "https://downloads.1password.com/mac/1Password-8.12.40-23.BETA-x86_64.zip"
+      },
+      "x86_64_linux": {
+        "sha256": null,
+        "url": "https://downloads.1password.com/mac/1Password-8.12.40-23.BETA-x86_64.zip"
+      }
+    },
+    "version": "8.12.40-23.BETA"
+  },
+  {
+    "artifacts": [
+      {
+        "app": [
+          "Thorium.app"
+        ],
+        "target": "/Applications/Thorium.app"
+      },
+      {
+        "zap": [
+          {
+            "trash": [
+              "~/Library/Application Support/EDRLab.ThoriumReader",
+              "~/Library/Preferences/io.github.edrlab.thorium.plist"
+            ]
+          }
+        ]
+      }
+    ],
+    "auto_updates": null,
+    "autobump": true,
+    "bundle_short_version": null,
+    "bundle_version": null,
+    "depends_on": {
+      "macos": {
+        ">=": [
+          "12"
+        ]
+      }
+    },
+    "deprecate_args": null,
+    "deprecated": false,
+    "deprecation_date": null,
+    "deprecation_reason": null,
+    "deprecation_replacement_cask": null,
+    "deprecation_replacement_formula": null,
+    "desc": "Epub reader",
+    "disable_args": null,
+    "disable_date": null,
+    "disable_reason": null,
+    "disable_replacement_cask": null,
+    "disable_replacement_formula": null,
+    "disabled": false,
+    "full_token": "thorium",
+    "homepage": "https://www.edrlab.org/software/thorium-reader/",
+    "name": [
+      "Thorium Reader"
+    ],
+    "no_autobump_message": null,
+    "sha256": "2f19dcaf4b717330626ebce7148653da399945467699bef7f0843d7b5f512030",
+    "skip_livecheck": false,
+    "supported_platforms": [
+      "golden_gate",
+      "arm64_golden_gate",
+      "tahoe",
+      "arm64_tahoe",
+      "sequoia",
+      "arm64_sequoia",
+      "sonoma",
+      "arm64_sonoma",
+      "ventura",
+      "arm64_ventura",
+      "monterey",
+      "arm64_monterey"
+    ],
+    "tap": "homebrew/cask",
+    "token": "thorium",
+    "url": "https://github.com/edrlab/thorium-reader/releases/download/v3.4.0/Thorium-3.4.0-arm64.dmg",
+    "variations": {
+      "arm64_linux": {
+        "sha256": null
+      },
+      "golden_gate": {
+        "sha256": "ef1e798792e0b2fc76348e2376453ce21cb7bb8607e8b8dff6d3c2298d69c239",
+        "url": "https://github.com/edrlab/thorium-reader/releases/download/v3.4.0/Thorium-3.4.0.dmg"
+      },
+      "monterey": {
+        "sha256": "ef1e798792e0b2fc76348e2376453ce21cb7bb8607e8b8dff6d3c2298d69c239",
+        "url": "https://github.com/edrlab/thorium-reader/releases/download/v3.4.0/Thorium-3.4.0.dmg"
+      },
+      "sequoia": {
+        "sha256": "ef1e798792e0b2fc76348e2376453ce21cb7bb8607e8b8dff6d3c2298d69c239",
+        "url": "https://github.com/edrlab/thorium-reader/releases/download/v3.4.0/Thorium-3.4.0.dmg"
+      },
+      "sonoma": {
+        "sha256": "ef1e798792e0b2fc76348e2376453ce21cb7bb8607e8b8dff6d3c2298d69c239",
+        "url": "https://github.com/edrlab/thorium-reader/releases/download/v3.4.0/Thorium-3.4.0.dmg"
+      },
+      "tahoe": {
+        "sha256": "ef1e798792e0b2fc76348e2376453ce21cb7bb8607e8b8dff6d3c2298d69c239",
+        "url": "https://github.com/edrlab/thorium-reader/releases/download/v3.4.0/Thorium-3.4.0.dmg"
+      },
+      "ventura": {
+        "sha256": "ef1e798792e0b2fc76348e2376453ce21cb7bb8607e8b8dff6d3c2298d69c239",
+        "url": "https://github.com/edrlab/thorium-reader/releases/download/v3.4.0/Thorium-3.4.0.dmg"
+      },
+      "x86_64_linux": {
+        "sha256": null,
+        "url": "https://github.com/edrlab/thorium-reader/releases/download/v3.4.0/Thorium-3.4.0.dmg"
+      }
+    },
+    "version": "3.4.0"
+  },
+  {
+    "artifacts": [
+      {
+        "app": [
+          "Thorium.app",
+          {
+            "target": "Thorium Browser.app"
+          }
+        ],
+        "target": "/Applications/Thorium Browser.app"
+      },
+      {
+        "command_wrapper": [
+          "thorium",
+          {
+            "executable": "$APPDIR/Thorium Browser.app/Contents/MacOS/Thorium"
+          }
+        ],
+        "target": "$HOMEBREW_PREFIX/bin/thorium"
+      },
+      {
+        "zap": [
+          {
+            "trash": [
+              "~/Library/Application Support/Thorium",
+              "~/Library/Caches/Thorium",
+              "~/Library/Preferences/org.chromium.Thorium.plist",
+              "~/Library/Saved Application State/org.chromium.Thorium.savedState"
+            ]
+          }
+        ]
+      }
+    ],
+    "auto_updates": null,
+    "autobump": true,
+    "bundle_short_version": null,
+    "bundle_version": null,
+    "depends_on": {
+      "macos": {}
+    },
+    "deprecate_args": null,
+    "deprecated": false,
+    "deprecation_date": null,
+    "deprecation_reason": null,
+    "deprecation_replacement_cask": null,
+    "deprecation_replacement_formula": null,
+    "desc": "Chromium-based web browser",
+    "disable_args": {
+      "because": "fails_gatekeeper_check",
+      "date": "2026-09-01",
+      "replacement_cask": null,
+      "replacement_formula": null
+    },
+    "disable_date": "2026-09-01",
+    "disable_reason": "fails_gatekeeper_check",
+    "disable_replacement_cask": null,
+    "disable_replacement_formula": null,
+    "disabled": true,
+    "full_token": "alex313031-thorium",
+    "homepage": "https://thorium.rocks/",
+    "name": [
+      "Thorium"
+    ],
+    "no_autobump_message": null,
+    "sha256": "01f77352f40445e5c39a838c6e48198a09b64c14b0ec423c83fd9b461e0d7069",
+    "skip_livecheck": false,
+    "supported_platforms": [
+      "golden_gate",
+      "arm64_golden_gate",
+      "tahoe",
+      "arm64_tahoe",
+      "sequoia",
+      "arm64_sequoia",
+      "sonoma",
+      "arm64_sonoma",
+      "ventura",
+      "arm64_ventura",
+      "monterey",
+      "arm64_monterey",
+      "big_sur",
+      "arm64_big_sur"
+    ],
+    "tap": "homebrew/cask",
+    "token": "alex313031-thorium",
+    "url": "https://github.com/Alex313031/Thorium-MacOS/releases/download/M138.0.7204.303/Thorium_MacOS_ARM64.dmg",
+    "variations": {
+      "arm64_linux": {
+        "sha256": null
+      },
+      "big_sur": {
+        "sha256": "9a31c4d3fea1f6a49f2943f30d3400ef7cffbb8ab815567e83049b88652b8778",
+        "url": "https://github.com/Alex313031/Thorium-MacOS/releases/download/M138.0.7204.303/Thorium_MacOS_x64.dmg"
+      },
+      "golden_gate": {
+        "sha256": "9a31c4d3fea1f6a49f2943f30d3400ef7cffbb8ab815567e83049b88652b8778",
+        "url": "https://github.com/Alex313031/Thorium-MacOS/releases/download/M138.0.7204.303/Thorium_MacOS_x64.dmg"
+      },
+      "monterey": {
+        "sha256": "9a31c4d3fea1f6a49f2943f30d3400ef7cffbb8ab815567e83049b88652b8778",
+        "url": "https://github.com/Alex313031/Thorium-MacOS/releases/download/M138.0.7204.303/Thorium_MacOS_x64.dmg"
+      },
+      "sequoia": {
+        "sha256": "9a31c4d3fea1f6a49f2943f30d3400ef7cffbb8ab815567e83049b88652b8778",
+        "url": "https://github.com/Alex313031/Thorium-MacOS/releases/download/M138.0.7204.303/Thorium_MacOS_x64.dmg"
+      },
+      "sonoma": {
+        "sha256": "9a31c4d3fea1f6a49f2943f30d3400ef7cffbb8ab815567e83049b88652b8778",
+        "url": "https://github.com/Alex313031/Thorium-MacOS/releases/download/M138.0.7204.303/Thorium_MacOS_x64.dmg"
+      },
+      "tahoe": {
+        "sha256": "9a31c4d3fea1f6a49f2943f30d3400ef7cffbb8ab815567e83049b88652b8778",
+        "url": "https://github.com/Alex313031/Thorium-MacOS/releases/download/M138.0.7204.303/Thorium_MacOS_x64.dmg"
+      },
+      "ventura": {
+        "sha256": "9a31c4d3fea1f6a49f2943f30d3400ef7cffbb8ab815567e83049b88652b8778",
+        "url": "https://github.com/Alex313031/Thorium-MacOS/releases/download/M138.0.7204.303/Thorium_MacOS_x64.dmg"
+      },
+      "x86_64_linux": {
+        "sha256": null,
+        "url": "https://github.com/Alex313031/Thorium-MacOS/releases/download/M138.0.7204.303/Thorium_MacOS_x64.dmg"
+      }
+    },
+    "version": "M138.0.7204.303"
+  },
+  {
+    "artifacts": [
+      {
+        "app": [
+          "Google Chrome.app"
+        ],
+        "target": "/Applications/Google Chrome.app"
+      },
+      {
+        "zap": [
+          {
+            "launchctl": [
+              "com.google.keystone.agent",
+              "com.google.keystone.daemon"
+            ],
+            "rmdir": [
+              "/Library/Google",
+              "~/Library/Application Support/Google",
+              "~/Library/Caches/Google",
+              "~/Library/Google"
+            ],
+            "trash": [
+              "/Library/Caches/com.google.SoftwareUpdate.*",
+              "/Library/Google/Google Chrome Brand.plist",
+              "/Library/Google/GoogleSoftwareUpdate",
+              "~/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.ApplicationRecentDocuments/com.google.chrome.app.*.sfl*",
+              "~/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.ApplicationRecentDocuments/com.google.chrome.sfl*",
+              "~/Library/Application Support/Google/Chrome",
+              "~/Library/Caches/com.google.Chrome",
+              "~/Library/Caches/com.google.Chrome.helper.*",
+              "~/Library/Caches/com.google.Keystone",
+              "~/Library/Caches/com.google.Keystone.Agent",
+              "~/Library/Caches/com.google.SoftwareUpdate",
+              "~/Library/Caches/Google/Chrome",
+              "~/Library/Google/Google Chrome Brand.plist",
+              "~/Library/Google/GoogleSoftwareUpdate",
+              "~/Library/LaunchAgents/com.google.keystone.agent.plist",
+              "~/Library/LaunchAgents/com.google.keystone.xpcservice.plist",
+              "~/Library/Logs/GoogleSoftwareUpdateAgent.log",
+              "~/Library/Preferences/com.google.Chrome.plist",
+              "~/Library/Preferences/com.google.Keystone.Agent.plist",
+              "~/Library/Saved Application State/com.google.Chrome.app.*.savedState",
+              "~/Library/Saved Application State/com.google.Chrome.savedState",
+              "~/Library/WebKit/com.google.Chrome"
+            ]
+          }
+        ]
+      }
+    ],
+    "auto_updates": true,
+    "autobump": true,
+    "bundle_short_version": "152.0.7977.83",
+    "bundle_version": "7977.83",
+    "depends_on": {
+      "macos": {
+        ">=": [
+          "13"
+        ]
+      }
+    },
+    "deprecate_args": null,
+    "deprecated": false,
+    "deprecation_date": null,
+    "deprecation_reason": null,
+    "deprecation_replacement_cask": null,
+    "deprecation_replacement_formula": null,
+    "desc": "Web browser",
+    "disable_args": null,
+    "disable_date": null,
+    "disable_reason": null,
+    "disable_replacement_cask": null,
+    "disable_replacement_formula": null,
+    "disabled": false,
+    "full_token": "google-chrome",
+    "homepage": "https://www.google.com/chrome/",
+    "name": [
+      "Google Chrome"
+    ],
+    "no_autobump_message": null,
+    "sha256": "no_check",
+    "skip_livecheck": false,
+    "supported_platforms": [
+      "golden_gate",
+      "arm64_golden_gate",
+      "tahoe",
+      "arm64_tahoe",
+      "sequoia",
+      "arm64_sequoia",
+      "sonoma",
+      "arm64_sonoma",
+      "ventura",
+      "arm64_ventura"
+    ],
+    "tap": "homebrew/cask",
+    "token": "google-chrome",
+    "url": "https://dl.google.com/chrome/mac/universal/stable/GGRO/googlechrome.dmg",
+    "variations": {},
+    "version": "154.0.8037.58"
+  },
+  {
+    "artifacts": [
+      {
+        "app": [
+          "1Password.app"
+        ],
+        "target": "/Applications/1Password.app"
+      },
+      {
+        "zap": [
+          {
+            "trash": [
+              "~/Library/Application Scripts/2BUA8C4S2C.com.1password",
+              "~/Library/Application Scripts/2BUA8C4S2C.com.1password.browser-helper",
+              "~/Library/Application Scripts/com.1password.1password-launcher",
+              "~/Library/Application Scripts/com.1password.browser-support",
+              "~/Library/Application Support/1Password",
+              "~/Library/Application Support/CrashReporter/1Password*.plist",
+              "~/Library/Containers/2BUA8C4S2C.com.1password.browser-helper",
+              "~/Library/Containers/com.1password.1password-launcher",
+              "~/Library/Containers/com.1password.browser-support",
+              "~/Library/Group Containers/*.com.1password",
+              "~/Library/Group Containers/*.com.agilebits",
+              "~/Library/Logs/DiagnosticReports/1Password*",
+              "~/Library/Preferences/*1password.plist",
+              "~/Library/Saved Application State/com.1password.1password.savedState"
+            ]
+          }
+        ]
+      }
+    ],
+    "auto_updates": null,
+    "autobump": false,
+    "bundle_short_version": null,
+    "bundle_version": null,
+    "depends_on": {
+      "macos": {
+        ">=": [
+          "12"
+        ]
+      }
+    },
+    "deprecate_args": null,
+    "deprecated": false,
+    "deprecation_date": null,
+    "deprecation_reason": null,
+    "deprecation_replacement_cask": null,
+    "deprecation_replacement_formula": null,
+    "desc": "Password manager",
+    "disable_args": null,
+    "disable_date": null,
+    "disable_reason": null,
+    "disable_replacement_cask": null,
+    "disable_replacement_formula": null,
+    "disabled": false,
+    "full_token": "1password@nightly",
+    "homepage": "https://1password.com/",
+    "name": [
+      "1Password Nightly"
+    ],
+    "no_autobump_message": "latest_version",
+    "sha256": "no_check",
+    "skip_livecheck": false,
+    "supported_platforms": [
+      "golden_gate",
+      "arm64_golden_gate",
+      "tahoe",
+      "arm64_tahoe",
+      "sequoia",
+      "arm64_sequoia",
+      "sonoma",
+      "arm64_sonoma",
+      "ventura",
+      "arm64_ventura",
+      "monterey",
+      "arm64_monterey"
+    ],
+    "tap": "homebrew/cask",
+    "token": "1password@nightly",
+    "url": "https://c.1password.com/dist/1P/mac8/1Password-latest.NIGHTLY-aarch64.zip",
+    "variations": {
+      "golden_gate": {
+        "url": "https://c.1password.com/dist/1P/mac8/1Password-latest.NIGHTLY-x86_64.zip"
+      },
+      "monterey": {
+        "url": "https://c.1password.com/dist/1P/mac8/1Password-latest.NIGHTLY-x86_64.zip"
+      },
+      "sequoia": {
+        "url": "https://c.1password.com/dist/1P/mac8/1Password-latest.NIGHTLY-x86_64.zip"
+      },
+      "sonoma": {
+        "url": "https://c.1password.com/dist/1P/mac8/1Password-latest.NIGHTLY-x86_64.zip"
+      },
+      "tahoe": {
+        "url": "https://c.1password.com/dist/1P/mac8/1Password-latest.NIGHTLY-x86_64.zip"
+      },
+      "ventura": {
+        "url": "https://c.1password.com/dist/1P/mac8/1Password-latest.NIGHTLY-x86_64.zip"
+      },
+      "x86_64_linux": {
+        "url": "https://c.1password.com/dist/1P/mac8/1Password-latest.NIGHTLY-x86_64.zip"
+      }
+    },
+    "version": "latest"
+  },
+  {
+    "artifacts": [
+      {
+        "preflight_steps": [
+          {
+            "steps": [
+              {
+                "path": {
+                  "base": "home",
+                  "path": "Library/Application Support/net.86box.86Box/roms"
+                },
+                "type": "mkdir_p"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uninstall": [
+          {
+            "trash": "$APPDIR/86box"
+          }
+        ]
+      },
+      {
+        "app": [
+          "86Box.app"
+        ],
+        "target": "/Applications/86Box.app"
+      },
+      {
+        "zap": [
+          {
+            "trash": [
+              "~/Library/Application Support/86Box",
+              "~/Library/Application Support/net.86box.86Box",
+              "~/Library/Preferences/86Box",
+              "~/Library/Preferences/net.86Box.86Box.plist",
+              "~/Library/Saved Application State/net.86Box.86Box.savedState"
+            ]
+          }
+        ]
+      }
+    ],
+    "auto_updates": null,
+    "autobump": true,
+    "bundle_short_version": null,
+    "bundle_version": null,
+    "depends_on": {
+      "macos": {}
+    },
+    "deprecate_args": null,
+    "deprecated": false,
+    "deprecation_date": null,
+    "deprecation_reason": null,
+    "deprecation_replacement_cask": null,
+    "deprecation_replacement_formula": null,
+    "desc": "Emulator of x86-based machines based on PCem",
+    "disable_args": null,
+    "disable_date": null,
+    "disable_reason": null,
+    "disable_replacement_cask": null,
+    "disable_replacement_formula": null,
+    "disabled": false,
+    "full_token": "86box",
+    "homepage": "https://86box.net/",
+    "name": [
+      "86Box"
+    ],
+    "no_autobump_message": null,
+    "sha256": "fc66fc97225012af20145ae04193911bbf689fc75f89590774a904483140a5a9",
+    "skip_livecheck": false,
+    "supported_platforms": [
+      "golden_gate",
+      "arm64_golden_gate",
+      "tahoe",
+      "arm64_tahoe",
+      "sequoia",
+      "arm64_sequoia",
+      "sonoma",
+      "arm64_sonoma",
+      "ventura",
+      "arm64_ventura",
+      "monterey",
+      "arm64_monterey",
+      "big_sur",
+      "arm64_big_sur"
+    ],
+    "tap": "homebrew/cask",
+    "token": "86box",
+    "url": "https://github.com/86Box/86Box/releases/download/v6.0/86Box-macOS-x86_64+arm64-b9001.zip",
+    "variations": {},
+    "version": "6.0,9001"
+  },
+  {
+    "token": "freelens",
+    "full_token": "freelens",
+    "tap": "homebrew/cask",
+    "name": [
+      "Freelens"
+    ],
+    "desc": "Kubernetes IDE",
+    "homepage": "https://freelens.app/",
+    "url": "https://github.com/freelensapp/freelens/releases/download/v1.10.3/Freelens-1.10.3-macos-arm64.dmg",
+    "version": "1.10.3",
+    "autobump": true,
+    "no_autobump_message": null,
+    "skip_livecheck": false,
+    "bundle_version": null,
+    "bundle_short_version": null,
+    "sha256": "ae33e11d5db858da1f64ae2c4f7ca3835786780bcb2af02e55fe756f08900419",
+    "artifacts": [
+      {
+        "app": [
+          "Freelens.app"
+        ],
+        "target": "/Applications/Freelens.app"
+      },
+      {
+        "zap": [
+          {
+            "trash": [
+              "~/Library/Application Support/Freelens",
+              "~/Library/Logs/Freelens"
+            ]
+          }
+        ]
+      }
+    ],
+    "depends_on": {
+      "macos": {
+        ">=": [
+          "12"
+        ]
+      }
+    },
+    "auto_updates": null,
+    "deprecated": false,
+    "deprecation_date": null,
+    "deprecation_reason": null,
+    "deprecation_replacement_formula": null,
+    "deprecation_replacement_cask": null,
+    "deprecate_args": null,
+    "disabled": false,
+    "disable_date": null,
+    "disable_reason": null,
+    "disable_replacement_formula": null,
+    "disable_replacement_cask": null,
+    "disable_args": null,
+    "variations": {},
+    "supported_platforms": [
+      "golden_gate",
+      "arm64_golden_gate",
+      "tahoe",
+      "arm64_tahoe",
+      "sequoia",
+      "arm64_sequoia",
+      "sonoma",
+      "arm64_sonoma",
+      "ventura",
+      "arm64_ventura",
+      "monterey",
+      "arm64_monterey",
+      "x86_64_linux",
+      "arm64_linux"
+    ]
+  },
+  {
+    "token": "freelens@nightly",
+    "full_token": "freelens@nightly",
+    "tap": "homebrew/cask",
+    "name": [
+      "Freelens"
+    ],
+    "desc": "Kubernetes IDE",
+    "homepage": "https://freelens.app/",
+    "url": "https://github.com/freelensapp/freelens-nightly-builds/releases/download/v2.0.0-0-nightly-2026-09-30/Freelens-2.0.0-0-nightly-2026-09-30-macos-arm64.dmg",
+    "version": "2.0.0-0-nightly-2026-09-30",
+    "autobump": true,
+    "no_autobump_message": null,
+    "skip_livecheck": false,
+    "bundle_version": null,
+    "bundle_short_version": null,
+    "sha256": "0788ab7ea57773dab9afae4ae79eb05ebddcce50ffe0a8e062971e51d04e543a",
+    "artifacts": [
+      {
+        "app": [
+          "Freelens.app"
+        ],
+        "target": "/Applications/Freelens.app"
+      },
+      {
+        "zap": [
+          {
+            "trash": [
+              "~/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.ApplicationRecentDocuments/app.freelens.freelens.sfl*",
+              "~/Library/Application Support/Freelens",
+              "~/Library/Logs/Freelens",
+              "~/Library/Preferences/app.freelens.Freelens.plist",
+              "~/Library/Saved Application State/app.freelens.Freelens.savedState"
+            ],
+            "rmdir": "~/.freelens"
+          }
+        ]
+      }
+    ],
+    "depends_on": {
+      "macos": {
+        ">=": [
+          "12"
+        ]
+      }
+    },
+    "auto_updates": null,
+    "deprecated": false,
+    "deprecation_date": null,
+    "deprecation_reason": null,
+    "deprecation_replacement_formula": null,
+    "deprecation_replacement_cask": null,
+    "deprecate_args": null,
+    "disabled": false,
+    "disable_date": null,
+    "disable_reason": null,
+    "disable_replacement_formula": null,
+    "disable_replacement_cask": null,
+    "disable_args": null,
+    "variations": {},
+    "supported_platforms": [
+      "golden_gate",
+      "arm64_golden_gate",
+      "tahoe",
+      "arm64_tahoe",
+      "sequoia",
+      "arm64_sequoia",
+      "sonoma",
+      "arm64_sonoma",
+      "ventura",
+      "arm64_ventura",
+      "monterey",
+      "arm64_monterey"
+    ]
+  }
 ]

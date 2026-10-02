@@ -98,6 +98,16 @@ struct HomebrewCaskSourceTests {
         #expect(match(onePassword, installed: ["1password@beta"])?.cask.token == "1password@beta")
     }
 
+    @Test func channelCaskNeverBeatsAStableNameMatch() throws {
+        // Freelens (accuracy run, 2026-10-02): `freelens` matches by name only, `freelens@nightly`
+        // also lists the bundle ID in its zap paths. The nightly used to win and offer a nightly
+        // build to people running the stable app.
+        let freelens = InstalledApp.test("Freelens.app", bundleID: "app.freelens.Freelens", version: "1.10.3")
+        #expect(match(freelens)?.cask.token == "freelens")
+        #expect(match(freelens, installed: ["freelens"])?.cask.token == "freelens")
+        #expect(match(freelens, installed: ["freelens@nightly"])?.cask.token == "freelens@nightly")
+    }
+
     @Test func unversionedCaskCannotAnswer() {
         let nightly = InstalledApp.test("1Password.app", bundleID: "com.1password.nightly", version: "8.13")
         let outcome = HomebrewCaskSource.outcome(for: nightly, in: index, machine: .test())
