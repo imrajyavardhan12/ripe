@@ -26,11 +26,13 @@ Tags with a suffix (`v0.2.0-rc.1`) are published as pre-releases and don't touch
 ## Testing a formula change locally
 
 ```sh
-make release && tar -czf /tmp/ripe.tar.gz -C dist ripe
-brew tap-new --no-git ripe-test/local
-scripts/formula.sh 0.0.0-test "$(shasum -a 256 /tmp/ripe.tar.gz | cut -d' ' -f1)" file:///tmp/ripe.tar.gz \
-  > "$(brew --repository)/Library/Taps/ripe-test/homebrew-local/Formula/ripe.rb"
-HOMEBREW_NO_INSTALL_FROM_API=1 brew install ripe-test/local/ripe
-brew test ripe-test/local/ripe && brew audit --strict ripe-test/local/ripe
-brew uninstall ripe-test/local/ripe && brew untap ripe-test/local
+make release && scripts/check-formula.sh dist/ripe
 ```
+
+It installs the binary through the real formula from a throwaway local tap, runs `brew test` and `brew audit --strict`, and cleans up. It refuses to run if `ripe` is already installed through Homebrew, so it can never touch a real install (`brew uninstall ripe` first, reinstall after). CI runs it on every push; the release runs it before publishing anything.
+
+## Build machine and actions
+
+- CI and releases run on `macos-26` with **Xcode 26.6 selected explicitly**. Toolchains built for macOS 27+ ship no x86_64 runtime, so moving to a newer Xcode can silently drop the Intel slice; the release refuses to publish without both slices. Bump the image or Xcode on purpose, in its own PR.
+- Every action is pinned to a full commit SHA, with the version in a comment. Dependabot opens weekly PRs to bump them; review the release notes before merging.
+- After a release updates the tap, a separate job installs `ripe` from the tap on a clean machine and runs `brew test`. If that fails, the release is broken for users: fix forward with a patch release.

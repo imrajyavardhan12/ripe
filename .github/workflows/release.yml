@@ -1,30 +1,40 @@
 name: Release
 
-# Push a tag like v0.1.0 to publish a universal binary with a checksum and a build-provenance
-# attestation (verify with `gh attestation verify ripe-*.tar.gz -R imrajyavardhan12/ripe`), then
-# update the formula in imrajyavardhan12/homebrew-tap. See docs/releasing.md.
+# Push a tag like v0.3.0 to publish a universal binary with a checksum and a build-provenance
+# attestation (verify with `gh attestation verify ripe-*.tar.gz -R imrajyavardhan12/ripe`), update
+# the formula in imrajyavardhan12/homebrew-tap, then install it from the tap on a clean machine
+# to prove what users get works. See docs/releasing.md.
 on:
   push:
     tags: ["v*.*.*"]
 
 permissions:
-  contents: write
-  id-token: write
-  attestations: write
+  contents: read
 
 jobs:
   release:
-    runs-on: macos-latest
+    runs-on: macos-26
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
     env:
       # Fine-grained token with Contents: read and write on homebrew-tap only. Without it the
       # release still publishes and the tap step is skipped.
       HOMEBREW_TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      tap-updated: ${{ steps.tap.outputs.updated }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09  # v5.1.0
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_26.6.app
       - name: Read version
+        id: version
         run: |
           version="${GITHUB_REF_NAME#v}"
           echo "VERSION=$version" >> "$GITHUB_ENV"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
           case "$version" in *-*) echo "PRERELEASE=true" >> "$GITHUB_ENV" ;; *) echo "PRERELEASE=false" >> "$GITHUB_ENV" ;; esac
       - name: Release notes from CHANGELOG.md
         run: |
@@ -39,6 +49,8 @@ jobs:
           grep -q "\"${VERSION}\"" Sources/RipeCore/Ripe.swift
       - run: make test
       - run: make release
+      - name: Check the formula before publishing anything
+        run: scripts/check-formula.sh dist/ripe "$VERSION"
       - name: Package
         run: |
           archive="ripe-${VERSION}-universal-macos.tar.gz"
@@ -46,7 +58,8 @@ jobs:
           shasum -a 256 "$archive" > "$archive.sha256"
           echo "ARCHIVE=$archive" >> "$GITHUB_ENV"
           dist/ripe --version | grep -qx "$VERSION"
-      - uses: actions/attest-build-provenance@v3
+          lipo -archs dist/ripe | grep -q x86_64 && lipo -archs dist/ripe | grep -q arm64
+      - uses: actions/attest-build-provenance@96278af6caaf10aea03fd8d33a09a777ca52d62f  # v3.2.0
         with:
           subject-path: ${{ env.ARCHIVE }}
       - name: Publish
@@ -57,6 +70,7 @@ jobs:
           if [ "$PRERELEASE" = true ]; then flags="$flags --prerelease"; fi
           gh release create "$GITHUB_REF_NAME" "$ARCHIVE" "$ARCHIVE.sha256" $flags
       - name: Update Homebrew tap
+        id: tap
         if: env.HOMEBREW_TAP_TOKEN != '' && env.PRERELEASE == 'false'
         run: |
           sha256="$(cut -d' ' -f1 "$ARCHIVE.sha256")"
@@ -68,3 +82,22 @@ jobs:
           git add Formula/ripe.rb
           git commit -m "ripe ${VERSION}"
           git push
+          echo "updated=true" >> "$GITHUB_OUTPUT"
+
+  # What users actually run, on a machine that never saw the build.
+  verify-tap:
+    needs: release
+    if: needs.release.outputs.tap-updated == 'true'
+    runs-on: macos-26
+    steps:
+      - name: Install from the tap
+        env:
+          HOMEBREW_NO_AUTO_UPDATE: "1"
+          HOMEBREW_NO_ANALYTICS: "1"
+          VERSION: ${{ needs.release.outputs.version }}
+        run: |
+          brew tap imrajyavardhan12/tap
+          brew install imrajyavardhan12/tap/ripe
+          ripe --version | grep -qx "$VERSION"
+          brew test imrajyavardhan12/tap/ripe
+          echo "ripe $VERSION installs from the tap and passes brew test"

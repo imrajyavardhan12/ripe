@@ -1,0 +1,15 @@
+# Keeps the commit-pinned GitHub Actions current: Dependabot opens a PR with the new commit and
+# release notes, and CI must pass before it's merged.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ["*"]
+  - package-ecosystem: swift
+    directory: /
+    schedule:
+      interval: weekly
