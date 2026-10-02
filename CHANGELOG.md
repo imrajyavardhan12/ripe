@@ -7,6 +7,7 @@ All notable changes to Ripe. The release workflow publishes each version's secti
 - `ripe doctor` checks what Ripe depends on: app folders, Homebrew and mas, the Homebrew, App Store and orchard sources (live, or offline from cache), the skips file and interrupted updates. Exits 1 when something is broken; its output is the first thing to paste into a bug report.
 
 - orchard fallback feeds: the catalog can now give Sparkle feeds to apps that set theirs in code (first entries: Ghostty and KeepingYouAwake), each verified against Homebrew's version first. Used only when the app declares no feed and its name matches, and an update is reported only when the build number and the visible version agree.
+- Versions with a commit hash after a dash (GitHub Desktop's `3.6.6-8b85519e`) no longer read as a newer version. Found by the new accuracy workflow, which installs 80 popular apps on a clean Mac every week and fails on any false update.
 - Commit-hash versions that start with digits (Ghostty tip `0081d4530`) are recognized as not comparable instead of being read as a number, and versions like `3.10.8 :0294d207:` ignore the hash.
 
 - `ripe why` shows paths under your home folder as `~/…`, so pasting it into a bug report doesn't reveal your username.

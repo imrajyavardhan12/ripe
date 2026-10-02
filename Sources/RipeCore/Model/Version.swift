@@ -67,6 +67,16 @@ public struct Version: Sendable, Hashable, CustomStringConvertible {
         if let hash = text.range(of: " :") {
             text = String(text[..<hash.lowerBound])
         }
+        // A commit hash after a dash is build metadata, not a pre-release: GitHub Desktop's
+        // `3.6.6-8b85519e` would otherwise read as 3.6.6.8, a false update from 3.6.6.
+        if let dash = text.lastIndex(of: "-") {
+            let suffix = text[text.index(after: dash)...]
+            if (7...40).contains(suffix.count), suffix.allSatisfy(\.isHexDigit),
+                suffix.contains(where: \.isLetter), suffix.contains(where: \.isNumber)
+            {
+                text = String(text[..<dash])
+            }
+        }
         // A commit hash isn't a version, even one that starts with digits (Ghostty tip `0081d4530`
         // would otherwise read as 81 plus a tag, and `1a2b3c4` as a 1.x release).
         if (7...40).contains(text.count), text.allSatisfy(\.isHexDigit), text.contains(where: \.isLetter) {

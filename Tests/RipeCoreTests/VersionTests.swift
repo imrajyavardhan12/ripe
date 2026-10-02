@@ -47,6 +47,11 @@ struct VersionTests {
         Case(installed: "5.34", latest: "5.34(14042)", expected: .same),  // Folx
         Case(installed: "3.10.8", latest: "3.10.8 :0294d207:", expected: .same),  // Vienna
         Case(installed: "9.0.1", latest: "9.0.1 (build 6491)", expected: .same),  // Tunnelblick
+        // Commit hash after a dash (GitHub Desktop cask, accuracy run 2026-10-02)
+        Case(installed: "3.6.6", latest: "3.6.6-8b85519e", expected: .same),
+        Case(installed: "3.6.5", latest: "3.6.6-8b85519e", expected: .older),
+        Case(installed: "3.6.6-13b57bd2", latest: "3.6.6-8b85519e", expected: .same),
+        Case(installed: "0.21.3-Beta", latest: "0.21.3-beta2", expected: .older),  // tags still count
         // Unknown tags can't be ordered against each other
         Case(installed: "1.0-foo", latest: "1.0-bar", expected: nil),
         Case(installed: "1.0-foo", latest: "1.0-foo", expected: .same),

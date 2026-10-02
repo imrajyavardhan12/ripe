@@ -2,6 +2,17 @@
 
 Ripe's headline metric is its false-positive rate: how often it claims an update that isn't real. Each release gets a verification run on real Macs, recorded here. When a verdict is wrong, the fix lands with a test (fixture or table row), and the row below links to it.
 
+## 2026-10-02 · Accuracy workflow, clean macOS 26 runner · 0.4.0-dev
+
+First automated run: the 80 most-installed app casks, freshly installed, then `ripe --all`. A fresh install must read as current, so any update Ripe reports is either a false positive or the app's own feed running ahead of Homebrew.
+
+80 installed, 80 found, 2.0 s. 77 current, 1 unknown (WezTerm: bundle says 0.1.0, Homebrew uses date versions, so not comparable), 2 reported updates:
+
+- **GitHub Desktop: false positive, fixed.** Cask version `3.6.6-8b85519e` read as 3.6.6.8, so the installed 3.6.6 looked outdated. A commit hash after a dash is now build metadata (`VersionTests`, GitHub Desktop rows).
+- **QLMarkdown: real.** Its own Sparkle feed offers 1.5.7 (build 59) while the cask still says 1.5.6.
+
+Earlier attempts the same day taught the harness two lessons: Homebrew dropped `--no-quarantine` (nothing installed, yet the run "passed": it now fails below 40 installs), and runner images carry stale cask data (36 apps installed old versions, which Ripe correctly reported as outdated: 36 of 36 caught, recall evidence; the run now refreshes Homebrew first and reports stale installs separately).
+
 ## 2026-10-02 (evening) · maintainer's Mac · 0.4.0-dev with the seeded orchard catalog
 
 27 apps, local catalog with 571 seeded fallback feeds. 12 ripe, 9 up to date, 6 unknown, identical to the same build without the seeded entries. Two apps got a seeded feed: **KeepingYouAwake** is now decided by its own Sparkle feed (build 1060800 = 1060800, still current); **Ghostty** (tip build, version `0081d4530`) stays unknown, now because its version is a commit hash. The importer's bundle IDs matched all 4 of this Mac's apps that it covers. No false positives. (The bulk set was withdrawn the same day to keep orchard curated; only the Ghostty and KeepingYouAwake entries were kept.)
