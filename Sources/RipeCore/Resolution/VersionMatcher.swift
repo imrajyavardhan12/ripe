@@ -127,7 +127,10 @@ enum VersionMatcher {
         let a = installed.release
         let b = latest.release
         guard a[0] != b[0], differByOrderOfMagnitude(a[0], b[0]) else {
-            return Result(order: installed.order(comparedTo: latest), basis: basis)
+            let order = installed.order(comparedTo: latest)
+            // Same numbers, but a label (`-latest`, `.CE`) or unrelated pre-release tags differ.
+            return Result(
+                order: order, basis: order == nil ? "\(basis): the labels after the numbers can't be ordered" : basis)
         }
         // Try dropping leading components from the installed version until it lines up with
         // the release's first number.

@@ -91,6 +91,15 @@ struct VersionMatcherTests {
         #expect(order("9.5.0", vs: release("9.5.1.4590")) == .older)
     }
 
+    @Test func explainsLabelsThatCantBeOrdered() {
+        let lens = VersionMatcher.compare(
+            AppVersion(short: "2026.9.181013-latest", build: nil), with: release("2026.9.181013"))
+        #expect(lens.order == nil)
+        #expect(
+            lens.basis == "version 2026.9.181013-latest vs 2026.9.181013: the labels after the numbers can't be ordered"
+        )
+    }
+
     @Test func placeholderVersionsAreUnknown() {
         // Hermes' bundle says 0.0.1 (npm's default) whatever it runs; Homebrew says 0.21.2.
         #expect(order("0.0.1", build: "0.0.1", vs: release("0.21.2")) == nil)

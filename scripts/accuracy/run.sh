@@ -23,13 +23,24 @@ mkdir -p "$apps"
 brew update --quiet
 export HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 HOMEBREW_NO_ANALYTICS=1
 
+cache=$(brew --cache)
+count=0
 grep -v '^#' "$list" | while read -r token; do
     [ -n "$token" ] || continue
+    count=$((count + 1))
+    # Runners have small disks: show the headroom now and then, so a lost runner can be explained.
+    [ $((count % 20)) -eq 0 ] && df -h "$work" | tail -1
     before=$(ls "$apps")
-    if ! brew install --cask --appdir="$apps" "$token" < /dev/null > "$work/install-$token.log" 2>&1; then
+    # 10 minutes per cask (perl's alarm: macOS has no `timeout`), so one hung installer can't
+    # stall the whole run.
+    if ! perl -e 'alarm shift; exec @ARGV' 600 \
+        brew install --cask --appdir="$apps" "$token" < /dev/null > "$work/install-$token.log" 2>&1; then
         echo "::warning::$token failed to install (see install-$token.log)"
         continue
     fi
+    # The installed app is all that's needed; the downloaded archive only fills the disk.
+    rm -rf "$cache/downloads" "$cache/Cask"
+
     app=$(comm -13 <(echo "$before") <(ls "$apps") | grep '\.app$' | head -1 || true)
     version=$(brew info --cask --json=v2 "$token" < /dev/null | python3 -c 'import json,sys; print(json.load(sys.stdin)["casks"][0]["version"])')
     printf '%s\t%s\t%s\n' "$token" "${app%.app}" "$version" >> "$work/installed.tsv"
