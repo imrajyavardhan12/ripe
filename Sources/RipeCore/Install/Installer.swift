@@ -40,18 +40,23 @@ public struct Installer: Sendable {
             self.journalDirectory = journalDirectory
         }
 
-        public static func live(machine: Machine = .current()) -> Environment {
-            let runner = LiveProcessRunner()
-            let cache = DiskCache.defaultDirectory()
+        /// Where interrupted updates are recorded until `recoverInterrupted()` settles them.
+        public static var defaultJournalDirectory: URL {
             let support =
                 FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
                 ?? FileManager.default.homeDirectoryForCurrentUser.appending(path: "Library/Application Support")
+            return support.appending(path: "ripe/journal", directoryHint: .isDirectory)
+        }
+
+        public static func live(machine: Machine = .current()) -> Environment {
+            let runner = LiveProcessRunner()
+            let cache = DiskCache.defaultDirectory()
             return Environment(
                 downloader: URLSessionDownloader(), runner: runner,
                 signatures: LiveCodeSignatureChecker(runner: runner), apps: WorkspaceAppControl(),
                 trash: SystemTrash(), tools: .find(), machine: machine,
                 workDirectory: cache.appending(path: "downloads", directoryHint: .isDirectory),
-                journalDirectory: support.appending(path: "ripe/journal", directoryHint: .isDirectory)
+                journalDirectory: defaultJournalDirectory
             )
         }
     }

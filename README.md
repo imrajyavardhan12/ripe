@@ -23,6 +23,7 @@ ripe pick <app>       # update one app
 ripe pick --all       # update everything ("the harvest")
 ripe why <app>        # where the version info came from, and how Ripe decided
 ripe skip <app>       # skip this update (--always to ignore the app)
+ripe doctor           # check Homebrew, mas, update sources and settings
 ripe --json           # everything, for scripts
 ```
 

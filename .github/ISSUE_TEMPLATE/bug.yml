@@ -11,6 +11,12 @@ body:
     validations:
       required: true
   - type: textarea
+    id: doctor
+    attributes:
+      label: Output of `ripe doctor`
+      description: Available after 0.3.0. Shows Homebrew, mas, network sources and settings in one go.
+      render: text
+  - type: textarea
     id: verbose
     attributes:
       label: Output with `--verbose`

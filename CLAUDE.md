@@ -20,7 +20,7 @@ Release tooling done: `scripts/formula.sh` (verified with `brew test` and `brew 
 
 **Released:** v0.2.0 (2026-10-02, first public release) and v0.3.0 (2026-10-02, `ripe skip`/`unskip`). Install: `brew install imrajyavardhan12/tap/ripe`. The maintainer uses the Homebrew install, not `make install`. Release pipeline is hardened (pinned macos-26 + Xcode 26.6, actions pinned by SHA with Dependabot, formula checked before publishing, tap install verified on a clean machine after); `main` carries the next `-dev` version.
 
-Priorities (the maintainer delegated prioritization, 2026-10-02): launch kit in progress. README rewritten for launch, demo GIF done (`make demo`, VHS against a staged `/tmp/ripe-demo`, never the maintainer's real apps; inspect frames for leaks before committing). Launch drafts written (a private Claude Doc; posting is the maintainer's call). orchard stays curated (maintainer's call, 2026-10-02): `scripts/import_livecheck.py` writes `fallback_sparkle_feed` entries only for casks named with `--only` (each verified with the hidden `ripe feed`); a 571-entry bulk seed was tried and withdrawn. Entries take effect from the next release. Next: `ripe doctor`, Electron and GitHub sources.
+Priorities (the maintainer delegated prioritization, 2026-10-02): launch kit in progress. README rewritten for launch, demo GIF done (`make demo`, VHS against a staged `/tmp/ripe-demo`, never the maintainer's real apps; inspect frames for leaks before committing). Launch drafts written (a private Claude Doc; posting is the maintainer's call). orchard stays curated (maintainer's call, 2026-10-02): `scripts/import_livecheck.py` writes `fallback_sparkle_feed` entries only for casks named with `--only` (each verified with the hidden `ripe feed`); a 571-entry bulk seed was tried and withdrawn. Entries take effect from the next release. `ripe doctor` done. Accuracy workflow (`.github/workflows/accuracy.yml`, weekly + manual): installs 80 popular casks on a clean runner and fails on any false positive. Next: Electron and GitHub sources.
 
 ## Working in this repo
 
@@ -40,6 +40,7 @@ ripe pick <app>   # update one app
 ripe pick --all   # update everything ("harvest")
 ripe skip <app>   # ignore an app or a specific version
 ripe why <app>    # show where version info came from and how the app updates
+ripe doctor       # check brew, mas, sources, skips and interrupted updates
 ```
 
 - **orchard**: the community app catalog, a separate repo (see Catalog).

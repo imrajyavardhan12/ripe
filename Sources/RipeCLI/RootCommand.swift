@@ -8,7 +8,9 @@ public struct RootCommand: AsyncParsableCommand {
         abstract: "Your apps, always ripe. See every outdated app on your Mac, wherever it came from.",
         version: Ripe.version,
         subcommands: [
-            ListCommand.self, PickCommand.self, SkipCommand.self, UnskipCommand.self, WhyCommand.self, FeedCommand.self,
+            ListCommand.self, PickCommand.self, SkipCommand.self, UnskipCommand.self, WhyCommand.self,
+            DoctorCommand.self,
+            FeedCommand.self,
         ],
         defaultSubcommand: ListCommand.self
     )

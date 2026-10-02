@@ -170,6 +170,8 @@ Most bugs in update checkers are version bugs, so this gets its own module, an e
 
 A run succeeds when discovery succeeds. Everything after that degrades per app: a dead feed, a DNS failure or a malformed appcast becomes an `unknown` with a reason, plus a single stderr line summarizing failed sources. Errors are typed per layer (`DiscoveryError`, `SourceError`, `HTTPError`) and carry a user-facing message; raw `NSError` text never reaches the terminal unwrapped.
 
+**`ripe doctor`** (`Doctor/`) checks the same dependencies a run has, in one read-only pass: app folders, `brew` and `mas`, the three online sources (revalidated through the normal cache, so "offline, using cache" is told apart from "unreachable"), the skips file and leftover journal entries. Problems (Ripe can't work properly) exit 1; warnings (works, degraded) and info (optional tool missing) don't.
+
 ## 11. Security and privacy
 
 **Read path (v0.1):**
