@@ -1,8 +1,9 @@
 name: Accuracy
 
-# Installs the latest version of 80 popular apps on a clean Mac and runs Ripe on them. A fresh
-# install must never be reported as outdated, so the run fails on any false positive. Results go
-# to the job summary; record notable runs in docs/accuracy.md.
+# Installs the latest version of 80 popular apps on clean Macs and runs Ripe on them. A fresh
+# install must never be reported as outdated, so a run fails on any false positive. Several
+# machines, because per-CPU and per-macOS rules (Sparkle hardware requirements, cask variations)
+# only show up there. Results go to each job's summary; record notable runs in docs/accuracy.md.
 on:
   workflow_dispatch:
   schedule:
@@ -12,21 +13,43 @@ permissions:
   contents: read
 
 jobs:
-  accuracy:
+  build:
     runs-on: macos-26
-    timeout-minutes: 60
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09  # v5.1.0
       - name: Select Xcode
         run: sudo xcode-select -s /Applications/Xcode_26.6.app
-      - name: Build
+      - name: Universal build
         run: make release
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
+        with:
+          name: ripe
+          path: dist/ripe
+          if-no-files-found: error
+
+  accuracy:
+    needs: build
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [macos-26, macos-15, macos-15-intel]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09  # v5.1.0
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c  # v8.0.1
+        with:
+          name: ripe
+          path: dist
       - name: Install apps and check them
-        run: scripts/accuracy/run.sh dist/ripe "$RUNNER_TEMP/accuracy"
+        run: |
+          chmod +x dist/ripe
+          dist/ripe --version
+          scripts/accuracy/run.sh dist/ripe "$RUNNER_TEMP/accuracy"
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
         if: always()
         with:
-          name: accuracy
+          name: accuracy-${{ matrix.runner }}
           path: |
             ${{ runner.temp }}/accuracy/*.json
             ${{ runner.temp }}/accuracy/*.tsv

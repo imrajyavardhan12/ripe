@@ -15,6 +15,8 @@ First automated run: the 80 most-installed app casks, freshly installed, then `r
 - **GitHub Desktop: false positive, fixed.** Cask version `3.6.6-8b85519e` read as 3.6.6.8, so the installed 3.6.6 looked outdated. A commit hash after a dash is now build metadata (`VersionTests`, GitHub Desktop rows).
 - **QLMarkdown: real.** Its own Sparkle feed offers 1.5.7 (build 59) while the cask still says 1.5.6.
 
+Re-run after the fix: 80 installed, 80 found, **0 false positives**, 79 current, 1 unknown (WezTerm), 1.5 s. (By then the QLMarkdown cask had caught up.)
+
 Earlier attempts the same day taught the harness two lessons: Homebrew dropped `--no-quarantine` (nothing installed, yet the run "passed": it now fails below 40 installs), and runner images carry stale cask data (36 apps installed old versions, which Ripe correctly reported as outdated: 36 of 36 caught, recall evidence; the run now refreshes Homebrew first and reports stale installs separately).
 
 ## 2026-10-02 (evening) · maintainer's Mac · 0.4.0-dev with the seeded orchard catalog
