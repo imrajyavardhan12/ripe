@@ -2,6 +2,18 @@
 
 Ripe's headline metric is its false-positive rate: how often it claims an update that isn't real. Each release gets a verification run on real Macs, recorded here. When a verdict is wrong, the fix lands with a test (fixture or table row), and the row below links to it.
 
+## 2026-10-02 (night) · Accuracy workflow on three machines · 0.4.0-dev
+
+Same 80 apps, one universal binary, three clean runners. **0 false positives on all three.**
+
+| Runner | Installed | Current | Unknown | Time |
+|---|---|---|---|---|
+| macOS 26, Apple silicon | 80 | 78 | 1 (WezTerm) | 1.3 s |
+| macOS 15, Apple silicon | 79 | 77 | 1 (WezTerm) | 1.5 s |
+| macOS 15, Intel | 78 | 76 | 1 (WezTerm) | 3.4 s |
+
+The remaining app on each was OpenLogi: Homebrew published 0.8.11 during the run, and Ripe reported the update (classified as a stale install, not a false positive). A few casks don't install on older or Intel Macs, hence the lower counts.
+
 ## 2026-10-02 (night) · maintainer's Mac · 0.4.0-dev with tap casks
 
 28 apps: 12 ripe, 10 up to date, 6 unknown. **AeroSpace** (installed from `nikitabobko/tap`) moved from unknown to up to date (0.21.3-Beta, from the local tap). No other verdict changed. Remaining unknowns: Ghostty tip (commit-hash version), Codenotch (feed 404), Folio ×2, Proompt, Claude Code URL Handler (personal or niche apps with no source).
