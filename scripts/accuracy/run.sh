@@ -21,12 +21,12 @@ export HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 HOMEBREW_NO_ANALY
 grep -v '^#' "$here/casks.txt" | while read -r token; do
     [ -n "$token" ] || continue
     before=$(ls "$apps")
-    if ! brew install --cask --appdir="$apps" "$token" > "$work/install-$token.log" 2>&1; then
+    if ! brew install --cask --appdir="$apps" "$token" < /dev/null > "$work/install-$token.log" 2>&1; then
         echo "::warning::$token failed to install (see install-$token.log)"
         continue
     fi
     app=$(comm -13 <(echo "$before") <(ls "$apps") | grep '\.app$' | head -1 || true)
-    version=$(brew info --cask --json=v2 "$token" | python3 -c 'import json,sys; print(json.load(sys.stdin)["casks"][0]["version"])')
+    version=$(brew info --cask --json=v2 "$token" < /dev/null | python3 -c 'import json,sys; print(json.load(sys.stdin)["casks"][0]["version"])')
     printf '%s\t%s\t%s\n' "$token" "${app%.app}" "$version" >> "$work/installed.tsv"
     echo "installed $token ${app:-?} $version"
 done
