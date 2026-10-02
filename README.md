@@ -57,7 +57,7 @@ Ripe needs no special macOS permissions.
 
 **What does it send over the network?** Requests to each app's own update feed (the same request the app makes itself), bundle IDs to Apple's App Store lookup, and downloads of Homebrew's public cask database and the orchard catalog. No telemetry, no Ripe server.
 
-**An app shows the wrong version, or no version.** Run `ripe why <app>` and [open an issue](https://github.com/imrajyavardhan12/ripe/issues/new?template=wrong-version.yml) with its `--json` output. Most fixes are a small [orchard](https://github.com/imrajyavardhan12/orchard) entry anyone can contribute.
+**An app shows the wrong version, or no version.** Run `ripe why <app>` and [open an issue](https://github.com/imrajyavardhan12/ripe/issues/new?template=wrong-version.yml) with its output (check paths for your username before posting; newer versions shorten them to `~`). Most fixes are a small [orchard](https://github.com/imrajyavardhan12/orchard) entry anyone can contribute.
 
 **Will it update Setapp or Apple's own apps?** No. Setapp keeps its apps updated, and Apple's built-in apps update with macOS. Apple apps sold on the App Store, like Xcode, are checked through the App Store.
 

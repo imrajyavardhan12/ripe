@@ -1,0 +1,25 @@
+name: Bug
+description: Something else went wrong, like a crash, an error, a failed `ripe pick` or confusing output.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: The command you ran, what you expected, and what you got. Paste the output (paths under your home folder are fine to shorten to `~`).
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: verbose
+    attributes:
+      label: Output with `--verbose`
+      description: Run the same command with `--verbose` and paste the stderr lines, if it's not a pick that changed something.
+      render: text
+  - type: input
+    id: versions
+    attributes:
+      label: Ripe version and macOS version
+      placeholder: ripe 0.3.0, macOS 27.0 (Apple silicon)
+    validations:
+      required: true

@@ -19,11 +19,13 @@ body:
   - type: textarea
     id: why
     attributes:
-      label: Output of `ripe why <app> --json`
-      description: This shows every source Ripe checked and which rule decided. It contains no personal data beyond the app's path.
-      render: json
+      label: Output of `ripe why <app>`
+      description: Every source Ripe checked and the rule that decided. Check paths for your username before posting (versions after 0.3.0 shorten them to `~`).
+      render: text
+    validations:
+      required: true
   - type: input
     id: versions
     attributes:
       label: Ripe version and macOS version
-      placeholder: ripe 0.1.0, macOS 27.0 (Apple silicon)
+      placeholder: ripe 0.3.0, macOS 27.0 (Apple silicon)

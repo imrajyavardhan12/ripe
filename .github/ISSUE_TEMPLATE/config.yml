@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Add or fix an app in the catalog
+    url: https://github.com/imrajyavardhan12/orchard#add-or-fix-an-app
+    about: Missing update feed, wrong Homebrew cask, or an app that updates in place. Usually a one-file pull request to orchard.
+  - name: Report a security problem
+    url: https://github.com/imrajyavardhan12/ripe/security/advisories/new
+    about: Please report vulnerabilities privately, not as an issue.

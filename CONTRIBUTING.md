@@ -25,4 +25,4 @@ make install   # optimized build to ~/.local/bin/ripe (PREFIX=… to change)
 
 ## Wrong version for an app?
 
-Open a "Wrong version or missed update" issue and paste `ripe why <app> --json`. Most fixes end up as an orchard catalog entry rather than a code change.
+Open a "Wrong version or missed update" issue and paste the output of `ripe why <app>`. It shows every source Ripe asked and the rule that decided, Check paths for your username before posting (versions after 0.3.0 shorten them to `~`). Most fixes end up as an orchard catalog entry rather than a code change.
