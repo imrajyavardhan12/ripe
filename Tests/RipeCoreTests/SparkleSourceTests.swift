@@ -97,6 +97,33 @@ struct SparkleSourceTests {
         #expect(confidence == .high)
     }
 
+    @Test func seededFeedsAreCrossCheckedWithMediumConfidence() async throws {
+        let feed = URL(staticString: "https://obsproject.com/osx_update/updates_arm64_v2.xml")
+        let context = SourceContext(http: try FakeHTTPClient.fixtures(), machine: .test())
+        let outcome = await SparkleSource.check(feed: feed, catalogFeed: .fallback, context: context)
+        guard case .found(let release, let confidence, let note) = outcome else {
+            Issue.record("expected a release, got \(outcome)")
+            return
+        }
+        #expect(release.comparison == .crossChecked)
+        #expect(confidence == .medium)
+        #expect(note?.contains("Homebrew's livecheck") == true)
+    }
+
+    @Test func checksBareFeedsForOrchardTooling() async throws {
+        let good = URL(staticString: "https://obsproject.com/osx_update/updates_arm64_v2.xml")
+        let missing = URL(staticString: "https://example.com/appcast.xml")
+        let context = SourceContext(http: try FakeHTTPClient.fixtures(), machine: .test())
+        let outcomes = await Ripe.checkFeeds([good, missing, good], context: context)
+        #expect(outcomes.count == 2)
+        guard case .found(let release, _, _) = outcomes[good], case .failed = outcomes[missing] else {
+            Issue.record("unexpected outcomes \(outcomes)")
+            return
+        }
+        #expect(release.version == "32.2.2")
+        #expect(release.comparison == .bundleVersion, "a bare feed is checked like the app's own")
+    }
+
     @Test func limitsConcurrentFeedRequests() async throws {
         let probe = ConcurrencyProbe(body: try Fixture.data("flux-appcast.xml"))
         let apps = (0..<40).map { index in

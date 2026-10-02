@@ -55,6 +55,10 @@ public struct Release: Sendable, Hashable, Codable {
         case bundleVersion
         /// `version` against `CFBundleShortVersionString` only.
         case shortVersion
+        /// `build` against `CFBundleVersion` *and* `version` against the short version; when both
+        /// can be compared they must agree. For feeds nobody has checked against the real app
+        /// (orchard fallback feeds seeded from Homebrew), whose numbering might not be the app's.
+        case crossChecked
     }
 
     /// The version people see, like `32.2.2`.

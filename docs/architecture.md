@@ -107,12 +107,13 @@ Authority, highest first:
 | 4 | **GitHub Releases** (v0.3) | orchard maps the app to a repo | Skip drafts and pre-releases. |
 | 5 | **Homebrew cask DB** | Match found (see below) | A version *database* for every app, not only brew-installed ones. Lowest authority because matching is heuristic. |
 
-orchard entries are not a rank; they **enrich apps after discovery and before any source runs**, so sources stay catalog-unaware (`Catalog/`). Schema v1 has three directives:
+orchard entries are not a rank; they **enrich apps after discovery and before any source runs**, so sources stay catalog-unaware (`Catalog/`). Schema v1 has four directives (`fallbackSparkleFeed` was added later; older clients ignore it):
 
 | Directive | Effect | First real use |
 |---|---|---|
 | `sparkleFeed` (per CPU) | Sets the app's Sparkle feed, overriding Info.plist (fixes dead feeds). Sparkle then answers authoritatively. | Brave sets its feed in code; with it, Brave is compared by build number (196.59 = 196.59) instead of by scheme alignment. |
 | `homebrewCask` | Pins the cask; beats every matching heuristic. | Ambiguous channels, same-name apps. |
+| `fallbackSparkleFeed` (per CPU) | Like `sparkleFeed`, but only when the app declares no feed **and** its Finder name equals the entry's name; compared with `crossChecked` (below) at medium confidence. Seeded in bulk by orchard's importer from Homebrew casks whose livecheck reads a Sparkle feed, each verified with `ripe feed` against the cask version. | 571 entries on 2026-10-02; KeepingYouAwake moved from the cask fallback to its own feed. |
 | `installedVersion.glob` | Reads the real version from file names (lists one folder, never opens files); marks the app self-updating. | Obsidian runs `obsidian-1.13.4.asar` while its bundle says 1.12.4. |
 
 The compiled catalog (`index.json`, built and validated by the orchard repo's CI, served by GitHub Pages) is fetched with a 3 s timeout and a 6 h TTL, falls back to the cached copy, and remembers an unavailable catalog for an hour so it never slows a run. A catalog with a newer `schemaVersion` is ignored, not misread. `RIPE_CATALOG_URL` points at a local build (`file://…`) so contributors can test an entry with `ripe why` before opening a PR; `none` disables it. The catalog is untrusted: the client re-checks the path rules for version globs, and nothing in it can weaken install verification (§11). orchard is the correction layer that turns `ripe why` bug reports into fixes for everyone.
@@ -145,6 +146,8 @@ Most bugs in update checkers are version bugs, so this gets its own module, an e
 - **Incomparable** when either side has no numeric component (`b40acce58`), or when the schemes clearly differ.
 - **Scheme alignment** for Brave-style mismatches: if the candidate's components appear as a contiguous suffix of the installed version (`1.96.59` inside `154.1.96.59`), compare on that alignment. Otherwise, if the leading components differ by an order of magnitude, mark incomparable rather than claim installed-is-newer. orchard can pin a per-app mapping when heuristics fail.
 - **Two fields**: `CFBundleShortVersionString` is what humans see; `CFBundleVersion` is what Sparkle compares. Each source declares which one it speaks.
+- **Cross-checked** (`Release.Comparison.crossChecked`) for feeds nobody has checked against the real app (orchard fallback feeds): both fields are compared, each with the scheme guard, and an answer exists only when they agree. A visible version that's present but unreadable means `unknown`, not "use the build". Measured reason: Ghostty tip (`0081d4530`, build 18035) against the stable feed (build 15212) would otherwise read as current by build alone.
+- **Commit hashes** are not versions, even when they start with digits: 7 to 40 hex characters with a letter and no separators parse as nothing (`0081d4530` used to read as 81 plus a tag). Colon-wrapped hashes after a version (`3.10.8 :0294d207:`, Vienna) are dropped like parenthesized notes.
 
 ## 8. Platform: network, cache, concurrency
 
@@ -271,6 +274,7 @@ scripts/            accuracy.sh, release helpers
 | 8 | Cache in `~/Library/Caches/ripe`, config in `~/.config/ripe` | Mac convention for caches; dotfile-friendly config for developers. | — |
 | 9 | No telemetry, ever | Principle 5; trust is the product. | Never. |
 | 10 | MIT license | Same as `mas` and Latest; lowest friction for contributors. | Before the first public release, if the maintainer prefers Apache-2.0. |
+| 11 | Seeded catalog feeds are fallbacks, never overrides | A feed taken from Homebrew's livecheck hasn't been checked against the app's bundle; replacing the app's own feed or trusting its build numbers outright could cry wolf. Fallback + name match + cross-check keeps the gain (authoritative feeds for apps that set theirs in code) without that risk. Released clients ignore the new key. | An entry is verified against a real bundle (then it can become `sparkleFeed`). |
 
 ## 17. Open risks
 

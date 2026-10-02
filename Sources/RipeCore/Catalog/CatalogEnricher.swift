@@ -11,11 +11,24 @@ struct CatalogEnricher: Sendable {
         guard let entry = catalog.entry(for: app.bundleID) else { return app }
         var app = app
         var changes: [String] = []
+        var feedKind: CatalogApplication.FeedKind?
 
-        if let feed = entry.sparkleFeed?[machine.architecture.rawValue] {
+        let arch = machine.architecture.rawValue
+        if let feed = entry.sparkleFeed?[arch] {
             // orchard is the correction layer, so it may replace a dead feed from Info.plist.
             app.signals.sparkleFeedURL = feed
+            feedKind = .correction
             changes.append("Sparkle feed \(feed.absoluteString)")
+        } else if let feed = entry.fallbackSparkleFeed?[arch], app.signals.sparkleFeedURL == nil,
+            app.name.caseInsensitiveCompare(entry.name) == .orderedSame
+        {
+            // Never replaces the app's own feed: that is exactly what its updater reads. The
+            // bundle ID behind a seeded entry is inferred from Homebrew's data, so the Finder name
+            // must match too: a wrong guess then attaches to nothing rather than to another app.
+            app.signals.sparkleFeedURL = feed
+            feedKind = .fallback
+            changes.append(
+                "Sparkle feed \(feed.absoluteString) (from Homebrew's livecheck, used because the app declares none)")
         }
         if let token = entry.homebrewCask {
             changes.append("Homebrew cask pinned to \(token)")
@@ -28,7 +41,7 @@ struct CatalogEnricher: Sendable {
                 changes.append("no files match \(rule.glob); using the bundle's version")
             }
         }
-        app.catalog = CatalogApplication(entry: entry, changes: changes)
+        app.catalog = CatalogApplication(entry: entry, changes: changes, sparkleFeed: feedKind)
         return app
     }
 }

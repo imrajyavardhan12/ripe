@@ -21,7 +21,14 @@ struct CatalogTests {
               "installedVersion": { "glob": "~/Library/Application Support/obsidian/obsidian-*.asar" },
               "notes": "Updates in place."
             },
-            "com.1password.1password": { "name": "1Password", "homebrewCask": "1password@beta" }
+            "com.1password.1password": { "name": "1Password", "homebrewCask": "1password@beta" },
+            "net.matthewpalmer.Rocket": {
+              "name": "Rocket",
+              "fallbackSparkleFeed": {
+                "arm64": "https://macrelease.matthewpalmer.net/distribution/appcasts/rocket.xml",
+                "x86_64": "https://macrelease.matthewpalmer.net/distribution/appcasts/rocket.xml"
+              }
+            }
           }
         }
         """
@@ -35,7 +42,7 @@ struct CatalogTests {
 
     @Test func decodesAndLooksUpCaseInsensitively() throws {
         let catalog = try Self.catalog()
-        #expect(catalog.count == 3)
+        #expect(catalog.count == 4)
         #expect(catalog.entry(for: "COM.BRAVE.BROWSER")?.name == "Brave Browser")
         #expect(catalog.entry(for: "md.obsidian")?.notes == "Updates in place.")
     }
@@ -53,7 +60,7 @@ struct CatalogTests {
         try Data(Self.catalogJSON.utf8).write(to: file)
         let catalog = await CatalogLoader(url: file, refresh: false)
             .load(context: SourceContext(http: FakeHTTPClient([]), machine: .test()))
-        #expect(catalog?.count == 3)
+        #expect(catalog?.count == 4)
     }
 
     @Test func remembersAnUnavailableCatalogForAnHour() async throws {
@@ -85,6 +92,38 @@ struct CatalogTests {
         #expect(appleSilicon.signals.sparkleFeedURL?.path() == "/stable-arm64/appcast.xml")
         #expect(intel.signals.sparkleFeedURL?.path() == "/stable/appcast.xml")
         #expect(appleSilicon.catalog?.changes.first?.hasPrefix("Sparkle feed") == true)
+    }
+
+    @Test func fallbackFeedFillsInOnlyWhenTheAppDeclaresNone() throws {
+        let enricher = CatalogEnricher(catalog: try Self.catalog(), machine: .test())
+        let bare = InstalledApp.test("Rocket.app", bundleID: "net.matthewpalmer.Rocket", version: "1.9")
+        let enriched = enricher.apply(to: bare)
+        #expect(enriched.signals.sparkleFeedURL?.host() == "macrelease.matthewpalmer.net")
+        #expect(enriched.catalog?.sparkleFeed == .fallback)
+
+        // The app's own feed is what its updater reads; a seeded guess never replaces it.
+        let own = URL(staticString: "https://example.com/own-appcast.xml")
+        let declaring = InstalledApp.test(
+            "Rocket.app", bundleID: "net.matthewpalmer.Rocket", version: "1.9", signals: .init(sparkleFeedURL: own))
+        let untouched = enricher.apply(to: declaring)
+        #expect(untouched.signals.sparkleFeedURL == own)
+        #expect(untouched.catalog?.sparkleFeed == nil)
+        #expect(untouched.catalog?.changes.isEmpty == true)
+    }
+
+    @Test func fallbackFeedNeedsTheFinderNameToMatch() throws {
+        let enricher = CatalogEnricher(catalog: try Self.catalog(), machine: .test())
+        let renamed = InstalledApp.test("Rocket Typist.app", bundleID: "net.matthewpalmer.Rocket", version: "1.9")
+        #expect(enricher.apply(to: renamed).signals.sparkleFeedURL == nil)
+        let otherCase = InstalledApp.test("rocket.app", bundleID: "net.matthewpalmer.Rocket", version: "1.9")
+        #expect(enricher.apply(to: otherCase).signals.sparkleFeedURL != nil)
+    }
+
+    @Test func correctionFeedsAreMarkedAsSuch() throws {
+        let brave = InstalledApp.test("Brave Browser.app", bundleID: "com.brave.Browser", version: "154.1.96.59")
+        #expect(
+            CatalogEnricher(catalog: try Self.catalog(), machine: .test()).apply(to: brave).catalog?.sparkleFeed
+                == .correction)
     }
 
     @Test func appsWithoutEntriesAreUntouched() throws {

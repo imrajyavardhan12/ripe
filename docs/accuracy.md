@@ -2,6 +2,10 @@
 
 Ripe's headline metric is its false-positive rate: how often it claims an update that isn't real. Each release gets a verification run on real Macs, recorded here. When a verdict is wrong, the fix lands with a test (fixture or table row), and the row below links to it.
 
+## 2026-10-02 (evening) · maintainer's Mac · 0.4.0-dev with the seeded orchard catalog
+
+27 apps, local catalog with 571 seeded fallback feeds. 12 ripe, 9 up to date, 6 unknown, identical to the same build without the seeded entries. Two apps got a seeded feed: **KeepingYouAwake** is now decided by its own Sparkle feed (build 1060800 = 1060800, still current); **Ghostty** (tip build, version `0081d4530`) stays unknown, now because its version is a commit hash. The importer's bundle IDs matched all 4 of this Mac's apps that it covers. No false positives.
+
 ## 2026-10-02 (later) · maintainer's Mac · pre-release v0.3.0
 
 12 ripe, 9 up to date, 7 unknown: the same set as the v0.2.0 run, minus Helium (updated with `ripe pick`). No new false positives. `ripe skip` / `unskip` exercised against real apps (Raycast version skip, Postman `--always`) with an isolated config folder.

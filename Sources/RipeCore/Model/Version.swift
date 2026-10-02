@@ -59,9 +59,18 @@ public struct Version: Sendable, Hashable, CustomStringConvertible {
     public init?(_ raw: String) {
         self.raw = raw
         var text = raw.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        // Build metadata (`0.4.24+1`) and parenthesized notes (`5.0 (1234)`) don't affect order.
+        // Build metadata (`0.4.24+1`), parenthesized notes (`5.0 (1234)`) and colon-wrapped
+        // commit hashes (Vienna's `3.10.8 :0294d207:`) don't affect order.
         if let cut = text.firstIndex(where: { $0 == "+" || $0 == "(" }) {
             text = String(text[..<cut])
+        }
+        if let hash = text.range(of: " :") {
+            text = String(text[..<hash.lowerBound])
+        }
+        // A commit hash isn't a version, even one that starts with digits (Ghostty tip `0081d4530`
+        // would otherwise read as 81 plus a tag, and `1a2b3c4` as a 1.x release).
+        if (7...40).contains(text.count), text.allSatisfy(\.isHexDigit), text.contains(where: \.isLetter) {
+            return nil
         }
         if text.first == "v", text.dropFirst().first?.isASCIINumber == true {
             text.removeFirst()

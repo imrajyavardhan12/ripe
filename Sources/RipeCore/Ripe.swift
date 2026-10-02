@@ -100,6 +100,27 @@ public enum Ripe {
         return Report(apps: reports, skipped: discovery.skipped, duration: duration, generatedAt: Date())
     }
 
+    /// The release Ripe would take from each Sparkle feed on this Mac, without any installed app.
+    /// For orchard tooling: an importer checks candidate feeds with exactly the client's rules.
+    public static func checkFeeds(_ feeds: [URL], context: SourceContext) async -> [URL: SourceOutcome] {
+        await withTaskGroup(of: (URL, SourceOutcome).self) { group in
+            var outcomes: [URL: SourceOutcome] = [:]
+            var inFlight = 0
+            for feed in Set(feeds) {
+                if inFlight == SparkleSource.maxConcurrentFeeds, let (url, outcome) = await group.next() {
+                    outcomes[url] = outcome
+                    inFlight -= 1
+                }
+                group.addTask { (feed, await SparkleSource.check(feed: feed, context: context)) }
+                inFlight += 1
+            }
+            for await (url, outcome) in group {
+                outcomes[url] = outcome
+            }
+            return outcomes
+        }
+    }
+
     /// Only an update can be skipped; current and unknown verdicts are left as they are.
     static func applySkips(_ skips: SkipList, to report: AppReport) -> AppReport {
         guard case .outdated(let release) = report.verdict, let rule = skips.rule(for: report.app, release: release)

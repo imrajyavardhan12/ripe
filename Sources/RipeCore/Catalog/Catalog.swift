@@ -42,6 +42,10 @@ public struct CatalogEntry: Sendable, Hashable, Codable {
     public var name: String
     /// Feed per CPU, keyed by ``Machine/Architecture`` raw value (`arm64`, `x86_64`).
     public var sparkleFeed: [String: URL]?
+    /// Like `sparkleFeed`, but only for apps that declare no feed of their own, and compared
+    /// more cautiously (``Release/Comparison/crossChecked``). Seeded in bulk from Homebrew's
+    /// livecheck data, so nobody has checked it against the real app.
+    public var fallbackSparkleFeed: [String: URL]?
     public var homebrewCask: String?
     public var installedVersion: InstalledVersionRule?
     public var notes: String?
@@ -54,12 +58,14 @@ public struct CatalogEntry: Sendable, Hashable, Codable {
     public init(
         name: String,
         sparkleFeed: [String: URL]? = nil,
+        fallbackSparkleFeed: [String: URL]? = nil,
         homebrewCask: String? = nil,
         installedVersion: InstalledVersionRule? = nil,
         notes: String? = nil
     ) {
         self.name = name
         self.sparkleFeed = sparkleFeed
+        self.fallbackSparkleFeed = fallbackSparkleFeed
         self.homebrewCask = homebrewCask
         self.installedVersion = installedVersion
         self.notes = notes
@@ -71,4 +77,19 @@ public struct CatalogApplication: Sendable, Hashable, Codable {
     public var entry: CatalogEntry
     /// Human-readable changes, like "Sparkle feed from orchard".
     public var changes: [String]
+    /// Set when the app's Sparkle feed came from this entry.
+    public var sparkleFeed: FeedKind?
+
+    public enum FeedKind: String, Sendable, Hashable, Codable {
+        /// A hand-written correction (`sparkleFeed`): trusted like the app's own feed.
+        case correction
+        /// A seeded fallback (`fallbackSparkleFeed`): compared cautiously.
+        case fallback
+    }
+
+    public init(entry: CatalogEntry, changes: [String], sparkleFeed: FeedKind? = nil) {
+        self.entry = entry
+        self.changes = changes
+        self.sparkleFeed = sparkleFeed
+    }
 }

@@ -9,6 +9,9 @@ enum VersionMatcher {
     }
 
     static func compare(_ installed: AppVersion, with release: Release) -> Result {
+        if release.comparison == .crossChecked {
+            return crossCheck(installed, with: release)
+        }
         // Sparkle's rule: the feed's build number against CFBundleVersion.
         if release.comparison == .bundleVersion,
             let installedBuild = installed.parsedBuild,
@@ -32,11 +35,48 @@ enum VersionMatcher {
         return compareAcrossSchemes(installedVersion, releaseVersion)
     }
 
+    /// Both fields, each guarded against scheme mismatches; an answer only when they agree. A feed
+    /// whose build numbers count differently from the app's (`1.2.3` against `456`) would
+    /// otherwise turn into a confident false update.
+    static func crossCheck(_ installed: AppVersion, with release: Release) -> Result {
+        // A visible version that's there but unreadable (Ghostty tip builds show a git hash) means
+        // a channel this feed may not describe; the build number alone isn't enough then.
+        if installed.short != nil, installed.parsedShort == nil {
+            return Result(order: nil, basis: "installed version \"\(installed.display)\" isn't a comparable version")
+        }
+        guard Version(release.version) != nil else {
+            return Result(order: nil, basis: "latest version \"\(release.version)\" isn't a comparable version")
+        }
+        let byBuild = installed.parsedBuild.flatMap { build in
+            release.build.flatMap(Version.init).map { compareAcrossSchemes(build, $0, field: "build") }
+        }
+        let byVersion = installed.parsedShort.flatMap { short in
+            Version(release.version).map { compareAcrossSchemes(short, $0) }
+        }
+        switch (byBuild, byVersion) {
+        case (let build?, let version?):
+            // One side can't be ordered at all: its own reason says why.
+            if version.order == nil { return version }
+            if build.order == nil { return build }
+            guard build.order == version.order else {
+                return Result(
+                    order: nil,
+                    basis: "\(build.basis) and \(version.basis) disagree, so the feed may number builds differently"
+                )
+            }
+            return Result(order: build.order, basis: "\(build.basis), \(version.basis)")
+        case (let only?, nil), (nil, let only?):
+            return only
+        case (nil, nil):
+            return Result(order: nil, basis: "installed version \"\(installed.display)\" isn't a comparable version")
+        }
+    }
+
     /// Plain comparison, unless the leading numbers are so far apart that the two sides clearly
     /// count differently. Brave reports `154.1.96.59` (Chromium major first) while Homebrew
     /// says `1.96.59.0`; a plain comparison would call Brave up to date forever.
-    static func compareAcrossSchemes(_ installed: Version, _ latest: Version) -> Result {
-        let basis = "version \(installed.raw) vs \(latest.raw)"
+    static func compareAcrossSchemes(_ installed: Version, _ latest: Version, field: String = "version") -> Result {
+        let basis = "\(field) \(installed.raw) vs \(latest.raw)"
         let a = installed.release
         let b = latest.release
         guard a[0] != b[0], differByOrderOfMagnitude(a[0], b[0]) else {

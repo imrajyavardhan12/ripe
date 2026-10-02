@@ -41,6 +41,12 @@ struct VersionTests {
         Case(installed: "2.0 build 5", latest: "2.0.5", expected: .same),
         Case(installed: "1.0 final", latest: "1.0", expected: .same),
         Case(installed: "1.0", latest: "1.0.1", expected: .older),
+        // Visible versions with a build or hash attached, as Sparkle feeds publish them (2026-10-02)
+        Case(installed: "1.166.0 (87901)", latest: "1.167.0 (88045)", expected: .older),  // Arc
+        Case(installed: "3.29.2", latest: "3.29.2(400)", expected: .same),  // Airy
+        Case(installed: "5.34", latest: "5.34(14042)", expected: .same),  // Folx
+        Case(installed: "3.10.8", latest: "3.10.8 :0294d207:", expected: .same),  // Vienna
+        Case(installed: "9.0.1", latest: "9.0.1 (build 6491)", expected: .same),  // Tunnelblick
         // Unknown tags can't be ordered against each other
         Case(installed: "1.0-foo", latest: "1.0-bar", expected: nil),
         Case(installed: "1.0-foo", latest: "1.0-foo", expected: .same),
@@ -54,7 +60,10 @@ struct VersionTests {
         #expect(installed.order(comparedTo: latest) == c.expected)
     }
 
-    @Test(arguments: ["", "   ", "latest", "b40acce58", "beta", "v", "abc1.2", "99999999999999999999"])
+    @Test(arguments: [
+        "", "   ", "latest", "b40acce58", "0081d4530", "1a2b3c4", "deadbeefcafe", "beta", "v", "abc1.2",
+        "99999999999999999999",
+    ])
     func unparseable(_ raw: String) {
         #expect(Version(raw) == nil)
     }

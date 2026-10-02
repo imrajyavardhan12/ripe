@@ -4,6 +4,9 @@ All notable changes to Ripe. The release workflow publishes each version's secti
 
 ## [Unreleased]
 
+- orchard fallback feeds: the catalog can now give Sparkle feeds to apps that set theirs in code, seeded from 571 Homebrew casks and each verified first. Used only when the app declares no feed and its name matches, and an update is reported only when the build number and the visible version agree.
+- Commit-hash versions that start with digits (Ghostty tip `0081d4530`) are recognized as not comparable instead of being read as a number, and versions like `3.10.8 :0294d207:` ignore the hash.
+
 - `ripe why` shows paths under your home folder as `~/…`, so pasting it into a bug report doesn't reveal your username.
 - `RIPE_APPLICATIONS_DIR` (colon-separated) points Ripe at other folders instead of `/Applications` and `~/Applications`, for testing and demos.
 - README demo, recorded reproducibly by the Demo workflow on a clean Mac (VHS): a staged folder of well-known apps and a real, verified update.

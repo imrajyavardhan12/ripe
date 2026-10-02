@@ -24,6 +24,51 @@ struct VersionMatcherTests {
         #expect(order("2.7.12", build: nil, vs: release("2.7.12", comparison: .bundleVersion)) == .same)
     }
 
+    // MARK: Cross-checked (orchard fallback feeds)
+
+    @Test func crossCheckedAgreesWhenBothFieldsDo() {
+        let latest = release("32.2.2", build: "31845296735", comparison: .crossChecked)
+        #expect(order("32.2.2", build: "31845296735", vs: latest) == .same)
+        #expect(order("32.2.1", build: "31000000000", vs: latest) == .older)
+        #expect(order("32.3.0", build: "32000000000", vs: latest) == .newer)
+    }
+
+    @Test func crossCheckedRefusesWhenFieldsDisagree() {
+        // The feed's build says the app is ahead while its version says the app is behind: one of
+        // them doesn't count the way the app does. Unknown, not an update.
+        let latest = release("2.1", build: "250", comparison: .crossChecked)
+        let result = VersionMatcher.compare(AppVersion(short: "2.0", build: "300"), with: latest)
+        #expect(result.order == nil)
+        #expect(result.basis.contains("disagree"))
+        // Same visible version, newer build: Sparkle would offer it, but an unverified feed isn't
+        // enough to say so.
+        #expect(order("2.1", build: "100", vs: release("2.1", build: "101", comparison: .crossChecked)) == nil)
+    }
+
+    @Test func crossCheckedUsesWhicheverFieldExists() {
+        #expect(order("2.0", build: nil, vs: release("2.1", build: "210", comparison: .crossChecked)) == .older)
+        #expect(order(nil, build: "209", vs: release("2.1", build: "210", comparison: .crossChecked)) == .older)
+        #expect(order("b40acce58", build: nil, vs: release("1.3.1", comparison: .crossChecked)) == nil)
+    }
+
+    @Test func crossCheckedNeedsAReadableVisibleVersion() {
+        // Ghostty tip (2026-09-28): short version is a git hash, CFBundleVersion 17955. The seeded
+        // feed is the stable channel; comparing builds alone would judge a tip build by it.
+        let stable = release("1.3.1", build: "12345", comparison: .crossChecked)
+        #expect(order("b40acce58", build: "17955", vs: stable) == nil)
+        // Same app on 2026-10-02: a hash that starts with digits.
+        let today = VersionMatcher.compare(AppVersion(short: "0081d4530", build: "18035"), with: stable)
+        #expect(today.order == nil)
+        #expect(today.basis == "installed version \"0081d4530\" isn't a comparable version")
+    }
+
+    @Test func crossCheckedExplainsTheSideThatCantBeCompared() {
+        let result = VersionMatcher.compare(
+            AppVersion(short: "2.0", build: "154000"), with: release("2.1", build: "12", comparison: .crossChecked))
+        #expect(result.order == nil)
+        #expect(result.basis == "build 154000 vs 12: numbering schemes differ")
+    }
+
     @Test func caskBuildPartIsDisplayOnly() {
         // `6.0,9001`: the build part may be a download ID, never compared.
         #expect(order("6.0", build: "1", vs: release("6.0", build: "9001")) == .same)

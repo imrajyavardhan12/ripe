@@ -27,8 +27,8 @@ public struct SparkleSource: UpdateSource {
                     outcomes[id] = outcome
                     inFlight -= 1
                 }
-                let fromCatalog = app.catalog?.entry.sparkleFeed != nil
-                group.addTask { (app.id, await Self.check(feed: feed, fromCatalog: fromCatalog, context: context)) }
+                let catalogFeed = app.catalog?.sparkleFeed
+                group.addTask { (app.id, await Self.check(feed: feed, catalogFeed: catalogFeed, context: context)) }
                 inFlight += 1
             }
             for await (id, outcome) in group {
@@ -38,7 +38,9 @@ public struct SparkleSource: UpdateSource {
         }
     }
 
-    static func check(feed: URL, fromCatalog: Bool = false, context: SourceContext) async -> SourceOutcome {
+    static func check(
+        feed: URL, catalogFeed: CatalogApplication.FeedKind? = nil, context: SourceContext
+    ) async -> SourceOutcome {
         let items: [AppcastItem]
         do {
             let request = HTTPRequest(url: feed, cacheTTL: 30 * 60, allowInsecure: true)
@@ -66,15 +68,22 @@ public struct SparkleSource: UpdateSource {
             version: version,
             build: item.version,
             source: .sparkle,
-            comparison: .bundleVersion,
+            comparison: catalogFeed == .fallback ? .crossChecked : .bundleVersion,
             pageURL: item.releaseNotesURL,
             minimumSystemVersion: item.minimumSystemVersion,
             publishedAt: item.publishedAt,
             download: download
         )
-        let notes = [fromCatalog ? "feed from orchard" : nil, feed.scheme == "http" ? "feed is plain HTTP" : nil]
-            .compactMap { $0 }
-        return .found(release, .high, note: notes.isEmpty ? nil : notes.joined(separator: ", "))
+        let origin: String? =
+            switch catalogFeed {
+            case .correction: "feed from orchard"
+            case .fallback: "feed from orchard, seeded from Homebrew's livecheck"
+            case nil: nil
+            }
+        let notes = [origin, feed.scheme == "http" ? "feed is plain HTTP" : nil].compactMap { $0 }
+        // A seeded feed was matched to the app through Homebrew's data, not declared by the app.
+        let confidence: Confidence = catalogFeed == .fallback ? .medium : .high
+        return .found(release, confidence, note: notes.isEmpty ? nil : notes.joined(separator: ", "))
     }
 
     /// Channel names that mean "the normal release". Sparkle offers items without a channel to
