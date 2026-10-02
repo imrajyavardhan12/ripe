@@ -12,13 +12,13 @@ Architecture, principles, pipeline, version rules and decision log (read before 
 
 v0.1 feature-complete, not yet released: App Store, Sparkle and Homebrew cask sources, resolver with evidence, disk cache with offline fallback, `ripe`, `ripe --all`, `ripe why <app>`, `--json` (schema v1). Verified against the maintainer's Mac in `docs/accuracy.md` (keep that log updated per release).
 
-orchard catalog v1 done: client support in `Sources/RipeCore/Catalog/`, catalog repo at `~/Developer/orchard` (github.com/imrajyavardhan12/orchard, private until launch). Test local entries with `RIPE_CATALOG_URL=file://…/orchard/dist/index.json`.
+orchard catalog v1 done: client support in `Sources/RipeCore/Catalog/`, catalog repo at `~/Developer/orchard` (github.com/imrajyavardhan12/orchard, public; served at https://imrajyavardhan12.github.io/orchard/index.json, redeployed on every push to main or by hand via workflow_dispatch). Test local entries with `RIPE_CATALOG_URL=file://…/orchard/dist/index.json`.
 
 Release tooling done: `scripts/formula.sh` (verified with `brew test` and `brew audit --strict` from a throwaway local tap), release workflow updates the existing public tap `imrajyavardhan12/homebrew-tap` (shared with `margin`; don't touch `margin.rb`). Process in `docs/releasing.md`; `CHANGELOG.md` must have a section for every tag.
 
 `ripe pick` done (`Sources/RipeCore/Install/`, design and the measured App Management rule in docs/architecture.md §11): hand-off to brew/mas, direct installs only after integrity + strict signature + matching Team ID + Gatekeeper, journaled whole-bundle swap. **Never write inside an app bundle** (blocked by App Management once an app has launched); only move whole bundles. Verified end to end on a throwaway app; never test `pick` on the maintainer's real apps without asking.
 
-Blocked on the maintainer: make `ripe` and `orchard` public (launch timing), add the `HOMEBREW_TAP_TOKEN` secret, then tag the first release (likely v0.2.0, since v0.1 never shipped alone). Next: `ripe skip`, `ripe doctor`, Electron and GitHub sources (v0.3).
+Both repos are public (2026-10-02). The maintainer ran `ripe pick Helium` successfully on their own Mac. Blocked on the maintainer: add the `HOMEBREW_TAP_TOKEN` secret, then tag the first release as v0.2.0 (v0.1 never shipped alone). Local install meanwhile: `make install` (→ `~/.local/bin/ripe`). Next: `ripe skip`, `ripe doctor`, Electron and GitHub sources (v0.3).
 
 ## Working in this repo
 
