@@ -18,7 +18,7 @@ Release tooling done: `scripts/formula.sh` (verified with `brew test` and `brew 
 
 `ripe pick` done (`Sources/RipeCore/Install/`, design and the measured App Management rule in docs/architecture.md §11): hand-off to brew/mas, direct installs only after integrity + strict signature + matching Team ID + Gatekeeper, journaled whole-bundle swap. **Never write inside an app bundle** (blocked by App Management once an app has launched); only move whole bundles. Verified end to end on a throwaway app; never test `pick` on the maintainer's real apps without asking.
 
-Both repos are public (2026-10-02). The maintainer ran `ripe pick Helium` successfully on their own Mac. Blocked on the maintainer: add the `HOMEBREW_TAP_TOKEN` secret, then tag the first release as v0.2.0 (v0.1 never shipped alone). Local install meanwhile: `make install` (→ `~/.local/bin/ripe`). Next: `ripe skip`, `ripe doctor`, Electron and GitHub sources (v0.3).
+**v0.2.0 released 2026-10-02** (both repos public; `brew install imrajyavardhan12/tap/ripe`; release workflow verified end to end: universal binary, checksum, SLSA attestation, tap commit). The maintainer uses the Homebrew install, not `make install`. Next: `ripe skip`, `ripe doctor`, Electron and GitHub sources (v0.3).
 
 ## Working in this repo
 
