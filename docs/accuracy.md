@@ -2,6 +2,17 @@
 
 Ripe's headline metric is its false-positive rate: how often it claims an update that isn't real. Each release gets a verification run on real Macs, recorded here. When a verdict is wrong, the fix lands with a test (fixture or table row), and the row below links to it.
 
+## 2026-10-02 · maintainer's Mac (macOS 27.0, Apple silicon) · pre-release v0.2.0
+
+28 apps, live orchard catalog. 13 ripe, 8 up to date, 7 unknown. Verdicts match the 2026-09-28 run below, plus newer upstream releases since then (Brave 1.96.60, Helium 0.18.2.1, Mullvad Browser 15.0.24, Postman 12.30.5, Raycast 2.6.0.0, WhatsApp 26.38.74).
+
+- **Brave** is now decided by Sparkle through the orchard feed (build comparison), no longer by the Homebrew fallback.
+- **Obsidian** reports its real running version (1.13.4) through orchard; 1.13.7 is a real update.
+- **First real update by the maintainer:** `ripe pick Helium` 0.18.1.1 → 0.18.2.1 (Homebrew cask download, SHA-256, strict signature, matching Team ID, swap, old version in the Trash). Ripe then reported it up to date.
+- Earlier the same week: GrandPerspective 3.6.1 → 3.8.1 end to end on a throwaway install, app running during the update (quit and relaunched).
+
+No false positives found.
+
 ## 2026-09-28 · maintainer's Mac (macOS 27.0, Apple silicon) · v0.1.0-dev
 
 28 apps checked in 1.2 s cold, 0.19 s warm. 12 ripe, 9 up to date, 7 unknown.
