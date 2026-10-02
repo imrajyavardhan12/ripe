@@ -153,6 +153,17 @@ struct ReportOutputTests {
         #expect(text.contains("More: https://obsproject.com/notes.html"))
     }
 
+    @Test func pathsUnderHomeAreShortened() {
+        let home = "/Users/someone"
+        #expect(
+            ReportRenderer.displayPath(URL(filePath: "/Users/someone/Applications/X.app"), home: home)
+                == "~/Applications/X.app")
+        #expect(ReportRenderer.displayPath(URL(filePath: "/Applications/X.app"), home: home) == "/Applications/X.app")
+        #expect(
+            ReportRenderer.displayPath(URL(filePath: "/Users/someoneelse/X.app"), home: home)
+                == "/Users/someoneelse/X.app")
+    }
+
     @Test func findsAppsTheWayPeopleTypeThem() {
         let reports = Self.report.apps
         #expect(AppQuery("obs").best(reports).map(\.app.name) == ["OBS"])

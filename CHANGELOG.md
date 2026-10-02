@@ -4,6 +4,10 @@ All notable changes to Ripe. The release workflow publishes each version's secti
 
 ## [Unreleased]
 
+- `ripe why` shows paths under your home folder as `~/…`, so pasting it into a bug report doesn't reveal your username.
+- `RIPE_APPLICATIONS_DIR` (colon-separated) points Ripe at other folders instead of `/Applications` and `~/Applications`, for testing and demos.
+- README demo, recorded reproducibly with `make demo` (VHS) against a staged folder of well-known apps.
+
 ## [0.3.0] - 2026-10-02
 
 - `ripe skip <app>` skips the update on offer; the app shows up again when a newer version ships, so a later fix is never hidden. `--always` ignores the app until `ripe unskip <app>`; `ripe skip --list` shows what's skipped. Skips live in `~/.config/ripe/skips.json` (respects `XDG_CONFIG_HOME`). `ripe pick --all` respects skips; naming an app (`ripe pick Raycast`) overrides them. Skipped apps stay visible in `--all`, `why`, the summary line and `--json` (`status: "skipped"`).

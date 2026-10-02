@@ -4,7 +4,7 @@ TESTING_PLUGINS := $(shell xcode-select -p)/usr/lib/swift/host/plugins/testing
 TEST_FLAGS := $(if $(wildcard $(TESTING_PLUGINS)),-Xswiftc -plugin-path -Xswiftc $(TESTING_PLUGINS))
 SOURCES := Package.swift Sources Tests
 
-.PHONY: build test lint format release install uninstall run clean
+.PHONY: build test lint format release install uninstall demo run clean
 
 build:
 	swift build
@@ -39,6 +39,14 @@ install: release
 
 uninstall:
 	rm -f "$(PREFIX)/bin/ripe"
+
+# Re-record assets/demo.gif from scripts/demo/demo.tape against a staged Applications folder.
+# Staged under /tmp/ripe-demo so the paths in the GIF say "demo", not the recording Mac's home.
+demo: release
+	scripts/demo/stage.sh /tmp/ripe-demo/Applications
+	rm -rf /tmp/ripe-demo/cache /tmp/ripe-demo/config
+	vhs scripts/demo/demo.tape
+	rm -rf /tmp/ripe-demo
 
 run:
 	swift run ripe $(ARGS)

@@ -49,7 +49,7 @@ struct ReportRenderer {
         let app = item.app
         let build = app.version.build.map { $0 == app.version.short ? "" : " (\($0))" } ?? ""
         var lines = [
-            "\(terminal.style(app.name, .bold)) \(app.version.display)\(build)  \(terminal.style(app.url.path, .dim))",
+            "\(terminal.style(app.name, .bold)) \(app.version.display)\(build)  \(terminal.style(Self.displayPath(app.url), .dim))",
             "\(app.bundleID)",
             "",
             "\(status(item.verdict)): \(item.explanation)",
@@ -99,7 +99,8 @@ struct ReportRenderer {
             case .missingVersion: "its Info.plist declares no version."
             case .unreadableInfoPlist: "its Info.plist couldn't be read."
             }
-        return "\(terminal.style(name, .bold)) isn't checked: \(reason)\n\(terminal.style(skipped.url.path, .dim))"
+        return
+            "\(terminal.style(name, .bold)) isn't checked: \(reason)\n\(terminal.style(Self.displayPath(skipped.url), .dim))"
     }
 
     // MARK: Pieces
@@ -134,6 +135,14 @@ struct ReportRenderer {
         case .skippedByUser(_, .always): terminal.style("skipped (always)", .dim)
         case .skippedByUser(_, .version(let version)): terminal.style("skipped \(version)", .dim)
         }
+    }
+
+    /// Paths under the home folder as `~/…`: tidier, and pasting `ripe why` into a bug report
+    /// doesn't reveal the username.
+    static func displayPath(_ url: URL, home: String = FileManager.default.homeDirectoryForCurrentUser.path) -> String {
+        let path = url.path
+        guard path == home || path.hasPrefix(home + "/") else { return path }
+        return "~" + path.dropFirst(home.count)
     }
 
     static func describe(_ reason: UnknownReason) -> String {

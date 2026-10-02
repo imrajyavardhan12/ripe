@@ -19,8 +19,15 @@ public struct AppScanner: Sendable {
         self.maxDepth = maxDepth
     }
 
-    public static var defaultRoots: [URL] {
-        [
+    public static var defaultRoots: [URL] { defaultRoots() }
+
+    /// `/Applications` and `~/Applications`, or the folders in `RIPE_APPLICATIONS_DIR`
+    /// (colon-separated), which replace them entirely: for demos and testing against a staged folder.
+    public static func defaultRoots(environment: [String: String] = ProcessInfo.processInfo.environment) -> [URL] {
+        if let override = environment["RIPE_APPLICATIONS_DIR"], !override.isEmpty {
+            return override.split(separator: ":").map { URL(filePath: String($0), directoryHint: .isDirectory) }
+        }
+        return [
             URL(filePath: "/Applications", directoryHint: .isDirectory),
             FileManager.default.homeDirectoryForCurrentUser.appending(
                 path: "Applications", directoryHint: .isDirectory),

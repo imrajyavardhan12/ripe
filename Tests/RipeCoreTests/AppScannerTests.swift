@@ -163,6 +163,14 @@ struct AppScannerTests {
         #expect(AppScanner(roots: [fixture.root]).scan().apps.map(\.name) == ["Hidden"])
     }
 
+    @Test func applicationsFolderOverride() {
+        #expect(
+            AppScanner.defaultRoots(environment: ["RIPE_APPLICATIONS_DIR": "/tmp/a:/tmp/b"]).map(\.path) == [
+                "/tmp/a", "/tmp/b",
+            ])
+        #expect(AppScanner.defaultRoots(environment: [:]).first?.path == "/Applications")
+    }
+
     @Test func missingRootIsNotAnError() {
         let result = AppScanner(roots: [URL(filePath: "/nonexistent-\(UUID().uuidString)")]).scan()
         #expect(result.apps.isEmpty && result.skipped.isEmpty)
