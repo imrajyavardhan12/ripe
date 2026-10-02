@@ -2,6 +2,10 @@
 
 Ripe's headline metric is its false-positive rate: how often it claims an update that isn't real. Each release gets a verification run on real Macs, recorded here. When a verdict is wrong, the fix lands with a test (fixture or table row), and the row below links to it.
 
+## 2026-10-02 (later) · maintainer's Mac · pre-release v0.3.0
+
+12 ripe, 9 up to date, 7 unknown: the same set as the v0.2.0 run, minus Helium (updated with `ripe pick`). No new false positives. `ripe skip` / `unskip` exercised against real apps (Raycast version skip, Postman `--always`) with an isolated config folder.
+
 ## 2026-10-02 · maintainer's Mac (macOS 27.0, Apple silicon) · pre-release v0.2.0
 
 28 apps, live orchard catalog. 13 ripe, 8 up to date, 7 unknown. Verdicts match the 2026-09-28 run below, plus newer upstream releases since then (Brave 1.96.60, Helium 0.18.2.1, Mullvad Browser 15.0.24, Postman 12.30.5, Raycast 2.6.0.0, WhatsApp 26.38.74).
