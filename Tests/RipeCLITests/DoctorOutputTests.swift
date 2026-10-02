@@ -6,9 +6,12 @@ import Testing
 
 struct DoctorOutputTests {
     let renderer = DoctorRenderer(terminal: Terminal(color: false))
-    let machine = Machine(macOSVersion: Version("27.0.1")!, architecture: .arm64, storeCountry: "in")
 
-    @Test func alignsChecksAndShowsHintsOnlyForNonOK() {
+    func machine() throws -> Machine {
+        Machine(macOSVersion: try #require(Version("27.0.1")), architecture: .arm64, storeCountry: "in")
+    }
+
+    @Test func alignsChecksAndShowsHintsOnlyForNonOK() throws {
         let checks = [
             DoctorCheck("Apps", .ok, "28 in /Applications", hint: "never shown"),
             DoctorCheck("mas", .info, "not installed", hint: "`brew install mas`"),
@@ -16,7 +19,7 @@ struct DoctorOutputTests {
             DoctorCheck("Skips", .problem, "~/.config/ripe/skips.json can't be read"),
         ]
         #expect(
-            renderer.render(checks, machine: machine) == """
+            renderer.render(checks, machine: try machine()) == """
                 ripe \(Ripe.version) · macOS 27.0.1 · Apple silicon
 
                 ✓ Apps           28 in /Applications
@@ -30,8 +33,8 @@ struct DoctorOutputTests {
                 """)
     }
 
-    @Test func saysSoWhenAllIsWell() {
-        let output = renderer.render([DoctorCheck("Apps", .ok, "3 in /Applications")], machine: machine)
+    @Test func saysSoWhenAllIsWell() throws {
+        let output = renderer.render([DoctorCheck("Apps", .ok, "3 in /Applications")], machine: try machine())
         #expect(output.hasSuffix("Everything Ripe needs is in place."))
     }
 }
