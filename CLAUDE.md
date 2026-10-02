@@ -20,7 +20,7 @@ Release tooling done: `scripts/formula.sh` (verified with `brew test` and `brew 
 
 **Released:** v0.2.0 (2026-10-02, first public release) and v0.3.0 (2026-10-02, `ripe skip`/`unskip`). Install: `brew install imrajyavardhan12/tap/ripe`. The maintainer uses the Homebrew install, not `make install`. Release pipeline is hardened (pinned macos-26 + Xcode 26.6, actions pinned by SHA with Dependabot, formula checked before publishing, tap install verified on a clean machine after); `main` carries the next `-dev` version.
 
-Priorities (the maintainer delegated prioritization, 2026-10-02): launch kit next (README demo GIF, launch post drafts; posting itself is the maintainer's call), then catalog coverage (seed orchard from Homebrew livecheck Sparkle URLs), `ripe doctor`, Electron and GitHub sources. Next: `ripe skip`, `ripe doctor`, Electron and GitHub sources (v0.3).
+Priorities (the maintainer delegated prioritization, 2026-10-02): launch kit in progress. README rewritten for launch, demo GIF done (`make demo`, VHS against a staged `/tmp/ripe-demo`, never the maintainer's real apps; inspect frames for leaks before committing). Remaining: launch post drafts (posting is the maintainer's call). Then catalog coverage (seed orchard from Homebrew livecheck Sparkle URLs), `ripe doctor`, Electron and GitHub sources. Next: `ripe skip`, `ripe doctor`, Electron and GitHub sources (v0.3).
 
 ## Working in this repo
 
