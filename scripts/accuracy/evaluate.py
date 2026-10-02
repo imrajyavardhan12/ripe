@@ -19,6 +19,8 @@ import json
 import os
 import sys
 
+MIN_INSTALLED = 40  # of the 80 in casks.txt
+
 
 def main(installed_path: str, report_path: str) -> int:
     installed = {}
@@ -73,6 +75,10 @@ def main(installed_path: str, report_path: str) -> int:
         with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as handle:
             handle.write(summary + "\n")
     print(f"precision: {reported - len(false_positives)}/{reported} reported updates not known to be false", file=sys.stderr)
+    # A run that installed little proves nothing; never let a broken harness pass as clean.
+    if len(installed) < MIN_INSTALLED:
+        print(f"only {len(installed)} casks installed (need {MIN_INSTALLED}); the harness itself is broken", file=sys.stderr)
+        return 2
     return 1 if false_positives else 0
 
 

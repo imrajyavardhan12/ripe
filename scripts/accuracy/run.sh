@@ -21,7 +21,7 @@ export HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 HOMEBREW_NO_ANALY
 grep -v '^#' "$here/casks.txt" | while read -r token; do
     [ -n "$token" ] || continue
     before=$(ls "$apps")
-    if ! brew install --cask --no-quarantine --appdir="$apps" "$token" > "$work/install-$token.log" 2>&1; then
+    if ! brew install --cask --appdir="$apps" "$token" > "$work/install-$token.log" 2>&1; then
         echo "::warning::$token failed to install (see install-$token.log)"
         continue
     fi
