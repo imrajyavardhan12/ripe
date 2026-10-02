@@ -44,7 +44,7 @@ struct PickCommand: AsyncParsableCommand {
 
         let queries = apps.map(AppQuery.init)
         let named: @Sendable (InstalledApp) -> Bool = { app in queries.contains { $0.matches(app) } }
-        let report = await options.check(including: all ? nil : named)
+        let report = try await options.check(including: all ? nil : named)
         let selected = try select(from: report, queries: queries)
         var plans: [InstallPlan] = []
         var skipped: [(String, String)] = []
@@ -81,7 +81,8 @@ struct PickCommand: AsyncParsableCommand {
     }
 
     private func select(from report: Report, queries: [AppQuery]) throws -> [AppReport] {
-        if all { return report.outdated }
+        // --all respects skips: skipped apps are listed with the reason, not updated.
+        if all { return report.outdated + report.skippedByUser }
         var selected: [AppReport] = []
         for query in queries {
             let matches = query.best(report.apps)
@@ -90,7 +91,13 @@ struct PickCommand: AsyncParsableCommand {
             }
             selected += matches.filter { match in !selected.contains { $0.id == match.id } }
         }
-        return selected
+        // Naming an app is an explicit request: it overrides a skip.
+        return selected.map { report in
+            guard case .skippedByUser(let release, _) = report.verdict else { return report }
+            var report = report
+            report.verdict = .outdated(release)
+            return report
+        }
     }
 
     private func confirm(_ count: Int) throws -> Bool {

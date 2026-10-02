@@ -4,10 +4,12 @@ public enum Verdict: Sendable, Hashable {
     case outdated(Release)
     case current(Release)
     case unknown(UnknownReason)
+    /// An update exists, but the person chose to skip it (`ripe skip`).
+    case skippedByUser(Release, SkipRule)
 
     public var release: Release? {
         switch self {
-        case .outdated(let release), .current(let release): release
+        case .outdated(let release), .current(let release), .skippedByUser(let release, _): release
         case .unknown(let reason): reason.release
         }
     }
@@ -92,4 +94,7 @@ public struct Report: Sendable {
     public var outdated: [AppReport] { apps.filter { if case .outdated = $0.verdict { true } else { false } } }
     public var current: [AppReport] { apps.filter { if case .current = $0.verdict { true } else { false } } }
     public var unknown: [AppReport] { apps.filter { if case .unknown = $0.verdict { true } else { false } } }
+    public var skippedByUser: [AppReport] {
+        apps.filter { if case .skippedByUser = $0.verdict { true } else { false } }
+    }
 }

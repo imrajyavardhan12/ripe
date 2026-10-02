@@ -69,7 +69,7 @@ Why not more modules now: every module boundary in Swift costs `public` boilerpl
 - **`Version`**: parsed, comparable version. See §7.
 - **`Release`**: a candidate newest version from one source: `version`, optional `build`, `source`, download URL, release-notes URL, `minimumSystemVersion`, publish date.
 - **`SourceOutcome`**: per app per source: `.found(Release, Confidence)`, `.notApplicable`, `.failed(SourceError)`.
-- **`Verdict`**: `.outdated(Release)`, `.current`, `.unknown(Reason)`, `.ignored(Reason)`.
+- **`Verdict`**: `.outdated(Release)`, `.current`, `.unknown(Reason)`, `.skippedByUser(Release, SkipRule)`. Skips (`SkipList`, `~/.config/ripe/skips.json`) are applied after resolution, so the resolver stays a pure function of the evidence. A version skip hides that release and anything not newer, never a newer one: a skip must not hide a later fix.
 - **`Evidence`**: ordered list of what each source said and which rule produced the verdict. Built from day one; `ripe why` and `--json` are just views of it.
 - **`AppReport`** = `InstalledApp` + `Verdict` + `Evidence` + `managedBy` (`.homebrew(token)`, `.appStore(id)`, `.selfUpdating`, `.none`).
 - **`Report`**: all `AppReport`s + run metadata (duration, sources that failed, cache state).
@@ -159,7 +159,7 @@ Most bugs in update checkers are version bugs, so this gets its own module, an e
 
 - **Default (TTY)**: table of outdated apps (name, installed → latest, source, how to update), then a one-line summary: `3 ripe · 41 current · 6 unknown (ripe why <app>)`. Color only on a TTY; respects `NO_COLOR`.
 - **`--all`**: every app with its verdict.
-- **`--json`**: stable, documented schema with `"schemaVersion": 1`. Additive changes keep the version; breaking changes bump it. Covered by golden tests.
+- **`--json`**: stable, documented schema with `"schemaVersion": 1`. Additive changes keep the version (new fields, new `status` values such as `skipped`, so consumers must tolerate unknown statuses); breaking changes bump it. Covered by golden tests.
 - **stdout carries results only**; logs, progress and warnings go to stderr. `--verbose` for debug logs.
 - **Exit codes**: `0` success (regardless of how many updates), `1` runtime failure, `64` usage error (ArgumentParser default). A future `--check` may return `10` when updates exist, for scripts.
 

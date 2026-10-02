@@ -7,7 +7,7 @@ public struct RootCommand: AsyncParsableCommand {
         commandName: "ripe",
         abstract: "Your apps, always ripe. See every outdated app on your Mac, wherever it came from.",
         version: Ripe.version,
-        subcommands: [ListCommand.self, PickCommand.self, WhyCommand.self],
+        subcommands: [ListCommand.self, PickCommand.self, SkipCommand.self, UnskipCommand.self, WhyCommand.self],
         defaultSubcommand: ListCommand.self
     )
 
@@ -22,15 +22,23 @@ struct CheckOptions: ParsableArguments {
     @Flag(help: "Print debug details (sources, cache hits, timings) to stderr.")
     var verbose = false
 
-    func environment() -> Ripe.Environment {
-        .live(refresh: refresh, log: verbose ? .standardError : .silent)
+    func environment() throws -> Ripe.Environment {
+        .live(
+            refresh: refresh, log: verbose ? .standardError : .silent,
+            skips: try SkipStore(url: SkipStore.defaultURL()).load())
     }
 
     /// Runs a check with a one-line progress note on stderr when it's a terminal.
-    func check(including filter: (@Sendable (InstalledApp) -> Bool)? = nil) async -> Report {
+    func check(including filter: (@Sendable (InstalledApp) -> Bool)? = nil) async throws -> Report {
+        let environment: Ripe.Environment
+        do {
+            environment = try self.environment()
+        } catch {
+            throw RipeError("\(error)")
+        }
         let showProgress = isatty(STDERR_FILENO) == 1 && !verbose
         if showProgress { FileHandle.standardError.write(Data("Checking your apps…".utf8)) }
-        let report = await Ripe.check(environment(), including: filter)
+        let report = await Ripe.check(environment, including: filter)
         if showProgress { FileHandle.standardError.write(Data("\r\u{1B}[K".utf8)) }
         return report
     }
@@ -52,7 +60,7 @@ struct ListCommand: AsyncParsableCommand {
     @OptionGroup var options: CheckOptions
 
     func run() async throws {
-        let report = await options.check()
+        let report = try await options.check()
         if json {
             print(try JSONReport(report).encoded())
         } else {
@@ -79,7 +87,7 @@ struct WhyCommand: AsyncParsableCommand {
 
     func run() async throws {
         let query = app
-        let report = await options.check { AppQuery(query).matches($0) }
+        let report = try await options.check { AppQuery(query).matches($0) }
         let matches = AppQuery(query).best(report.apps)
 
         guard !matches.isEmpty else {

@@ -19,6 +19,7 @@ struct JSONReport: Encodable {
         var outdated: Int
         var current: Int
         var unknown: Int
+        var skipped: Int
     }
 
     struct App: Encodable {
@@ -26,12 +27,14 @@ struct JSONReport: Encodable {
         var bundleId: String
         var path: String
         var installed: Installed
-        /// `outdated`, `current` or `unknown`.
+        /// `outdated`, `current`, `unknown` or `skipped` (an update the person chose to skip).
         var status: String
         /// Why the status is `unknown`: `no-source`, `sources-failed`, `incomparable`,
         /// `low-confidence` or `requires-newer-macos`.
         var reason: String?
         var latest: Latest?
+        /// For `skipped`: `always`, or the skipped version.
+        var skipped: String?
         var updateWith: UpdateWith
         var explanation: String
         var evidence: [EvidenceItem]
@@ -86,7 +89,9 @@ extension JSONReport {
         generatedAt = report.generatedAt
         durationSeconds =
             Double(report.duration.components.seconds) + Double(report.duration.components.attoseconds) / 1e18
-        summary = Summary(outdated: report.outdated.count, current: report.current.count, unknown: report.unknown.count)
+        summary = Summary(
+            outdated: report.outdated.count, current: report.current.count, unknown: report.unknown.count,
+            skipped: report.skippedByUser.count)
         apps = report.apps.map(App.init)
         skipped = report.skipped.map { Skipped(path: $0.url.path, reason: $0.reason.rawValue) }
     }
@@ -111,6 +116,12 @@ extension JSONReport.App {
         switch report.verdict {
         case .outdated: status = "outdated"
         case .current: status = "current"
+        case .skippedByUser(_, let rule):
+            status = "skipped"
+            switch rule {
+            case .always: skipped = "always"
+            case .version(let version): skipped = version
+            }
         case .unknown(let why):
             status = "unknown"
             reason =

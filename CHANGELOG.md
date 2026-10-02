@@ -4,6 +4,8 @@ All notable changes to Ripe. The release workflow publishes each version's secti
 
 ## [Unreleased]
 
+- `ripe skip <app>` skips the update on offer; the app shows up again when a newer version ships, so a later fix is never hidden. `--always` ignores the app until `ripe unskip <app>`; `ripe skip --list` shows what's skipped. Skips live in `~/.config/ripe/skips.json` (respects `XDG_CONFIG_HOME`). `ripe pick --all` respects skips; naming an app (`ripe pick Raycast`) overrides them. Skipped apps stay visible in `--all`, `why`, the summary line and `--json` (`status: "skipped"`).
+
 ## [0.2.0] - 2026-10-02
 
 First release: see what's outdated, and update it safely.

@@ -58,7 +58,7 @@ struct ReportOutputTests {
         #expect(object["schemaVersion"] as? Int == 1)
         #expect(object["generatedAt"] as? String == "2026-09-21T14:13:20Z")
         #expect(object["durationSeconds"] as? Double == 1.25)
-        #expect(object["summary"] as? [String: Int] == ["outdated": 1, "current": 1, "unknown": 1])
+        #expect(object["summary"] as? [String: Int] == ["outdated": 1, "current": 1, "unknown": 1, "skipped": 0])
         #expect(
             object["skipped"] as? [[String: String]] == [
                 ["path": "/Applications/Safari.app", "reason": "appleSystemApp"]
@@ -125,6 +125,16 @@ struct ReportOutputTests {
         #expect(lines[1] == "OBS  32.2.1     32.2.2  Sparkle  brew upgrade --cask obs")
         #expect(!text.contains("Brave"))
         #expect(text.contains("1 ripe · 1 up to date · 1 unknown · 1.2s"))
+    }
+
+    @Test func skippedAppsAreCountedNotHidden() throws {
+        var report = Self.report
+        report.apps[2].verdict = .skippedByUser(Self.obsRelease, .version("32.2.2"))
+        let text = ReportRenderer(terminal: Terminal(color: false)).renderAll(report)
+        #expect(text.contains("skipped 32.2.2"))
+        #expect(text.contains("0 ripe · 1 up to date · 1 unknown · 1 skipped"))
+        let obs = JSONReport.App(report.apps[2])
+        #expect(obs.status == "skipped" && obs.skipped == "32.2.2")
     }
 
     @Test func saysSoWhenNothingIsRipe() {

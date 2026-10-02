@@ -12,6 +12,8 @@ public enum Ripe {
         public var context: SourceContext
         /// The orchard catalog (`https://` or `file://`); `nil` runs without it.
         public var catalogURL: URL?
+        /// Updates the person chose to skip.
+        public var skips: SkipList
         public var refresh: Bool
         /// Sources still running after this are cut off; the report ships without them.
         public var deadline: Duration
@@ -21,6 +23,7 @@ public enum Ripe {
             sources: [any UpdateSource],
             context: SourceContext,
             catalogURL: URL? = nil,
+            skips: SkipList = SkipList(),
             refresh: Bool = false,
             // Matches URLSession's per-download limit: the first run fetches ~2 MB (gzip) of cask
             // data, which needs ~16 s at 1 Mbps. Warm runs finish in well under a second.
@@ -30,6 +33,7 @@ public enum Ripe {
             self.sources = sources
             self.context = context
             self.catalogURL = catalogURL
+            self.skips = skips
             self.refresh = refresh
             self.deadline = deadline
         }
@@ -37,6 +41,7 @@ public enum Ripe {
         public static func live(
             refresh: Bool = false,
             log: Logger = .silent,
+            skips: SkipList = SkipList(),
             environment: [String: String] = ProcessInfo.processInfo.environment
         ) -> Environment {
             let cache = DiskCache(directory: DiskCache.defaultDirectory(environment: environment))
@@ -46,6 +51,7 @@ public enum Ripe {
                 sources: [AppStoreSource(), SparkleSource(), HomebrewCaskSource()],
                 context: SourceContext(http: http, machine: .current(environment: environment), cache: cache, log: log),
                 catalogURL: catalogURL(environment: environment),
+                skips: skips,
                 refresh: refresh
             )
         }
@@ -87,11 +93,23 @@ public enum Ripe {
         let resolver = Resolver(machine: environment.context.machine)
         let reports = apps.map { app in
             let perSource = outcomes.mapValues { $0[app.id] ?? .notApplicable }
-            return resolver.resolve(app, outcomes: perSource)
+            return applySkips(environment.skips, to: resolver.resolve(app, outcomes: perSource))
         }
         let duration = ContinuousClock.now - started
         log.debug("checked in \(duration)")
         return Report(apps: reports, skipped: discovery.skipped, duration: duration, generatedAt: Date())
+    }
+
+    /// Only an update can be skipped; current and unknown verdicts are left as they are.
+    static func applySkips(_ skips: SkipList, to report: AppReport) -> AppReport {
+        guard case .outdated(let release) = report.verdict, let rule = skips.rule(for: report.app, release: release)
+        else {
+            return report
+        }
+        var report = report
+        report.verdict = .skippedByUser(release, rule)
+        report.explanation += " Skipped by you (`ripe unskip \(report.app.name)` to see it again)."
+        return report
     }
 
     private static func querySources(

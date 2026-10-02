@@ -17,6 +17,7 @@ Ripe checks them all in one place:
 ripe              # what's ripe? (apps with updates)
 ripe pick <app>   # update one app
 ripe pick --all   # harvest everything
+ripe skip <app>   # skip this update (or --always to ignore the app)
 ripe why <app>    # where the version info came from and how the app updates
 ```
 

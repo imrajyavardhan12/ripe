@@ -55,6 +55,10 @@ public enum Planner {
             switch report.verdict {
             case .current: return .skip("already up to date")
             case .unknown: return .skip("Ripe isn't sure it's outdated (`ripe why \(report.app.name)`)")
+            case .skippedByUser(let release, .always):
+                return .skip("you skipped it (\(release.version) available; `ripe unskip \(report.app.name)`)")
+            case .skippedByUser(let release, .version):
+                return .skip("you skipped \(release.version) (`ripe unskip \(report.app.name)`)")
             case .outdated: return .skip("")  // unreachable
             }
         }

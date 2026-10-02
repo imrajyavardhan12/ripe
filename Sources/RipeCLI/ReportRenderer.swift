@@ -108,6 +108,7 @@ struct ReportRenderer {
         let seconds = Double(report.duration.components.seconds) + Double(report.duration.components.attoseconds) / 1e18
         var parts = ["\(report.outdated.count) ripe", "\(report.current.count) up to date"]
         if !report.unknown.isEmpty { parts.append("\(report.unknown.count) unknown") }
+        if !report.skippedByUser.isEmpty { parts.append("\(report.skippedByUser.count) skipped") }
         parts.append(String(format: "%.1fs", seconds))
         var lines = [terminal.style(parts.joined(separator: " · "), .dim)]
         var hints = ["`ripe why <app>` explains any result"]
@@ -130,6 +131,8 @@ struct ReportRenderer {
         case .outdated: terminal.style("ripe", .yellow)
         case .current: terminal.style("up to date", .green)
         case .unknown(let reason): terminal.style(Self.describe(reason), .dim)
+        case .skippedByUser(_, .always): terminal.style("skipped (always)", .dim)
+        case .skippedByUser(_, .version(let version)): terminal.style("skipped \(version)", .dim)
         }
     }
 
