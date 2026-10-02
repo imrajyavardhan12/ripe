@@ -21,6 +21,7 @@ make install   # optimized build to ~/.local/bin/ripe (PREFIX=… to change)
 - **Every accuracy fix comes with a fixture.** Capture the real feed, plist or API response in `Tests/**/Fixtures/`, trimmed to what matters.
 - **No new dependencies** without discussing it in an issue first.
 - **No network in unit tests.** Use the fake HTTP client. Live tests are tagged and only run with `RIPE_LIVE_TESTS=1`.
+- No force unwraps, tests included: use `try #require(…)`. CI's `swift format` (Xcode 26.6) flags them in Swift Testing files; some newer local toolchains don't, so `make lint` can pass locally and still fail in CI.
 - Keep commits small, with a short one-line message.
 
 ## Wrong version for an app?

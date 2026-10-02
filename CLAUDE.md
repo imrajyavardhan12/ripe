@@ -26,7 +26,7 @@ Priorities (the maintainer delegated prioritization, 2026-10-02): launch kit in 
 
 - `make build`, `make test`, `make lint`, `make format`, `make release`, `make run ARGS="..."`.
 - Always use `make test`, not bare `swift test`: with Command Line Tools only, the Swift Testing macro plugin must be passed explicitly.
-- `make lint` must pass (CI runs `swift format lint --strict`).
+- `make lint` must pass (CI runs `swift format lint --strict`). The local 6.4 toolchain's swift-format skips `NeverForceUnwrap` in Swift Testing files but CI's doesn't: never force-unwrap in tests (`try #require`).
 - Local `make release` builds arm64 only; the macOS 27 toolchain has no x86_64 runtime libs. CI builds the universal binary.
 - Every accuracy fix needs a test with a real-world case (fixture or table row). When unsure, the answer is `unknown`, never `outdated`.
 
