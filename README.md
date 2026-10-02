@@ -3,7 +3,7 @@
 <h1 align="center">Ripe</h1>
 <p align="center"><b>Your apps, always ripe.</b><br>One command to see every outdated app on your Mac, and update it safely, whether it came from Homebrew, the Mac App Store or a direct download.</p>
 
-<p align="center"><img src="assets/demo.gif" alt="ripe listing outdated apps, explaining one result with ripe why, and planning updates with ripe pick" width="900"></p>
+<p align="center"><img src="assets/demo.gif" alt="ripe listing outdated apps, explaining one result with ripe why, planning updates, and updating GrandPerspective with ripe pick" width="900"></p>
 
 ```sh
 brew install imrajyavardhan12/tap/ripe

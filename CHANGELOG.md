@@ -6,7 +6,7 @@ All notable changes to Ripe. The release workflow publishes each version's secti
 
 - `ripe why` shows paths under your home folder as `~/…`, so pasting it into a bug report doesn't reveal your username.
 - `RIPE_APPLICATIONS_DIR` (colon-separated) points Ripe at other folders instead of `/Applications` and `~/Applications`, for testing and demos.
-- README demo, recorded reproducibly with `make demo` (VHS) against a staged folder of well-known apps.
+- README demo, recorded reproducibly by the Demo workflow on a clean Mac (VHS): a staged folder of well-known apps and a real, verified update.
 
 ## [0.3.0] - 2026-10-02
 
