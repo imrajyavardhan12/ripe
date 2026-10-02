@@ -3,6 +3,8 @@
 <h1 align="center">Ripe</h1>
 <p align="center"><b>Your apps, always ripe.</b><br>One command to see every outdated app on your Mac, and update it safely, whether it came from Homebrew, the Mac App Store or a direct download.</p>
 
+<p align="center"><a href="https://github.com/imrajyavardhan12/ripe/actions/workflows/ci.yml"><img src="https://github.com/imrajyavardhan12/ripe/actions/workflows/ci.yml/badge.svg" alt="CI"></a> <a href="https://github.com/imrajyavardhan12/ripe/actions/workflows/accuracy.yml"><img src="https://github.com/imrajyavardhan12/ripe/actions/workflows/accuracy.yml/badge.svg" alt="Accuracy: no false updates on 80 popular apps, checked weekly on clean Macs"></a></p>
+
 <p align="center"><img src="assets/demo.gif" alt="ripe listing outdated apps, explaining one result with ripe why, planning updates, and updating GrandPerspective with ripe pick" width="900"></p>
 
 ```sh
@@ -36,7 +38,7 @@ For each app Ripe asks the most authoritative source first:
 3. **Homebrew's cask database**, used as a version database for *every* app, not just ones Homebrew installed.
 4. **[orchard](https://github.com/imrajyavardhan12/orchard)**, an open catalog of corrections anyone can add to by pull request: a missing update feed, the right Homebrew cask, or where an app keeps its real version.
 
-When Ripe isn't sure, it says `unknown` and tells you why, instead of guessing. A false "update available" is worse than a missed one. `ripe why <app>` shows every source it asked and the rule that decided.
+When Ripe isn't sure, it says `unknown` and tells you why, instead of guessing. A false "update available" is worse than a missed one. Every week a [workflow](.github/workflows/accuracy.yml) installs the latest version of 80 popular apps on clean Macs (macOS 26, macOS 15, Intel) and fails if Ripe calls any of them outdated; results are in [docs/accuracy.md](docs/accuracy.md). `ripe why <app>` shows every source it asked and the rule that decided.
 
 ## How it updates
 
