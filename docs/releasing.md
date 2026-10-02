@@ -19,6 +19,7 @@ Without the secret, releases still publish; only the tap update is skipped.
 
 4. The `Release` workflow tests, builds the universal binary, attests it, publishes the GitHub release with the changelog section as notes, and commits `Formula/ripe.rb` to the tap.
 5. Check it: `brew update && brew install imrajyavardhan12/tap/ripe && ripe --version`.
+6. Bump `Ripe.version` in `Sources/RipeCore/Ripe.swift` to the next `-dev` version, so builds from `main` never claim to be older than the release.
 
 Tags with a suffix (`v0.2.0-rc.1`) are published as pre-releases and don't touch the tap.
 
