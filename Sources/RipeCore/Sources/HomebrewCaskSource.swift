@@ -25,8 +25,10 @@ public struct HomebrewCaskSource: UpdateSource {
         do {
             index = try await Self.loadIndex(context: context)
         } catch {
-            let outcome = SourceOutcome.failed("Homebrew cask database unavailable: \(error)")
-            return Dictionary(uniqueKeysWithValues: eligible.map { ($0.id, outcome) })
+            // Tap casks are read locally, so they still answer when the database can't be fetched.
+            let failed = SourceOutcome.failed("Homebrew cask database unavailable: \(error)")
+            return Dictionary(
+                uniqueKeysWithValues: eligible.map { ($0.id, Self.tapOutcome(for: $0, on: context.machine) ?? failed) })
         }
 
         var outcomes: [InstalledApp.ID: SourceOutcome] = [:]
@@ -53,6 +55,7 @@ public struct HomebrewCaskSource: UpdateSource {
 
     /// `nil` when no cask mentions the app.
     static func outcome(for app: InstalledApp, in index: CaskIndex, machine: Machine) -> SourceOutcome? {
+        if let tapped = tapOutcome(for: app, on: machine) { return tapped }
         guard let match = match(app, in: index, installedTokens: machine.homebrewCasks) else { return nil }
         let cask = match.cask
         guard cask.isVersioned else {
@@ -76,6 +79,27 @@ public struct HomebrewCaskSource: UpdateSource {
             download: download
         )
         return .found(release, match.confidence, note: "cask \(cask.token), \(match.reason)")
+    }
+
+    /// Homebrew installed this very bundle from a third-party tap: that cask is the answer,
+    /// whatever the public database says about similarly named apps.
+    static func tapOutcome(for app: InstalledApp, on machine: Machine) -> SourceOutcome? {
+        guard app.catalog?.entry.homebrewCask == nil, let tapCask = tapCask(for: app, on: machine) else { return nil }
+        let parts = tapCask.version.split(separator: ",", maxSplits: 1).map(String.init)
+        let release = Release(
+            version: parts[0], build: parts.count > 1 ? parts[1] : nil, source: .homebrewCask,
+            comparison: .shortVersion, caskToken: tapCask.token)
+        return .found(
+            release, .high,
+            note: "cask \(tapCask.tap)/\(tapCask.token) from your local tap (current as of your last `brew update`)")
+    }
+
+    static func tapCask(for app: InstalledApp, on machine: Machine) -> TapCask? {
+        let fileName = app.url.lastPathComponent
+        let matches = machine.tapCasks.filter { cask in
+            cask.appNames.contains { $0.caseInsensitiveCompare(fileName) == .orderedSame }
+        }
+        return matches.count == 1 ? matches[0] : nil
     }
 
     static func match(_ app: InstalledApp, in index: CaskIndex, installedTokens: Set<String>) -> Match? {

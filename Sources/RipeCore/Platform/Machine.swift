@@ -14,14 +14,18 @@ public struct Machine: Sendable, Hashable {
     public var storeCountry: String
     /// Tokens of casks installed by Homebrew (folder names in the Caskroom).
     public var homebrewCasks: Set<String>
+    /// Installed casks from third-party taps, which the public cask API doesn't list.
+    public var tapCasks: [TapCask]
 
     public init(
-        macOSVersion: Version, architecture: Architecture, storeCountry: String, homebrewCasks: Set<String> = []
+        macOSVersion: Version, architecture: Architecture, storeCountry: String, homebrewCasks: Set<String> = [],
+        tapCasks: [TapCask] = []
     ) {
         self.macOSVersion = macOSVersion
         self.architecture = architecture
         self.storeCountry = storeCountry
         self.homebrewCasks = homebrewCasks
+        self.tapCasks = tapCasks
     }
 
     /// Homebrew's name for this macOS release, used as a key in cask `variations`.
@@ -44,7 +48,8 @@ public struct Machine: Sendable, Hashable {
             macOSVersion: Version(release: [os.majorVersion, os.minorVersion, os.patchVersion]),
             architecture: hardwareArchitecture(),
             storeCountry: storeCountry(environment: environment),
-            homebrewCasks: installedCasks(environment: environment)
+            homebrewCasks: installedCasks(environment: environment),
+            tapCasks: TapCaskReader.installed(prefixes: homebrewPrefixes(environment: environment))
         )
     }
 
@@ -66,10 +71,13 @@ public struct Machine: Sendable, Hashable {
         return Locale.current.region?.identifier.lowercased() ?? "us"
     }
 
+    static func homebrewPrefixes(environment: [String: String]) -> [String] {
+        [environment["HOMEBREW_PREFIX"], "/opt/homebrew", "/usr/local"].compactMap { $0 }
+    }
+
     static func installedCasks(environment: [String: String]) -> Set<String> {
-        let prefixes = [environment["HOMEBREW_PREFIX"], "/opt/homebrew", "/usr/local"].compactMap { $0 }
         var tokens = Set<String>()
-        for prefix in Set(prefixes) {
+        for prefix in Set(homebrewPrefixes(environment: environment)) {
             let caskroom = URL(filePath: prefix).appending(path: "Caskroom")
             let entries = (try? FileManager.default.contentsOfDirectory(atPath: caskroom.path)) ?? []
             tokens.formUnion(entries.filter { !$0.hasPrefix(".") })

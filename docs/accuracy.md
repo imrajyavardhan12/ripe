@@ -2,6 +2,10 @@
 
 Ripe's headline metric is its false-positive rate: how often it claims an update that isn't real. Each release gets a verification run on real Macs, recorded here. When a verdict is wrong, the fix lands with a test (fixture or table row), and the row below links to it.
 
+## 2026-10-02 (night) · maintainer's Mac · 0.4.0-dev with tap casks
+
+27 apps: 12 ripe, 10 up to date, 5 unknown. **AeroSpace** (installed from `nikitabobko/tap`) moved from unknown to up to date (0.21.3-Beta, from the local tap). No other verdict changed. Remaining unknowns: Ghostty tip (commit-hash version), Codenotch (feed 404), Folio ×2, Proompt, Claude Code URL Handler (personal or niche apps with no source).
+
 ## 2026-10-02 · Accuracy workflow, clean macOS 26 runner · 0.4.0-dev
 
 First automated run: the 80 most-installed app casks, freshly installed, then `ripe --all`. A fresh install must read as current, so any update Ripe reports is either a false positive or the app's own feed running ahead of Homebrew.

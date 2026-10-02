@@ -4,6 +4,8 @@ All notable changes to Ripe. The release workflow publishes each version's secti
 
 ## [Unreleased]
 
+- Apps installed from third-party Homebrew taps (like `nikitabobko/tap/aerospace`) are checked against the tap's cask, read locally from your Homebrew installation; they used to show as unknown.
+
 - `ripe doctor` checks what Ripe depends on: app folders, Homebrew and mas, the Homebrew, App Store and orchard sources (live, or offline from cache), the skips file and interrupted updates. Exits 1 when something is broken; its output is the first thing to paste into a bug report.
 
 - orchard fallback feeds: the catalog can now give Sparkle feeds to apps that set theirs in code (first entries: Ghostty and KeepingYouAwake), each verified against Homebrew's version first. Used only when the app declares no feed and its name matches, and an update is reported only when the build number and the visible version agree.

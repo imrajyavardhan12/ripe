@@ -17,14 +17,16 @@ extension Machine {
         macOS: String = "27.0",
         architecture: Architecture = .arm64,
         country: String = "in",
-        homebrewCasks: Set<String> = []
+        homebrewCasks: Set<String> = [],
+        tapCasks: [TapCask] = []
     ) -> Machine {
         guard let version = Version(macOS) else { preconditionFailure("bad test macOS version \(macOS)") }
         return Machine(
             macOSVersion: version,
             architecture: architecture,
             storeCountry: country,
-            homebrewCasks: homebrewCasks
+            homebrewCasks: homebrewCasks,
+            tapCasks: tapCasks
         )
     }
 }
