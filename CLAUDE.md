@@ -10,6 +10,8 @@ Architecture, principles, pipeline, version rules and decision log (read before 
 
 ## Status
 
+If `HANDOFF.md` exists at the repo root (local, untracked), read it first: it has the latest state, work in flight and the working agreement with the maintainer.
+
 v0.1 feature-complete, not yet released: App Store, Sparkle and Homebrew cask sources, resolver with evidence, disk cache with offline fallback, `ripe`, `ripe --all`, `ripe why <app>`, `--json` (schema v1). Verified against the maintainer's Mac in `docs/accuracy.md` (keep that log updated per release).
 
 orchard catalog v1 done: client support in `Sources/RipeCore/Catalog/`, catalog repo at `~/Developer/orchard` (github.com/imrajyavardhan12/orchard, public; served at https://imrajyavardhan12.github.io/orchard/index.json, redeployed on every push to main or by hand via workflow_dispatch). Test local entries with `RIPE_CATALOG_URL=file://…/orchard/dist/index.json`.
