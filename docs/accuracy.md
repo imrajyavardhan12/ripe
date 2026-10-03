@@ -19,6 +19,16 @@ macOS 26: 120 installed, 107 current, 3 unknown. Intel: 114 installed, same find
 
 Also reported: OpenClaw (Sparkle feed ahead of the cask: real) and Paseo (cask updated mid-run). On the maintainer's Mac the fixes changed no verdict.
 
+Re-run after the fixes, all three machines (disk cleanup and a per-install time limit let macOS 15 finish):
+
+| Runner | Installed | False positives | Current | Unknown | Feed ahead of cask | Time |
+|---|---|---|---|---|---|---|
+| macOS 26, Apple silicon | 120 | **0** | 112 | 7 | 1 (OpenClaw) | 1.3 s |
+| macOS 15, Apple silicon | 116 | **0** | 108 | 7 | 1 (OpenClaw) | 1.4 s |
+| macOS 15, Intel | 114 | **0** | 106 | 7 | 1 (OpenClaw) | 3.7 s |
+
+The unknowns are honest: different numbering schemes (Android File Transfer, WeChat DevTools), the deliberate unknowns above (CapCut, Hermes, Lens, MySQL Workbench) and one app with no source (Headlamp). Together with the core list: **0 false updates across 200 popular apps on three Macs.**
+
 ## 2026-10-02 (night) · Accuracy workflow on three machines · 0.4.0-dev
 
 Same 80 apps, one universal binary, three clean runners. **0 false positives on all three.**
