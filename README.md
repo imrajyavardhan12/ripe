@@ -35,10 +35,10 @@ For each app Ripe asks the most authoritative source first:
 
 1. **Mac App Store**, for apps installed from it.
 2. **The app's own Sparkle feed**: exactly what the app's built-in updater would see, filtered the same way (stable channel, your macOS version, your CPU).
-3. **Homebrew's cask database**, used as a version database for *every* app, not just ones Homebrew installed.
+3. **Homebrew's cask database**, used as a version database for *every* app, not just ones Homebrew installed, plus the casks of any third-party taps you've added.
 4. **[orchard](https://github.com/imrajyavardhan12/orchard)**, an open catalog of corrections anyone can add to by pull request: a missing update feed, the right Homebrew cask, or where an app keeps its real version.
 
-When Ripe isn't sure, it says `unknown` and tells you why, instead of guessing. A false "update available" is worse than a missed one. Every week a [workflow](.github/workflows/accuracy.yml) installs the latest version of 80 popular apps on clean Macs (macOS 26, macOS 15, Intel) and fails if Ripe calls any of them outdated; results are in [docs/accuracy.md](docs/accuracy.md). `ripe why <app>` shows every source it asked and the rule that decided.
+When Ripe isn't sure, it says `unknown` and tells you why, instead of guessing. A false "update available" is worse than a missed one. Every week a [workflow](.github/workflows/accuracy.yml) installs the latest version of 80 popular apps (and 120 more each month) on clean Macs running macOS 26, macOS 15 and Intel, and fails if Ripe calls any of them outdated; results are in [docs/accuracy.md](docs/accuracy.md). `ripe why <app>` shows every source it asked and the rule that decided.
 
 ## How it updates
 
@@ -52,7 +52,7 @@ When Ripe isn't sure, it says `unknown` and tells you why, instead of guessing. 
 - Then the app is asked to quit (never forced), the old version goes to the **Trash**, and the new one moves in. Any failure restores the old version, and an interrupted update is recovered the next time Ripe runs.
 - `.pkg` installers are never run, and downloads that can't be verified are never installed. Ripe tells you where to get them instead.
 
-Ripe needs no special macOS permissions.
+Ripe needs no special macOS permissions. Another [workflow](.github/workflows/pick.yml) updates real, older apps this way on clean Macs every week, and checks that a copy without a matching Team ID is refused untouched.
 
 ## FAQ
 
