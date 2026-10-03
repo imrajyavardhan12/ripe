@@ -48,6 +48,8 @@ enum AppcastParser {
         var items: [AppcastItem] = []
         private var current: AppcastItem?
         private var text = ""
+        /// Inside `<sparkle:deltas>`: patches against one older build, never the full archive.
+        private var inDeltas = false
 
         private let dateFormatter: DateFormatter = {
             let formatter = DateFormatter()
@@ -66,7 +68,11 @@ enum AppcastParser {
             text = ""
             if element == "item" {
                 current = AppcastItem()
-            } else if element == "enclosure", current != nil {
+            } else if element == "sparkle:deltas" {
+                inDeltas = true
+            } else if element == "enclosure", current != nil, !inDeltas, attributes["sparkle:deltaFrom"] == nil,
+                Self.shouldTake(attributes, over: current)
+            {
                 // Older feeds put versions on the enclosure instead of in elements.
                 current?.enclosureURL = attributes["url"].flatMap(URL.init(string:))
                 current?.operatingSystem = attributes["sparkle:os"]
@@ -82,6 +88,17 @@ enum AppcastParser {
             }
         }
 
+        /// The first full archive wins, except that a macOS one replaces another platform's
+        /// (cross-platform feeds list a Windows build in the same item).
+        private static func shouldTake(_ attributes: [String: String], over item: AppcastItem?) -> Bool {
+            guard let item, item.enclosureURL != nil else { return true }
+            return !isMac(item.operatingSystem) && isMac(attributes["sparkle:os"])
+        }
+
+        private static func isMac(_ os: String?) -> Bool {
+            os.map { ["macos", "osx"].contains($0.lowercased()) } ?? true
+        }
+
         func parser(_ parser: XMLParser, foundCharacters string: String) {
             text += string
         }
@@ -91,6 +108,7 @@ enum AppcastParser {
         }
 
         func parser(_ parser: XMLParser, didEndElement element: String, namespaceURI: String?, qualifiedName: String?) {
+            if element == "sparkle:deltas" { inDeltas = false }
             guard current != nil else { return }
             let value = text.nilIfBlank
             switch element {

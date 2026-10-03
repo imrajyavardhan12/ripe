@@ -71,6 +71,45 @@ struct SparkleSourceTests {
         #expect(SparkleSource.newestEligible(items, on: .test())?.version == "100")
     }
 
+    @Test func ignoresDeltaUpdates() throws {
+        // Rectangle's feed (2026-10-03, trimmed): the full DMG, then delta patches, each with its
+        // own signature. Ripe used to keep the last enclosure, downloaded a 136 KB delta, verified
+        // its genuine signature and then couldn't unpack it.
+        let feed = """
+            <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"><channel><item>
+              <title>2.0.2</title>
+              <sparkle:version>109</sparkle:version>
+              <sparkle:shortVersionString>2.0.2</sparkle:shortVersionString>
+              <enclosure url="https://github.com/rxhanson/Rectangle/releases/download/v2.0.2/Rectangle2.0.2.dmg"
+                length="4679140" type="application/octet-stream" sparkle:edSignature="FULL"/>
+              <sparkle:deltas>
+                <enclosure url="https://github.com/rxhanson/Rectangle/releases/download/v2.0.2/Rectangle109-108.delta"
+                  sparkle:deltaFrom="108" length="136362" sparkle:edSignature="DELTA1"/>
+                <enclosure url="https://github.com/rxhanson/Rectangle/releases/download/v2.0.2/Rectangle109-107.delta"
+                  sparkle:deltaFrom="107" length="163162" sparkle:edSignature="DELTA2"/>
+              </sparkle:deltas>
+            </item></channel></rss>
+            """
+        let item = try #require(try AppcastParser.parse(Data(feed.utf8)).first)
+        #expect(item.enclosureURL?.lastPathComponent == "Rectangle2.0.2.dmg")
+        #expect(item.edSignature == "FULL")
+        #expect(item.length == 4_679_140)
+        #expect(item.version == "109")
+    }
+
+    @Test func prefersTheMacEnclosureInCrossPlatformItems() throws {
+        let feed = """
+            <rss><channel><item>
+              <enclosure url="https://example.com/app.dmg" sparkle:os="macos" sparkle:version="5" sparkle:edSignature="MAC"/>
+              <enclosure url="https://example.com/app.exe" sparkle:os="windows" sparkle:version="5" sparkle:edSignature="WIN"/>
+            </item></channel></rss>
+            """
+        let item = try #require(try AppcastParser.parse(Data(feed.utf8)).first)
+        #expect(item.enclosureURL?.lastPathComponent == "app.dmg")
+        #expect(item.edSignature == "MAC")
+        #expect(item.operatingSystem == "macos")
+    }
+
     @Test func doesNotTrustFeedOrder() {
         let items = [AppcastItem(version: "10"), AppcastItem(version: "12"), AppcastItem(version: "11")]
         #expect(SparkleSource.newestEligible(items, on: .test())?.version == "12")

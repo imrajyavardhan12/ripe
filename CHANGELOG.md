@@ -4,6 +4,7 @@ All notable changes to Ripe. The release workflow publishes each version's secti
 
 ## [Unreleased]
 
+- `ripe pick` downloads the full update for Sparkle apps that also publish delta patches (Rectangle and many others), instead of a patch it can't install; in cross-platform feeds it takes the macOS archive. Found by the new end-to-end pick workflow, which updates real apps on clean Macs.
 - `ripe pick` uses Homebrew's verified download when an app's own feed offers the same version without a signature (Maccy), instead of asking you to update by hand. The new copy still has to pass the SHA-256, signature, Team ID and Gatekeeper checks.
 
 - Apps installed from third-party Homebrew taps (like `nikitabobko/tap/aerospace`) are checked against the tap's cask, read locally from your Homebrew installation; they used to show as unknown.

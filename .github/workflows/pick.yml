@@ -12,6 +12,8 @@ on:
     branches: [main]
     paths:
       - "Sources/RipeCore/Install/**"
+      - "Sources/RipeCore/Sources/AppcastParser.swift"
+      - "Sources/RipeCore/Sources/HomebrewCaskSource.swift"
       - "Sources/RipeCLI/PickCommand.swift"
       - "scripts/pick-e2e.sh"
       - ".github/workflows/pick.yml"
