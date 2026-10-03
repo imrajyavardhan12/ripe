@@ -164,7 +164,7 @@ Most bugs in update checkers are version bugs, so this gets its own module, an e
 
 ## 9. Output contract
 
-- **Default (TTY)**: table of outdated apps (name, installed → latest, source, how to update), then a one-line summary: `3 ripe · 41 current · 6 unknown (ripe why <app>)`. Color only on a TTY; respects `NO_COLOR`.
+- **Default (TTY)**: table of outdated apps (name, installed → latest, source, how to update: what `ripe pick` would do, from the same `Planner`, so the list and the plan never disagree), then a one-line summary: `3 ripe · 41 current · 6 unknown (ripe why <app>)`. Color only on a TTY; respects `NO_COLOR`.
 - **`--all`**: every app with its verdict.
 - **`--json`**: stable, documented schema with `"schemaVersion": 1`. Additive changes keep the version (new fields, new `status` values such as `skipped`, so consumers must tolerate unknown statuses); breaking changes bump it. Covered by golden tests.
 - **stdout carries results only**; logs, progress and warnings go to stderr. `--verbose` for debug logs.

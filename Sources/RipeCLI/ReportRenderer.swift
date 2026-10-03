@@ -4,6 +4,8 @@ import RipeCore
 /// Human-readable output. Pure: takes a report, returns a string.
 struct ReportRenderer {
     var terminal: Terminal
+    /// brew and mas as `ripe pick` would find them, so "Update with" says what pick would do.
+    var tools = HandOffTools(brew: nil, mas: nil)
 
     // MARK: ripe
 
@@ -54,6 +56,15 @@ struct ReportRenderer {
             "",
             "\(status(item.verdict)): \(item.explanation)",
             "Updates through: \(updateChannel(item))",
+        ]
+        if case .plan(let plan) = Planner.decide(item, tools: tools) {
+            if case .manual(let reason, _) = plan.method {
+                lines.append("With ripe pick: not automatic, because \(reason)")
+            } else {
+                lines.append("With ripe pick: \(PickRenderer(terminal: terminal).how(plan.method, tools: tools))")
+            }
+        }
+        lines += [
             "",
             terminal.style("Sources, most authoritative first:", .bold),
         ]
@@ -155,12 +166,16 @@ struct ReportRenderer {
         }
     }
 
+    /// What `ripe pick` would do, from the same planner, so the list and the plan never disagree.
     private func updateWith(_ item: AppReport, _ release: Release) -> String {
-        switch item.managedBy {
-        case .appStore: "App Store"
-        case .homebrew(let token): "brew upgrade --cask \(token)"
-        case .selfUpdating: "the app's updater"
-        case .none: release.pageURL?.host().map { "download from \($0)" } ?? "the vendor's website"
+        guard case .plan(let plan) = Planner.decide(item, tools: tools) else { return "—" }
+        switch plan.method {
+        case .homebrew(let token): return "brew upgrade --cask \(token)"
+        case .appStore: return "App Store"
+        case .direct: return item.managedBy == .selfUpdating ? "ripe pick, or the app" : "ripe pick"
+        case .manual(_, let url):
+            if item.managedBy == .selfUpdating { return "the app's updater" }
+            return (url ?? release.pageURL)?.host().map { "download from \($0)" } ?? "the vendor's website"
         }
     }
 

@@ -118,13 +118,56 @@ struct ReportOutputTests {
 
     // MARK: Text
 
+    static let brew = HandOffTools(brew: URL(filePath: "/opt/homebrew/bin/brew"), mas: nil)
+
     @Test func listsOnlyOutdatedAppsWithHowToUpdate() {
-        let text = ReportRenderer(terminal: Terminal(color: false)).renderOutdated(Self.report)
+        let text = ReportRenderer(terminal: Terminal(color: false), tools: Self.brew).renderOutdated(Self.report)
         let lines = text.split(separator: "\n").map(String.init)
         #expect(lines[0] == "App  Installed  Latest  Source   Update with")
         #expect(lines[1] == "OBS  32.2.1     32.2.2  Sparkle  brew upgrade --cask obs")
         #expect(!text.contains("Brave"))
         #expect(text.contains("1 ripe · 1 up to date · 1 unknown · 1.2s"))
+    }
+
+    /// "Update with" is what `ripe pick` would do (the maintainer's Mac, 2026-10-03: the list said
+    /// "the app's updater" for LM Studio while pick planned a verified download).
+    @Test func updateWithMatchesThePickPlan() throws {
+        let download = Download(
+            url: try #require(URL(string: "https://installers.lmstudio.ai/LM-Studio.dmg")),
+            integrity: .sha256(String(repeating: "a", count: 64)))
+        let verified = Release(
+            version: "0.4.25", source: .homebrewCask, comparison: .shortVersion,
+            pageURL: URL(string: "https://lmstudio.ai/"), download: download)
+        let pkg = Release(
+            version: "2026.5", source: .homebrewCask, comparison: .shortVersion,
+            pageURL: URL(string: "https://mullvad.net/"),
+            download: Download(url: download.url, integrity: download.integrity, isInstallerPackage: true))
+        func column(_ release: Release, _ managedBy: ManagedBy, tools: HandOffTools = Self.brew) -> String {
+            let item = AppReport(
+                app: Self.app("Tool", "dev.example.tool", "1.0"), verdict: .outdated(release), evidence: [],
+                explanation: "", managedBy: managedBy)
+            let report = Report(apps: [item], skipped: [], duration: .zero, generatedAt: Date())
+            let text = ReportRenderer(terminal: Terminal(color: false), tools: tools).renderOutdated(report)
+            return text.split(separator: "\n")[1].split(separator: "  ").last.map(String.init) ?? ""
+        }
+        #expect(column(verified, .selfUpdating) == "ripe pick, or the app")
+        #expect(column(verified, .none) == "ripe pick")
+        #expect(column(pkg, .none) == "download from mullvad.net")
+        #expect(
+            column(Release(version: "2", source: .sparkle, comparison: .bundleVersion), .selfUpdating)
+                == "the app's updater")
+        #expect(column(verified, .homebrew(token: "lm-studio")) == "brew upgrade --cask lm-studio")
+        // Without brew on PATH, pick can't hand off to it, and the list says so.
+        #expect(
+            column(verified, .homebrew(token: "lm-studio"), tools: HandOffTools(brew: nil, mas: nil))
+                == "download from lmstudio.ai")
+    }
+
+    @Test func whySaysWhatPickWouldDo() {
+        let obs = ReportRenderer(terminal: Terminal(color: false), tools: Self.brew).renderWhy(Self.report.apps[2])
+        #expect(obs.contains("With ripe pick: brew upgrade --cask obs"))
+        let current = ReportRenderer(terminal: Terminal(color: false), tools: Self.brew).renderWhy(Self.report.apps[0])
+        #expect(!current.contains("With ripe pick"), "nothing to pick when it's up to date")
     }
 
     @Test func skippedAppsAreCountedNotHidden() throws {

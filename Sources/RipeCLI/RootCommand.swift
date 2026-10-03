@@ -68,7 +68,7 @@ struct ListCommand: AsyncParsableCommand {
         if json {
             print(try JSONReport(report).encoded())
         } else {
-            let renderer = ReportRenderer(terminal: .current())
+            let renderer = ReportRenderer(terminal: .current(), tools: .find())
             print(all ? renderer.renderAll(report) : renderer.renderOutdated(report))
         }
     }
@@ -112,7 +112,7 @@ struct WhyCommand: AsyncParsableCommand {
             let apps = matches.map(JSONReport.App.init)
             print(try JSONReport.encode(apps.count == 1 ? AnyEncodable(apps[0]) : AnyEncodable(apps)))
         } else {
-            let renderer = ReportRenderer(terminal: .current())
+            let renderer = ReportRenderer(terminal: .current(), tools: .find())
             print(matches.map(renderer.renderWhy).joined(separator: "\n\n"))
         }
     }
