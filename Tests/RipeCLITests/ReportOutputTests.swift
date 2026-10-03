@@ -172,4 +172,26 @@ struct ReportOutputTests {
         #expect(AppQuery("OBS.app").best(reports).map(\.app.name) == ["OBS"])
         #expect(AppQuery("zzz").best(reports).isEmpty)
     }
+
+    @Test func namesWithSpacesNeedNoQuotes() throws {
+        // The maintainer typed `ripe why LM Studio` and got "Unexpected argument 'Studio'" (0.3.0).
+        #expect(try WhyCommand.parse(["Brave", "Browser"]).app == "Brave Browser")
+        #expect(try WhyCommand.parse(["Brave Browser", "--json"]).app == "Brave Browser")
+        #expect(try SkipCommand.parse(["Brave", "Browser", "--always"]).app == "Brave Browser")
+        #expect(try SkipCommand.parse(["--list"]).app == nil)
+        #expect(try UnskipCommand.parse(["Brave", "Browser"]).app == "Brave Browser")
+    }
+
+    @Test func pickTellsOneSpacedNameFromSeveralApps() {
+        let reports = Self.report.apps
+        func names(_ words: [String]) -> [[String]] {
+            AppQuery.resolve(words, in: reports).map { $0.best(reports).map(\.app.name) }
+        }
+        // "Browser" alone names nothing, so the words are one name.
+        #expect(names(["Brave", "Browser"]) == [["Brave Browser"]])
+        // Each word names an app: two apps, as before.
+        #expect(names(["OBS", "Ghostty"]) == [["OBS"], ["Ghostty"]])
+        // Nothing matches either way: kept separate, so the error names the word that failed.
+        #expect(names(["zzz", "yyy"]) == [[], []])
+    }
 }

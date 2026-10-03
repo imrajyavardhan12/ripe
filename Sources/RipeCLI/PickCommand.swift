@@ -42,10 +42,11 @@ struct PickCommand: AsyncParsableCommand {
             print(terminal.style("Recovered: \(note)", .yellow))
         }
 
-        let queries = apps.map(AppQuery.init)
-        let named: @Sendable (InstalledApp) -> Bool = { app in queries.contains { $0.matches(app) } }
+        // The words together too, in case they're one name with spaces (`ripe pick LM Studio`).
+        let candidates = apps.map(AppQuery.init) + (apps.count > 1 ? [AppQuery(apps.joined(separator: " "))] : [])
+        let named: @Sendable (InstalledApp) -> Bool = { app in candidates.contains { $0.matches(app) } }
         let report = try await options.check(including: all ? nil : named)
-        let selected = try select(from: report, queries: queries)
+        let selected = try select(from: report, queries: AppQuery.resolve(apps, in: report.apps))
         var plans: [InstallPlan] = []
         var skipped: [(String, String)] = []
         for report in selected {

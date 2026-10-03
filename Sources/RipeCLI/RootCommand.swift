@@ -81,8 +81,13 @@ struct WhyCommand: AsyncParsableCommand {
         abstract: "Explain where an app's version information came from and how it updates."
     )
 
-    @Argument(help: "App name as shown in Finder (case-insensitive), or its bundle ID.")
-    var app: String
+    @Argument(
+        help: ArgumentHelp(
+            "App name as shown in Finder (case-insensitive), or its bundle ID. Quotes are optional.", valueName: "app"))
+    var words: [String]
+
+    /// `ripe why LM Studio` arrives as two arguments; it names one app.
+    var app: String { words.joined(separator: " ") }
 
     @Flag(help: "Print the explanation as JSON.")
     var json = false
@@ -121,6 +126,17 @@ struct RipeError: Error, CustomStringConvertible {
 /// Finds apps by what a person would type: the Finder name, a bundle ID, or a unique prefix.
 struct AppQuery: Sendable {
     let text: String
+
+    /// Several words meant as one name: `ripe pick LM Studio`. When some word on its own matches no
+    /// app but all of them together do, they're one app; otherwise each word is its own app.
+    static func resolve(_ words: [String], in reports: [AppReport]) -> [AppQuery] {
+        let separate = words.map(AppQuery.init)
+        guard words.count > 1 else { return separate }
+        let together = AppQuery(words.joined(separator: " "))
+        let unmatched = separate.contains { $0.best(reports).isEmpty }
+        return unmatched && !together.best(reports).isEmpty ? [together] : separate
+    }
+
     init(_ text: String) { self.text = text.lowercased().replacingOccurrences(of: ".app", with: "") }
 
     func matches(_ app: InstalledApp) -> Bool {

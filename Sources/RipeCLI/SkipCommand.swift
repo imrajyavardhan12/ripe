@@ -14,8 +14,10 @@ struct SkipCommand: AsyncParsableCommand {
             """
     )
 
-    @Argument(help: "App to skip, by Finder name or bundle ID.")
-    var app: String?
+    @Argument(help: ArgumentHelp("App to skip, by Finder name or bundle ID. Quotes are optional.", valueName: "app"))
+    var words: [String] = []
+
+    var app: String? { words.isEmpty ? nil : words.joined(separator: " ") }
 
     @Flag(help: "Ignore the app until `ripe unskip`, whatever version ships.")
     var always = false
@@ -81,8 +83,13 @@ struct UnskipCommand: ParsableCommand {
         abstract: "Offer an app's updates again."
     )
 
-    @Argument(help: "App to unskip, by name as shown in `ripe skip --list`, or its bundle ID.")
-    var app: String
+    @Argument(
+        help: ArgumentHelp(
+            "App to unskip, by name as shown in `ripe skip --list`, or its bundle ID. Quotes are optional.",
+            valueName: "app"))
+    var words: [String]
+
+    var app: String { words.joined(separator: " ") }
 
     func run() throws {
         let store = SkipStore(url: SkipStore.defaultURL())
