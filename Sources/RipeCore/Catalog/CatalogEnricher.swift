@@ -35,8 +35,16 @@ struct CatalogEnricher: Sendable {
         }
         if let rule = entry.installedVersion {
             if let found = InstalledVersionLocator.locate(glob: rule.glob, home: home) {
-                app.version = AppVersion(short: found.version.raw, build: nil)
-                changes.append("installed version \(found.version.raw) read from \(found.path)")
+                // The app runs the newer of its bundle and its downloaded copies: after a fresh
+                // install (or `ripe pick`), old downloads linger next to a newer bundle.
+                if let bundle = app.version.parsedShort, bundle.order(comparedTo: found.version) == .newer {
+                    changes.append(
+                        "\(found.path) holds \(found.version.raw), but the bundle's \(bundle.raw) is newer; using the bundle"
+                    )
+                } else {
+                    app.version = AppVersion(short: found.version.raw, build: nil)
+                    changes.append("installed version \(found.version.raw) read from \(found.path)")
+                }
             } else {
                 changes.append("no files match \(rule.glob); using the bundle's version")
             }

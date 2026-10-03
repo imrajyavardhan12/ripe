@@ -4,6 +4,8 @@ All notable changes to Ripe. The release workflow publishes each version's secti
 
 ## [Unreleased]
 
+- Obsidian (and any app with an orchard `installed_version` rule) no longer shows as outdated right after you update it: Ripe now uses the newer of the app bundle and its downloaded copies, as the app itself does. Found while checking what `ripe pick` would do on the maintainer's Mac, before it could happen.
+
 - App names with spaces no longer need quotes: `ripe why LM Studio`, `ripe skip Brave Browser`. `ripe pick LM Studio` treats the words as one name when they only match together; `ripe pick Raycast Postman` still updates two apps.
 
 - `ripe pick` downloads the full update for Sparkle apps that also publish delta patches (Rectangle and many others), instead of a patch it can't install; in cross-platform feeds it takes the macOS archive. Found by the new end-to-end pick workflow, which updates real apps on clean Macs.

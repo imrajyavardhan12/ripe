@@ -149,6 +149,23 @@ struct CatalogTests {
             ])
     }
 
+    @Test func aNewerBundleBeatsOlderDownloadedCopies() throws {
+        // After `ripe pick` installs Obsidian 1.13.7, the old obsidian-1.13.4.asar is still in
+        // Application Support. Obsidian runs the newer of its bundle and its downloads, so Ripe must
+        // too; reading 1.13.4 would report the update just installed as missing, and loop.
+        let home = FileManager.default.temporaryDirectory.appending(path: "home-\(UUID().uuidString)")
+        defer { try? FileManager.default.removeItem(at: home) }
+        let folder = home.appending(path: "Library/Application Support/obsidian")
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        for name in ["obsidian-1.12.7.asar", "obsidian-1.13.4.asar"] {
+            try Data().write(to: folder.appending(path: name))
+        }
+        let updated = InstalledApp.test("Obsidian.app", bundleID: "md.obsidian", version: "1.13.7")
+        let enriched = CatalogEnricher(catalog: try Self.catalog(), machine: .test(), home: home).apply(to: updated)
+        #expect(enriched.version.short == "1.13.7")
+        #expect(enriched.catalog?.changes.first?.contains("bundle's 1.13.7 is newer") == true)
+    }
+
     @Test func keepsBundleVersionWhenNothingMatches() throws {
         let home = FileManager.default.temporaryDirectory.appending(path: "home-\(UUID().uuidString)")
         let obsidian = InstalledApp.test("Obsidian.app", bundleID: "md.obsidian", version: "1.12.4")
