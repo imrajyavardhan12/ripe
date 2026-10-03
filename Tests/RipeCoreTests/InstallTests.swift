@@ -216,12 +216,13 @@ struct PlannerTests {
     static let tools = HandOffTools(brew: URL(filePath: "/opt/homebrew/bin/brew"), mas: nil)
 
     func report(
-        _ release: Release, managedBy: ManagedBy = .selfUpdating, edKey: String? = nil, verdict: Verdict? = nil
+        _ release: Release, managedBy: ManagedBy = .selfUpdating, edKey: String? = nil, verdict: Verdict? = nil,
+        evidence: [Evidence] = []
     ) -> AppReport {
         let app = InstalledApp.test(
             "Tool.app", bundleID: "dev.example.tool", version: "1.0", signals: .init(sparklePublicEDKey: edKey))
         return AppReport(
-            app: app, verdict: verdict ?? .outdated(release), evidence: [], explanation: "", managedBy: managedBy)
+            app: app, verdict: verdict ?? .outdated(release), evidence: evidence, explanation: "", managedBy: managedBy)
     }
 
     func method(_ report: AppReport, tools: HandOffTools = PlannerTests.tools) -> InstallPlan.Method? {
@@ -274,6 +275,42 @@ struct PlannerTests {
         }
         let withKey = Release(version: "2.0", source: .sparkle, comparison: .bundleVersion, download: signed)
         #expect(method(report(withKey, edKey: "key")) == .direct(signed))
+    }
+
+    @Test func usesHomebrewsVerifiedCopyOfTheSameVersion() {
+        // Maccy (2026-10-03): its own feed decides 2.7.1 but publishes no signature; Homebrew's
+        // cask has the same 2.7.1 with a SHA-256. That download can be verified, so use it.
+        let feedDownload = Download(
+            url: URL(staticString: "https://github.com/p0deje/Maccy/Maccy.app.zip"), integrity: nil)
+        let sparkle = Release(
+            version: "2.7.1", build: "999", source: .sparkle, comparison: .bundleVersion, download: feedDownload)
+        func cask(_ version: String, _ confidence: Confidence = .high, download: Download? = nil) -> [Evidence] {
+            let release = Release(
+                version: version, source: .homebrewCask, comparison: .shortVersion, caskToken: "maccy",
+                download: download ?? self.download)
+            return [
+                Evidence(source: .sparkle, outcome: .found(sparkle, .high, note: nil), decisive: true),
+                Evidence(source: .homebrewCask, outcome: .found(release, confidence, note: nil), decisive: false),
+            ]
+        }
+        #expect(method(report(sparkle, evidence: cask("2.7.1"))) == .direct(download))
+        #expect(method(report(sparkle, evidence: cask("2.7.1.0"))) == .direct(download), "1.2 equals 1.2.0")
+
+        var package = download
+        package.isInstallerPackage = true
+        var unverified = download
+        unverified.integrity = nil
+        for (evidence, why) in [
+            (cask("2.7.0"), "a different version is never a substitute"),
+            (cask("2.7.1", .medium), "only a high-confidence match"),
+            (cask("2.7.1", download: package), "never a .pkg"),
+            (cask("2.7.1", download: unverified), "the cask must have a checksum itself"),
+        ] {
+            guard case .manual? = method(report(sparkle, evidence: evidence)) else {
+                Issue.record("\(why)")
+                continue
+            }
+        }
     }
 
     @Test func skipsAnythingNotOutdated() {

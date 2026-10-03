@@ -81,6 +81,9 @@ public enum Planner {
     private static func directOrManual(_ report: AppReport, _ release: Release, _ fallbackURL: URL?)
         -> InstallPlan.Method
     {
+        if release.download?.integrity == nil, let verified = verifiedCaskCopy(of: release, in: report) {
+            return .direct(verified)
+        }
         guard let download = release.download else {
             return .manual(reason: "\(release.source.displayName) doesn't offer a download", url: fallbackURL)
         }
@@ -95,5 +98,21 @@ public enum Planner {
         default:
             return .direct(download)
         }
+    }
+
+    /// Homebrew's download of exactly the release on offer, when the deciding source has no way to
+    /// verify its own (Maccy's feed publishes no signature, its cask has a SHA-256). Only a
+    /// high-confidence cask match, the same version, a checksum, and never a `.pkg`; the new bundle
+    /// still has to pass the Team ID, signature and Gatekeeper checks like any other.
+    static func verifiedCaskCopy(of release: Release, in report: AppReport) -> Download? {
+        guard release.source != .homebrewCask, let wanted = Version(release.version) else { return nil }
+        for evidence in report.evidence where evidence.source == .homebrewCask {
+            guard case .found(let cask, .high, _) = evidence.outcome,
+                let download = cask.download, case .sha256? = download.integrity, !download.isInstallerPackage,
+                let offered = Version(cask.version), offered.order(comparedTo: wanted) == .same
+            else { continue }
+            return download
+        }
+        return nil
     }
 }

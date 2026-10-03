@@ -1,0 +1,62 @@
+name: Pick
+
+# `ripe pick` end to end with real apps on clean Macs: stages old, genuinely signed releases,
+# updates them, and checks version, strict signature, unchanged Team ID, old copy in the Trash and
+# nothing left behind, plus a refusal that must change nothing. Runs when the install code
+# changes, weekly, and on demand.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 7 * * 1"
+  push:
+    branches: [main]
+    paths:
+      - "Sources/RipeCore/Install/**"
+      - "Sources/RipeCLI/PickCommand.swift"
+      - "scripts/pick-e2e.sh"
+      - ".github/workflows/pick.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09  # v5.1.0
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_26.6.app
+      - name: Universal build
+        run: make release
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
+        with:
+          name: ripe
+          path: dist/ripe
+          if-no-files-found: error
+
+  pick:
+    needs: build
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [macos-26, macos-15-intel]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09  # v5.1.0
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c  # v8.0.1
+        with:
+          name: ripe
+          path: dist
+      - name: Update real apps
+        run: |
+          chmod +x dist/ripe
+          scripts/pick-e2e.sh dist/ripe "$RUNNER_TEMP/pick"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
+        if: always()
+        with:
+          name: pick-${{ matrix.runner }}
+          path: |
+            ${{ runner.temp }}/pick/*.log
+            ${{ runner.temp }}/pick/*.json
+          if-no-files-found: warn

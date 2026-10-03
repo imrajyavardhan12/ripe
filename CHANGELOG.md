@@ -4,6 +4,8 @@ All notable changes to Ripe. The release workflow publishes each version's secti
 
 ## [Unreleased]
 
+- `ripe pick` uses Homebrew's verified download when an app's own feed offers the same version without a signature (Maccy), instead of asking you to update by hand. The new copy still has to pass the SHA-256, signature, Team ID and Gatekeeper checks.
+
 - Apps installed from third-party Homebrew taps (like `nikitabobko/tap/aerospace`) are checked against the tap's cask, read locally from your Homebrew installation; they used to show as unknown.
 
 - `ripe doctor` checks what Ripe depends on: app folders, Homebrew and mas, the Homebrew, App Store and orchard sources (live, or offline from cache), the skips file and interrupted updates. Exits 1 when something is broken; its output is the first thing to paste into a bug report.

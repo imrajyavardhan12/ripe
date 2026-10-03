@@ -191,6 +191,7 @@ Planning is separate from doing (`Planner`, pure): every selected app gets a met
 | Homebrew | `managedBy == .homebrew` | `brew upgrade --cask --greedy <token>` (greedy: a named auto-updating cask is otherwise skipped) |
 | App Store | App Store app | `mas upgrade <id>` if `mas` exists, else opens the store page for the person to click Update |
 | Direct | a download **with** integrity data: cask SHA-256, or Sparkle EdDSA plus the installed app's `SUPublicEDKey` | the pipeline below |
+| Direct (Homebrew's copy) | the deciding source has no verifiable download, but a high-confidence cask match offers **the same version** with a SHA-256 (Maccy's feed is unsigned; its cask isn't) | the pipeline below, with the cask's download |
 | Manual | anything else (`.pkg`, `no_check` casks, no download, no key) | nothing; tells the person why and where to get it |
 
 Direct installs: every check that can refuse comes before every step that can change anything, so a refusal always means "nothing was changed".
