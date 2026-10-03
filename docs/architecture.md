@@ -225,7 +225,8 @@ So Ripe never needs the permission, under one rule: **only ever move whole bundl
 | Pipeline | resolver end to end | Fake `HTTPClient` serving fixtures + fake `Host`. Asserts verdicts and evidence. |
 | CLI | table and JSON output | Golden files; JSON schema snapshot. |
 | Live contract | real APIs still look like fixtures | `.tags(.live)`, run only when `RIPE_LIVE_TESTS=1`; nightly CI job. Catches upstream format drift before users do. |
-| Accuracy | precision / recall on real Macs | `scripts/accuracy.sh` compares Ripe's output against `brew outdated --greedy` and manual spot checks. The false-positive rate is the headline metric; track it per release. |
+| Accuracy | false positives on real apps | The **Accuracy** workflow (`scripts/accuracy/`): installs the latest version of 80 popular casks (weekly) or 120 more (monthly) on clean macOS 26, macOS 15 and Intel runners, runs `ripe --all`, and fails on any update Ripe reports for an app that was just installed. Stale installs and feeds ahead of Homebrew are reported separately. The false-positive count is the headline metric; notable runs go in `docs/accuracy.md`. |
+| Install | `ripe pick` end to end | The **Pick** workflow (`scripts/pick-e2e.sh`): stages old, genuinely signed releases (pinned by SHA-256) and updates them on clean Macs, covering Homebrew SHA-256 + DMG and zip, Sparkle EdDSA + DMG, and Homebrew's copy for an unsigned feed; checks version, strict signature, unchanged Team ID, old copy in the Trash, no leftovers, plus a refusal that must change nothing. Runs on install-code changes and weekly. |
 
 ## 13. Performance budget
 
@@ -263,7 +264,7 @@ Tests/
   RipeCoreTests/    (+ Fixtures/)
   RipeCLITests/     (+ Golden/)
 docs/               architecture.md, research.md
-scripts/            accuracy.sh, release helpers
+scripts/            accuracy/ (popular-app accuracy run), pick-e2e.sh, formula and release helpers, demo/
 .github/            workflows/, ISSUE_TEMPLATE/
 ```
 

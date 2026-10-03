@@ -2,6 +2,12 @@
 
 Ripe's headline metric is its false-positive rate: how often it claims an update that isn't real. Each release gets a verification run on real Macs, recorded here. When a verdict is wrong, the fix lands with a test (fixture or table row), and the row below links to it.
 
+## 2026-10-03 · Pick workflow (end to end, clean macOS 26 and Intel runners) · 0.4.0-dev
+
+First automated `ripe pick` run on real apps. Found one bug: **Sparkle delta patches.** Rectangle's feed lists the full DMG and then delta patches, each signed; Ripe kept the last enclosure, downloaded a 136 KB delta, verified its genuine signature and then refused to unpack it (no harm done, but `pick` failed for every Sparkle app that ships deltas). Fixed: delta enclosures are ignored, and cross-platform items use the macOS archive (`SparkleSourceTests`). Also: Maccy's feed has no signature, so `pick` used to send people to update by hand; it now uses Homebrew's SHA-256-verified copy of the same version.
+
+After the fixes, both machines: ad-hoc copy refused with nothing changed; AltTab 11.5.0 → 11.8.0 (SHA-256, zip), GrandPerspective 3.6.1 → 3.8.1 (SHA-256, DMG), Maccy 2.6.1 → 2.7.1 (Homebrew's copy), Rectangle 0.90 → 2.0.2 (EdDSA, DMG); same Team IDs, strict signatures, old copies in the Trash, no leftovers, all four current afterwards.
+
 ## 2026-10-03 · Accuracy workflow, extended list (120 more apps) · 0.4.0-dev
 
 macOS 26: 120 installed, 107 current, 3 unknown. Intel: 114 installed, same findings. (macOS 15 hit the job timeout; raised.) **8 false positives, all fixed with tests:**
