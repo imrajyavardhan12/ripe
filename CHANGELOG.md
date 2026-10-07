@@ -4,27 +4,27 @@ All notable changes to Ripe. The release workflow publishes each version's secti
 
 ## [Unreleased]
 
-- The "Update with" column now says what `ripe pick` would actually do (`ripe pick`, `ripe pick, or the app`, `brew upgrade --cask …`, App Store, or where to download it yourself), worked out by the same planner, so the list and the plan can't disagree. `ripe why` adds a "With ripe pick:" line.
+## [0.4.0] - 2026-10-07
 
-- Obsidian (and any app with an orchard `installed_version` rule) no longer shows as outdated right after you update it: Ripe now uses the newer of the app bundle and its downloaded copies, as the app itself does. Found while checking what `ripe pick` would do on the maintainer's Mac, before it could happen.
+Ripe now checks itself in public: a weekly workflow installs the latest version of popular apps on clean Macs (macOS 26, macOS 15, Intel) and fails if Ripe calls any of them outdated, and another updates real apps end to end with `ripe pick`. Most of the fixes below came from those runs.
 
-- App names with spaces no longer need quotes: `ripe why LM Studio`, `ripe skip Brave Browser`. `ripe pick LM Studio` treats the words as one name when they only match together; `ripe pick Raycast Postman` still updates two apps.
+**Fewer false updates**
+- Nine version formats that used to look like updates now compare correctly, or honestly as unknown: a commit hash after a dash (GitHub Desktop `3.6.6-8b85519e`) or on its own (Ghostty tip `0081d4530`); labels that aren't pre-releases (`-latest`, `.CE`); packaging revisions (`154.0.8037.57-1.1`); apps whose build number carries the full version (Opera) or matches Homebrew's (WeChat); build numbers only Homebrew shows (CapCut); placeholder versions (`0.0.1`); and hashes after a version (Vienna `3.10.8 :0294d207:`). Seven of the nine were found by the accuracy workflow.
+- A `@nightly` or `@beta` cask no longer outranks the stable cask for the same app (Freelens was offered a nightly). Found by the accuracy workflow.
+- Obsidian, and any app with an orchard `installed_version` rule, no longer shows as outdated right after you update it: Ripe uses the newer of the app bundle and its downloaded copies, as the app itself does.
 
-- `ripe pick` downloads the full update for Sparkle apps that also publish delta patches (Rectangle and many others), instead of a patch it can't install; in cross-platform feeds it takes the macOS archive. Found by the new end-to-end pick workflow, which updates real apps on clean Macs.
-- `ripe pick` uses Homebrew's verified download when an app's own feed offers the same version without a signature (Maccy), instead of asking you to update by hand. The new copy still has to pass the SHA-256, signature, Team ID and Gatekeeper checks.
+**`ripe pick`**
+- Sparkle apps that also publish delta patches (Rectangle and many others) now update: Ripe downloads the full archive instead of a patch it can't install. In cross-platform feeds it takes the macOS archive. Found by the pick workflow.
+- When an app's own feed offers no signature (Maccy), Ripe uses Homebrew's SHA-256-verified copy of the same version instead of sending you to update by hand. Every other check still applies.
+- The "Update with" column now says what `ripe pick` would actually do (`ripe pick`, `ripe pick, or the app`, `brew upgrade --cask …`, App Store, or where to download it yourself), decided by the same planner, so the list and the plan can't disagree. `ripe why` adds a "With ripe pick:" line.
 
-- Apps installed from third-party Homebrew taps (like `nikitabobko/tap/aerospace`) are checked against the tap's cask, read locally from your Homebrew installation; they used to show as unknown.
-
+**New**
 - `ripe doctor` checks what Ripe depends on: app folders, Homebrew and mas, the Homebrew, App Store and orchard sources (live, or offline from cache), the skips file and interrupted updates. Exits 1 when something is broken; its output is the first thing to paste into a bug report.
-
-- orchard fallback feeds: the catalog can now give Sparkle feeds to apps that set theirs in code (first entries: Ghostty and KeepingYouAwake), each verified against Homebrew's version first. Used only when the app declares no feed and its name matches, and an update is reported only when the build number and the visible version agree.
-- Eight more false updates fixed, all found by the accuracy workflow's extended list (120 more apps): words that aren't pre-release markers (`2026.9.181013-latest`, `8.0.47.CE`) no longer make a version look older; packaging revisions (`154.0.8037.57-1.1`) are ignored; an app whose build number is the full version (Opera) or matches Homebrew's build (WeChat) is compared by it; a build number only Homebrew shows (CapCut `9.5.0` vs `9.5.0.4590`) and placeholder versions (`0.0.1`) are reported as unknown; and a `@nightly` or `@beta` cask no longer outranks the stable cask for the same app (Freelens).
-- Versions with a commit hash after a dash (GitHub Desktop's `3.6.6-8b85519e`) no longer read as a newer version. Found by the new accuracy workflow, which installs 80 popular apps on a clean Mac every week and fails on any false update.
-- Commit-hash versions that start with digits (Ghostty tip `0081d4530`) are recognized as not comparable instead of being read as a number, and versions like `3.10.8 :0294d207:` ignore the hash.
-
+- Apps installed from third-party Homebrew taps (like `nikitabobko/tap/aerospace`) are checked against the tap's cask, read locally; they used to show as unknown.
+- orchard fallback feeds: the catalog can give Sparkle feeds to apps that set theirs in code (first: Ghostty, KeepingYouAwake). Used only when the app declares no feed and its name matches, and an update is reported only when the build number and the visible version agree.
+- App names with spaces no longer need quotes: `ripe why LM Studio`. `ripe pick LM Studio` treats the words as one name when they only match together.
 - `ripe why` shows paths under your home folder as `~/…`, so pasting it into a bug report doesn't reveal your username.
 - `RIPE_APPLICATIONS_DIR` (colon-separated) points Ripe at other folders instead of `/Applications` and `~/Applications`, for testing and demos.
-- README demo, recorded reproducibly by the Demo workflow on a clean Mac (VHS): a staged folder of well-known apps and a real, verified update.
 
 ## [0.3.0] - 2026-10-02
 

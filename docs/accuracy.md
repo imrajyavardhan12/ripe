@@ -2,6 +2,10 @@
 
 Ripe's headline metric is its false-positive rate: how often it claims an update that isn't real. Each release gets a verification run on real Macs, recorded here. When a verdict is wrong, the fix lands with a test (fixture or table row), and the row below links to it.
 
+## 2026-10-07 · maintainer's Mac (macOS 27, Apple silicon) · pre-release v0.4.0
+
+29 apps: 12 ripe, 11 up to date, 6 unknown, 1.8 s. No false positives. New since the last run: Claude (cask version carries a commit hash, `2.26454.0,98e3cc1…`) and Tailscale read correctly as up to date; Helium 0.18.3.1 and Obsidian 1.14.4 are new upstream releases. Unknowns unchanged and honest: Ghostty tip (commit-hash version), Codenotch (feed 404), Folio ×2, Proompt, Claude Code URL Handler (no source). The scheduled Accuracy (80 apps, three machines) and Pick runs of 2026-10-05 passed.
+
 ## 2026-10-03 · Pick workflow (end to end, clean macOS 26 and Intel runners) · 0.4.0-dev
 
 First automated `ripe pick` run on real apps. Found one bug: **Sparkle delta patches.** Rectangle's feed lists the full DMG and then delta patches, each signed; Ripe kept the last enclosure, downloaded a 136 KB delta, verified its genuine signature and then refused to unpack it (no harm done, but `pick` failed for every Sparkle app that ships deltas). Fixed: delta enclosures are ignored, and cross-platform items use the macOS archive (`SparkleSourceTests`). Also: Maccy's feed has no signature, so `pick` used to send people to update by hand; it now uses Homebrew's SHA-256-verified copy of the same version.
