@@ -1,56 +1,47 @@
-# Research and rationale
+# Why Ripe exists
 
-Collected 2026-09-28 while choosing the project.
+Collected 2026-09-28, before the first line of code.
 
-## Why this project
+## MacUpdater is gone
 
-MacUpdater (CoreCode, https://www.corecode.io/macupdater/) shut down. Its database froze on 2025-12-31 and goes fully dark after 2026-12-31. It sold for ~15 years, so demand is proven, and its users are actively looking for a replacement (TidBITS covered the shutdown in September 2026).
+MacUpdater (CoreCode) checked every app on a Mac for updates for about 15 years. It shut down: its database froze on 2025-12-31 and goes fully dark after 2026-12-31. People who relied on it are looking for a replacement, and nothing open source covered the same ground.
 
-## Evidence: `brew upgrade` isn't enough
+## `brew upgrade` isn't enough
 
-Scan of the maintainer's own Mac (a developer who runs `brew update && brew upgrade`):
+A scan of a developer's Mac whose owner runs `brew update && brew upgrade` regularly:
 
 ```
-Total apps in /Applications:   28
-  Managed by Homebrew cask:     3
-  From Mac App Store:           3
-  Neither (brew can't see):    22   (Sparkle 3, Electron 1, other 18)
+Apps in /Applications:          28
+  installed by Homebrew:         3
+  from the Mac App Store:        3
+  neither (brew can't see them): 22   (3 Sparkle, 1 Electron, 18 other)
 
-brew outdated --cask:           0
-brew outdated --cask --greedy:  3
+brew outdated --cask:            0
+brew outdated --cask --greedy:   3
 ```
 
-Takeaways:
-1. Most apps are direct downloads that brew doesn't know about.
-2. brew skips `auto_updates` casks unless you pass `--greedy`, so it reports "up to date" when it isn't.
-3. An app's own updater only runs when the app is opened; rarely-opened security tools (KeePassXC, Cryptomator, BlockBlock, Mullvad VPN) go stale.
+What it shows:
+1. Most apps are direct downloads that Homebrew doesn't know were installed.
+2. Homebrew skips casks that update themselves unless you pass `--greedy`, so it reports "up to date" when it isn't.
+3. An app's own updater only runs when the app is opened, so rarely opened apps (VPNs, password managers, security tools) fall furthest behind.
 4. App Store apps need a separate tool (`mas`).
-5. 18 of 22 non-brew apps had no detectable feed (custom updaters), so the Homebrew cask API must be used as a version database for all apps.
-
-Target users: former MacUpdater users, developers who want one command for everything, security-minded users, people managing family or small-team Macs. Not for: people who install every app via brew with `--greedy`.
+5. 18 of the 22 other apps declare no update feed at all, so Homebrew's cask database has to serve as a version database for every app, not only the ones it installed.
 
 The pitch is visibility plus one command, not "apps never update without Ripe".
 
-## Competitors (as of 2026-09)
+## Who it's for
 
-None dominant, most are small or alpha:
-- **Latest** (https://github.com/mangerlahn/Latest): open source, Sparkle + App Store only; found 12 of 86 updates in one comparison.
-- **updater** (https://github.com/lu-zhengda/updater): Go CLI + menu bar, Sparkle/brew/MAS/GitHub, ~14 stars.
-- **Versioneer** (https://github.com/jakejarvis/versioneer): native app, early alpha, crowdsourced catalog idea.
-- **OpenUpdater** (https://github.com/chenasraf/OpenUpdater): menu bar app.
-- **Floodtide**: new updater, launched 2026-09.
-- **WegaMacUpdater** (https://github.com/DominikSienkiewicz/WegaMacUpdater): Swift 6 + SwiftUI app; brew casks, MAS, JetBrains, GitHub Releases, Sparkle. Closest to Ripe's source list, but GUI-only.
-- **AppFresh** (https://github.com/AppFresh/AppFresh): discovery + update tracking for non-App-Store apps, ~2 stars.
-- Paid: Mole app (includes updates), App Cleaner & Uninstaller, Updatest, Version Tracker.
-- Pearcleaner has basic update checks, but development stopped at the end of 2025.
+Former MacUpdater users; developers who want one command for everything; security-minded people who want their rarely opened tools current; anyone looking after a family's or a small team's Macs. Not for people who already install every app with Homebrew and run `brew upgrade --greedy`.
 
-## General lesson from the research
+## Other tools (2026-09)
 
-In 2026, every paid-Mac-app category has 5 to 10 AI-built open-source clones, mostly under 200 stars. The idea alone doesn't win: a sharp angle, polish, trust (signing, verification), sustained maintenance and a good launch do. Ripe's angles: open PR-driven catalog, wraps brew + mas, Team ID verification before install, CLI-first.
+Different trade-offs, all worth knowing:
 
-## Ideas considered and rejected
+- **[Latest](https://github.com/mangerlahn/Latest)**: open-source Mac app; Sparkle and App Store apps.
+- **[updater](https://github.com/lu-zhengda/updater)**: Go CLI and menu bar app; Sparkle, Homebrew, App Store and GitHub.
+- **[Versioneer](https://github.com/jakejarvis/versioneer)**: native app with a crowdsourced catalog.
+- **[OpenUpdater](https://github.com/chenasraf/OpenUpdater)**: menu bar app.
+- **[WegaMacUpdater](https://github.com/DominikSienkiewicz/WegaMacUpdater)**: SwiftUI app; Homebrew, App Store, JetBrains, GitHub Releases and Sparkle.
+- Commercial: Updatest, Version Tracker, and the update checks in some cleaner apps.
 
-- Open-source Hazel: organize (3.1k stars, Python CLI) already covers CLI-first; a native GUI needs signing.
-- Dropover clone: crowded (OpenYoink, Droppy, Shelf...), needs Accessibility permission.
-- Shell undo for AI agents: crowded, and agents now ship built-in checkpoints (Claude Code `/rewind`).
-- launchd TUI, "why is my Mac slow" CLI, browser-history search, Mac-setup-as-code: crowded or low ceiling.
+What Ripe adds: a command line first; the most authoritative source per app, with `unknown` instead of guesses and `ripe why` to show the evidence; an open catalog anyone can correct by pull request (MacUpdater's database was private); and updates that are installed only when the new copy is signed by the same developer (Team ID) as the one you have.
