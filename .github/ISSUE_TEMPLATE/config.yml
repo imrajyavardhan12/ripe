@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
+  - name: Ask a question
+    url: https://github.com/imrajyavardhan12/ripe/discussions
+    about: How something works, whether Ripe fits your setup, or ideas you'd like to talk through first.
   - name: Add or fix an app in the catalog
     url: https://github.com/imrajyavardhan12/orchard#add-or-fix-an-app
     about: Missing update feed, wrong Homebrew cask, or an app that updates in place. Usually a one-file pull request to orchard.
