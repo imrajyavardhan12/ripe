@@ -103,8 +103,8 @@ Authority, highest first:
 |---|---|---|---|
 | 1 | **App Store** | App Store receipt or wrapped iOS app | Exclusive: an App Store app only updates through the store, so other sources are ignored for it. Batch lookup, `country` = the Mac's region. `kind != mac-software` → lower confidence. |
 | 2 | **Sparkle appcast** | `SUFeedURL` present | Exactly what the app's own updater would see. Stable channel only: items with no channel or a channel named `stable`, `release`, `default`, `production` or `public` (OBS labels its stable items explicitly; an earlier version that accepted only unlabeled items picked a three-year-old release). Any other channel is opt-in inside the app; drop items whose `minimumSystemVersion` or `hardwareRequirements` this Mac fails; ignore `informationalUpdate`. Compare `sparkle:version` against `CFBundleVersion` (Sparkle's own rule), falling back to `shortVersionString`. |
-| 3 | **Electron feed** (v0.3) | `app-update.yml` present | GitHub provider or generic `latest-mac.yml`. |
-| 4 | **GitHub Releases** (v0.3) | orchard maps the app to a repo | Skip drafts and pre-releases. |
+| 3 | **Electron feed** (planned) | `app-update.yml` present | GitHub provider or generic `latest-mac.yml`. |
+| 4 | **GitHub Releases** (planned) | orchard maps the app to a repo | Skip drafts and pre-releases. |
 | 5 | **Homebrew cask DB** | Match found (see below) | A version *database* for every app, not only brew-installed ones. Lowest authority because matching is heuristic. |
 
 orchard entries are not a rank; they **enrich apps after discovery and before any source runs**, so sources stay catalog-unaware (`Catalog/`). Schema v1 has four directives (`fallbackSparkleFeed` was added later; older clients ignore it):
@@ -155,7 +155,7 @@ Most bugs in update checkers are version bugs, so this gets its own module, an e
 
 ## 8. Platform: network, cache, concurrency
 
-- **HTTPClient** protocol over `URLSession`: 10 s request timeout, HTTPS required (plain-HTTP Sparkle feeds allowed for *checking* but flagged; never for downloading in v0.2), response size cap (25 MB for the cask DB, 5 MB otherwise), one retry with jitter on transient errors, `User-Agent: ripe/<version> (+https://github.com/imrajyavardhan12/ripe)`.
+- **HTTPClient** protocol over `URLSession`: 10 s request timeout, HTTPS required (plain-HTTP Sparkle feeds allowed for *checking* but flagged; never for downloading), response size cap (25 MB for the cask DB, 5 MB otherwise), one retry with jitter on transient errors, `User-Agent: ripe/<version> (+https://github.com/imrajyavardhan12/ripe)`.
 - **CachingHTTPClient** decorator: on-disk cache in `~/Library/Caches/ripe/` (override `RIPE_CACHE_DIR`). Stores body, `ETag`, `Last-Modified`, fetch time. Per-request TTL: feeds 30 min, App Store 1 h, cask DB 6 h (a stale catalog can only cause a missed update, never a false one, and the file changes every few minutes, so a short TTL would re-download 19 MB constantly). After the TTL, conditional GET; `--refresh` skips the TTL but still revalidates. Server `max-age` is ignored (iTunes sends 24 h, too stale for update checks). If the network fails, the expired copy is served and marked stale, so `ripe` works offline.
 - **Derived index cache**: the parsed cask index is written next to the raw body, keyed by ETag. Warm runs load the small index only.
 - **Concurrency**: Swift 6 strict concurrency. Sources are `Sendable` structs; the cache is an actor. Per-host concurrency limit (6) so Ripe is a polite client. Sparkle feeds are fetched at most 16 at a time (each is on a different host, so the per-host limit doesn't bound them). Overall run deadline (30 s, matching URLSession's per-download limit, so a first run on a slow link can still fetch the 2 MB cask data): when it fires, in-flight requests are cancelled, and every app a *late* source covers (per `applies(to:)`) gets a timeout failure instead of silently reading as "not applicable". Sources that answered in time are untouched.
@@ -223,8 +223,7 @@ So Ripe never needs the permission, under one rule: **only ever move whole bundl
 | Parsers | appcast, cask index, iTunes JSON | Real responses captured into `Tests/**/Fixtures/`, trimmed. Every bug report with a weird feed adds a fixture. |
 | Discovery | bundle inspection | Build throwaway `.app` directories in a temp dir (Info.plist + receipts). No binary fixtures. |
 | Pipeline | resolver end to end | Fake `HTTPClient` serving fixtures + fake `Host`. Asserts verdicts and evidence. |
-| CLI | table and JSON output | Golden files; JSON schema snapshot. |
-| Live contract | real APIs still look like fixtures | `.tags(.live)`, run only when `RIPE_LIVE_TESTS=1`; nightly CI job. Catches upstream format drift before users do. |
+| CLI | table and JSON output | Expected output inline in the tests; a test pins the JSON shape (schema v1). |
 | Accuracy | false positives on real apps | The **Accuracy** workflow (`scripts/accuracy/`): installs the latest version of 80 popular casks (weekly) or 120 more (monthly) on clean macOS 26, macOS 15 and Intel runners, runs `ripe --all`, and fails on any update Ripe reports for an app that was just installed. Stale installs and feeds ahead of Homebrew are reported separately. The false-positive count is the headline metric; notable runs go in `docs/accuracy.md`. |
 | Install | `ripe pick` end to end | The **Pick** workflow (`scripts/pick-e2e.sh`): stages old, genuinely signed releases (pinned by SHA-256) and updates them on clean Macs, covering Homebrew SHA-256 + DMG and zip, Sparkle EdDSA + DMG, and Homebrew's copy for an unsigned feed; checks version, strict signature, unchanged Team ID, old copy in the Trash, no leftovers, plus a refusal that must change nothing. Runs on install-code changes and weekly. |
 
@@ -236,11 +235,11 @@ So Ripe never needs the permission, under one rule: **only ever move whole bundl
 | Cask index, warm | < 150 ms | Derived compact index, no 19 MB parse |
 | Network, warm | ~0 | TTL cache |
 | Network, cold | < 4 s | Parallel sources, batched App Store, per-host limit 6 |
-| Total warm / cold | < 1 s / < 5 s | Measured in CI on every PR via `ripe --json --verbose` timing lines |
+| Total warm / cold | < 1 s / < 5 s | `ripe --verbose` prints timings; each accuracy run reports its total (1.3–3.7 s for 80–120 freshly installed apps on CI runners) |
 
 ## 14. Release engineering
 
-- **CI** (GitHub Actions, macOS runner): `swift format lint --strict`, `swift build`, `swift test`, universal release build. Nightly: live contract tests.
+- **CI** (GitHub Actions, macOS runner): `swift format lint --strict`, `swift build`, `swift test`, universal release build, formula check. Weekly: the Accuracy and Pick workflows (real apps, real APIs); monthly: the extended accuracy list.
 - **Release** on tag `vX.Y.Z`: universal binary (`--arch arm64 --arch x86_64`), stripped, `tar.gz` + SHA-256, provenance attestation, GitHub Release with notes from `CHANGELOG.md`, then bump the formula in the `homebrew-tap` repo.
 - SemVer. Pre-1.0: minor = features, patch = fixes. The JSON schema has its own version (§9).
 
@@ -256,14 +255,15 @@ Sources/
     Resolution/     Resolver, ResolutionPolicy
     Catalog/        Catalog, CatalogLoader, CatalogEnricher (orchard)
     Install/        Planner, Installer, Downloader, Integrity, Unpacker, CodeSignature, Replacer, RunningApps
-    Platform/       HTTPClient, CachingHTTPClient, DiskCache, Machine, ProcessRunner, Logger
+    Platform/       HTTPClient, CachingHTTPClient, DiskCache, Machine, TapCasks, ProcessRunner, Logger
+    Doctor/         Doctor (`ripe doctor`'s checks)
     Ripe.swift      public façade: Ripe.check(options) async -> Report
-  RipeCLI/          RootCommand (list, why), PickCommand, renderers, JSONReport, Terminal
+  RipeCLI/          RootCommand (list, why), PickCommand, SkipCommand, DoctorCommand, FeedCommand (hidden), renderers, JSONReport, Terminal
   ripe/             main.swift
 Tests/
   RipeCoreTests/    (+ Fixtures/)
-  RipeCLITests/     (+ Golden/)
-docs/               architecture.md, research.md
+  RipeCLITests/
+docs/               architecture.md, research.md (why Ripe exists), accuracy.md (verification log), releasing.md
 scripts/            accuracy/ (popular-app accuracy run), pick-e2e.sh, formula and release helpers, demo/
 .github/            workflows/, ISSUE_TEMPLATE/
 ```
@@ -281,7 +281,7 @@ scripts/            accuracy/ (popular-app accuracy run), pick-e2e.sh, formula a
 | 7 | `--json` and `why` ship in v0.1 (moved up from v0.3) | Cheap given the evidence model, and they are how we debug false positives and how users report them. | — |
 | 8 | Cache in `~/Library/Caches/ripe`, config in `~/.config/ripe` | Mac convention for caches; dotfile-friendly config for developers. | — |
 | 9 | No telemetry, ever | Principle 5; trust is the product. | Never. |
-| 10 | MIT license | Same as `mas` and Latest; lowest friction for contributors. | Before the first public release, if the maintainer prefers Apache-2.0. |
+| 10 | MIT license | Same as `mas` and Latest; lowest friction for contributors. | — |
 | 11 | Seeded catalog feeds are fallbacks, never overrides | A feed taken from Homebrew's livecheck hasn't been checked against the app's bundle; replacing the app's own feed or trusting its build numbers outright could cry wolf. Fallback + name match + cross-check keeps the gain (authoritative feeds for apps that set theirs in code) without that risk. Released clients ignore the new key. | An entry is verified against a real bundle (then it can become `sparkleFeed`). |
 | 12 | orchard stays curated: entries are added one by one for a reason, never in bulk | A 571-entry seed from Homebrew livecheck changed no verdict on the maintainer's Mac, couldn't show its benefit elsewhere (many entries are no-ops for apps that declare their own feed), and would turn a reviewed catalog into a generated dump. Coverage grows from `ripe why` reports. | Data shows many users hitting `unknown` for apps a seed would fix. |
 
@@ -290,7 +290,7 @@ scripts/            accuracy/ (popular-app accuracy run), pick-e2e.sh, formula a
 - **App Management TCC**: resolved by measurement (§11). Whole-bundle moves need no permission; a future change that writes inside a bundle would break on every launched app, so tests and review must keep that rule.
 - **In-place updaters**: some apps update their code without touching Info.plist (Obsidian's bundle says 1.12.4 while it runs 1.13.4). Mitigation: orchard `installedVersion` rules, one per app; no generic detection.
 - **Scheme mismatches** (Brave-style) are the main false-positive and false-negative source. Mitigation: alignment heuristic, `unknown` fallback, orchard mappings, fixture per reported case.
-- **Upstream drift**: cask JSON and iTunes API are unversioned. Mitigation: tolerant decoding (only the fields we need, all optional), nightly live contract tests.
+- **Upstream drift**: cask JSON and iTunes API are unversioned. Mitigation: tolerant decoding (only the fields we need, all optional), and the weekly accuracy runs, which exercise the real APIs on clean Macs.
 - **Rate limits**: iTunes lookup is rate-limited. Mitigation: batching, 1 h cache.
 - **Intel support**: toolchains built for macOS 27+ (Swift 6.4 Command Line Tools) ship no x86_64 runtime libraries, so universal binaries are built only in CI on an older runner image. When GitHub's runners move to Xcode 27, pin an older Xcode or drop Intel; decide based on how many users are still on Intel Macs.
 - **Swift Testing with Command Line Tools only**: the default `swiftbuild` build system doesn't reliably find the Testing macro plugin; `make test` passes `-plugin-path` explicitly.

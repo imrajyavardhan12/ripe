@@ -1,6 +1,6 @@
 # Accuracy log
 
-Ripe's headline metric is its false-positive rate: how often it claims an update that isn't real. Each release gets a verification run on real Macs, recorded here. When a verdict is wrong, the fix lands with a test (fixture or table row), and the row below links to it.
+Ripe's headline metric is its false-positive rate: how often it claims an update that isn't real. It's measured two ways: the [Accuracy workflow](../.github/workflows/accuracy.yml) installs the latest version of popular apps on clean Macs every week and fails on any reported update, and each release gets a run on a real, everyday Mac. Notable runs are recorded here, newest first. When a verdict is wrong, the fix lands with a test built from the real case.
 
 ## 2026-10-07 · maintainer's Mac (macOS 27, Apple silicon) · pre-release v0.4.0
 
@@ -67,10 +67,6 @@ First automated run: the 80 most-installed app casks, freshly installed, then `r
 Re-run after the fix: 80 installed, 80 found, **0 false positives**, 79 current, 1 unknown (WezTerm), 1.5 s. (By then the QLMarkdown cask had caught up.)
 
 Earlier attempts the same day taught the harness two lessons: Homebrew dropped `--no-quarantine` (nothing installed, yet the run "passed": it now fails below 40 installs), and runner images carry stale cask data (36 apps installed old versions, which Ripe correctly reported as outdated: 36 of 36 caught, recall evidence; the run now refreshes Homebrew first and reports stale installs separately).
-
-## 2026-10-02 (evening) · maintainer's Mac · 0.4.0-dev with the seeded orchard catalog
-
-28 apps (Folio is installed twice), local catalog with 571 seeded fallback feeds. 12 ripe, 9 up to date, 7 unknown, identical to the same build without the seeded entries. Two apps got a seeded feed: **KeepingYouAwake** is now decided by its own Sparkle feed (build 1060800 = 1060800, still current); **Ghostty** (tip build, version `0081d4530`) stays unknown, now because its version is a commit hash. The importer's bundle IDs matched all 4 of this Mac's apps that it covers. No false positives. (The bulk set was withdrawn the same day to keep orchard curated; only the Ghostty and KeepingYouAwake entries were kept.)
 
 ## 2026-10-02 (later) · maintainer's Mac · pre-release v0.3.0
 
