@@ -16,7 +16,7 @@ The **Tap token** workflow checks the secret monthly (and on demand): that it ca
 3. Commit, then tag and push:
 
    ```sh
-   git tag vX.Y.Z && git push origin vX.Y.Z
+   git tag -m "ripe X.Y.Z" vX.Y.Z && git push origin vX.Y.Z   # annotated: the repo signs tags
    ```
 
 4. The `Release` workflow tests, builds the universal binary, attests it, publishes the GitHub release with the changelog section as notes, and commits `Formula/ripe.rb` to the tap.
