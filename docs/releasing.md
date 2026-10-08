@@ -7,7 +7,7 @@
 
 Without the secret, releases still publish; only the tap update is skipped.
 
-The **Tap token** workflow checks the secret monthly (and on demand): that it can still write to the tap, and when it expires. It fails 30 days before expiry. GitHub's token page may say "Never used" even while releases work, because the tap is updated with `git push`, which that label doesn't seem to count; trust the workflow, not the label.
+GitHub's token page may say "Never used" even while releases work: the tap is updated with `git push`, which that label doesn't count.
 
 ## Each release
 
