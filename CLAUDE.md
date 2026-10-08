@@ -2,25 +2,15 @@
 
 Open-source successor to MacUpdater: one command that shows every outdated app on a Mac and updates it, whether it came from Homebrew, the Mac App Store or a direct download. Tagline: **"Your apps, always ripe."**
 
-Read before changing the pipeline, a source, version comparison or output: @docs/architecture.md (principles, pipeline, version rules, install pipeline, decision log). Also: `docs/research.md` (why the project exists), `docs/accuracy.md` (verification log, one entry per release), `docs/releasing.md` (release checklist).
-
-## State
-
-- Latest release **v0.4.0** (2026-10-07); `main` carries `0.5.0-dev`. Install: `brew install imrajyavardhan12/tap/ripe` (the maintainer uses this, not `make install`).
-- Launch planned for 2026-10-13/14 (Show HN, r/macapps, r/commandline). Drafts live in a private doc; posting is the maintainer's call.
-- Next: the open Dependabot PR (checkout 5→7, attest-build-provenance 3→4: test with an `-rc` tag first, which skips the tap); `managedBy` is decided by cask token alone, so a second, non-Homebrew copy of a Homebrew app reads as Homebrew-managed; then Electron and GitHub Releases sources, driven by `ripe why` reports.
-
-## Working agreement
-
-- The maintainer delegated prioritization: decide, build, verify on real data, report at milestones.
-- Ask first for: secrets and tokens, accounts, spending, anything posted publicly, and anything touching the maintainer's installed apps. **Never run `ripe pick` on the maintainer's apps**; use CI (Pick workflow) or a throwaway copy.
-- Commit messages: one short line.
+Read before changing the pipeline, a source, version comparison or output: @docs/architecture.md (principles, pipeline, version rules, install pipeline, decision log). Also: `docs/research.md` (why the project exists), `docs/accuracy.md` (verification log), `docs/releasing.md` (release checklist), `CONTRIBUTING.md`.
 
 ## Rules of the code
 
 - **Never cry wolf**: when unsure the answer is `unknown`, never `outdated`. Every accuracy fix ships with a test built from the real-world case (fixture or table row).
 - **Never write inside an app bundle**: App Management blocks it once an app has launched. Only move whole bundles.
+- **Never test `ripe pick` on apps you rely on**: use the Pick workflow on CI, or a throwaway copy staged with `RIPE_APPLICATIONS_DIR`. Read-only commands (`ripe`, `ripe why`, `pick --dry-run`) are safe anywhere.
 - Foundation + swift-argument-parser only; no new dependencies without a strong reason.
+- Commit messages: one short line.
 
 ## Commands and gotchas
 
@@ -35,17 +25,11 @@ Read before changing the pipeline, a source, version comparison or output: @docs
 - **Accuracy**: installs 80 popular casks (weekly) or 120 more (monthly) on macOS 26, macOS 15 and Intel runners; fails on any false positive. Record notable runs in `docs/accuracy.md`.
 - **Pick**: updates real old apps end to end on clean runners; weekly and on install-code changes.
 - **Demo**: records `assets/demo.gif` on a clean Mac (run it at the release tag). Inspect frames for usernames or home paths before committing.
-- **Release**: on a `vX.Y.Z` tag. Tags are signed and annotated: `git tag -m "ripe X.Y.Z" vX.Y.Z`.
-
-## Release facts
-
-- The tap `imrajyavardhan12/homebrew-tap` is shared with the maintainer's `margin` project: never touch `Formula/margin.rb`.
-- `HOMEBREW_TAP_TOKEN` (fine-grained, tap only) expires **2027-09-20** (calendar reminder). GitHub's token page may say "Never used" because the tap is updated with `git push`.
-- `CHANGELOG.md` needs a section for every tag; the release refuses to publish without one.
+- **Release**: on a `vX.Y.Z` tag, following `docs/releasing.md`. Tags are signed and annotated (`git tag -m "ripe X.Y.Z" vX.Y.Z`); `CHANGELOG.md` needs a section for every tag.
 
 ## orchard (the catalog)
 
-Separate repo at `~/Developer/orchard` (public), served at https://imrajyavardhan12.github.io/orchard/index.json. Kept curated: entries are added one at a time for a reason (`scripts/import_livecheck.py --only <cask>` for Sparkle feeds, verified with the hidden `ripe feed`). Test an entry with `RIPE_CATALOG_URL=file://…/orchard/dist/index.json ripe why <app>`.
+Separate repo ([imrajyavardhan12/orchard](https://github.com/imrajyavardhan12/orchard)), served at https://imrajyavardhan12.github.io/orchard/index.json. Kept curated: entries are added one at a time for a reason (`scripts/import_livecheck.py --only <cask>` for Sparkle feeds, verified with the hidden `ripe feed`). Test an entry with `RIPE_CATALOG_URL=file://…/orchard/dist/index.json ripe why <app>`.
 
 ## Constraint: no paid Apple Developer account
 

@@ -6,3 +6,6 @@
 xcuserdata/
 DerivedData/
 /dist/
+
+# Personal Claude Code instructions (see CLAUDE.md for the shared ones)
+/CLAUDE.local.md
