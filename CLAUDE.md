@@ -26,6 +26,7 @@ Read before changing the pipeline, a source, version comparison or output: @docs
 - **Pick**: updates real old apps end to end on clean runners; weekly and on install-code changes.
 - **Demo**: records `assets/demo.gif` on a clean Mac (run it at the release tag). Inspect frames for usernames or home paths before committing.
 - **Release**: on a `vX.Y.Z` tag, following `docs/releasing.md`. Tags are signed and annotated (`git tag -m "ripe X.Y.Z" vX.Y.Z`); `CHANGELOG.md` needs a section for every tag.
+- **Rulesets**: `main` takes PRs with a green `test` check, linear history, no force pushes (admins bypass); `v*` tags can't be deleted or moved, so a wrong tag means a new version.
 
 ## orchard (the catalog)
 
