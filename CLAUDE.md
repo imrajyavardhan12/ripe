@@ -19,6 +19,19 @@ Read before changing the pipeline, a source, version comparison or output: @docs
 - `make lint` must pass. The local 6.4 toolchain's swift-format skips `NeverForceUnwrap` in Swift Testing files but CI's doesn't: never force-unwrap in tests (`try #require`).
 - Local `make release` is arm64 only (the macOS 27 toolchain has no x86_64 runtime); CI builds the universal binary.
 
+## Proving a change works
+
+- Every change: `make lint && make test`. Quote the result (`Test run with N tests … passed`), not "tests pass".
+- Accuracy fix: the real-world case becomes a fixture or table row, and the test fails without the fix.
+- Version comparison: add the new shapes to the table and to the corpus that `VersionTests` checks for
+  antisymmetry and transitivity, so a fix can't break ordering elsewhere.
+- End to end on a real Mac, read-only: `make run ARGS="--all"` and `make run ARGS="why <app>"`, then check the
+  verdict and evidence for the apps you touched. `pick`: `--dry-run` here, a real run only on a throwaway copy
+  staged with `RIPE_APPLICATIONS_DIR`, or the Pick workflow.
+- Install-path changes (`Sources/RipeCore/Install/`, `AppcastParser.swift`): the Pick workflow runs on push to
+  `main` and can be started by hand (`workflow_dispatch`); link its run in the PR.
+- Workflow edits: `actionlint .github/workflows/*.yml` before pushing.
+
 ## CI workflows
 
 - **CI**: lint, tests, universal build, formula check, on every push.
