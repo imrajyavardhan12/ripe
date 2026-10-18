@@ -1,62 +1,43 @@
 # Ripe
 
-Open-source successor to MacUpdater: one command that shows every outdated app on a Mac and updates it, whether it came from Homebrew, the Mac App Store or a direct download. Tagline: **"Your apps, always ripe."**
+Open-source successor to MacUpdater: one command that shows every outdated app on a Mac and updates it, whether it
+came from Homebrew, the Mac App Store or a direct download. Swift CLI, shipped through a Homebrew formula.
 
-Read before changing the pipeline, a source, version comparison or output: @docs/architecture.md (principles, pipeline, version rules, install pipeline, decision log). Also: `docs/research.md` (why the project exists), `docs/accuracy.md` (verification log), `docs/releasing.md` (release checklist), `CONTRIBUTING.md`.
+Before changing the pipeline, a source, version comparison, install code or output, read `docs/architecture.md`
+(principles, pipeline, version rules, install pipeline, decision log). Release steps: `docs/releasing.md`.
+Accuracy log: `docs/accuracy.md`.
 
-## Rules of the code
+## Commands
 
-- **Never cry wolf**: when unsure the answer is `unknown`, never `outdated`. Every accuracy fix ships with a test built from the real-world case (fixture or table row).
-- **Never write inside an app bundle**: App Management blocks it once an app has launched. Only move whole bundles.
-- **Never test `ripe pick` on apps you rely on**: use the Pick workflow on CI, or a throwaway copy staged with `RIPE_APPLICATIONS_DIR`. Read-only commands (`ripe`, `ripe why`, `pick --dry-run`) are safe anywhere.
-- Foundation + swift-argument-parser only; no new dependencies without a strong reason.
-- Commit messages: one short line.
-
-## Commands and gotchas
-
-- `make build`, `make test`, `make lint`, `make format`, `make release`, `make run ARGS="…"`.
-- Use `make test`, not `swift test`: with Command Line Tools only, the Swift Testing plugin path has to be passed.
-- `make lint` must pass. The local 6.4 toolchain's swift-format skips `NeverForceUnwrap` in Swift Testing files but CI's doesn't: never force-unwrap in tests (`try #require`).
+- `make build`, `make test`, `make lint`, `make format`, `make run ARGS="…"`, `make release`
+- Use `make test`, not `swift test`: with Command Line Tools only, the Swift Testing plugin path must be passed.
 - Local `make release` is arm64 only (the macOS 27 toolchain has no x86_64 runtime); CI builds the universal binary.
 
-## Proving a change works
+## Verify before you say done
 
-- Every change: `make lint && make test`. Quote the result (`Test run with N tests … passed`), not "tests pass".
+- Every change: `make lint && make test`. Quote the result line (`Test run with N tests … passed`).
+- Never force-unwrap in tests (use `try #require`): local swift-format skips `NeverForceUnwrap` there, CI's doesn't.
 - Accuracy fix: the real-world case becomes a fixture or table row, and the test fails without the fix.
-- Version comparison: add the new shapes to the table and to the corpus that `VersionTests` checks for
-  antisymmetry and transitivity, so a fix can't break ordering elsewhere.
-- End to end on a real Mac, read-only: `make run ARGS="--all"` and `make run ARGS="why <app>"`, then check the
-  verdict and evidence for the apps you touched. `pick`: `--dry-run` here, a real run only on a throwaway copy
-  staged with `RIPE_APPLICATIONS_DIR`, or the Pick workflow.
-- Install-path changes (`Sources/RipeCore/Install/`, `AppcastParser.swift`): the Pick workflow runs on push to
-  `main` and can be started by hand (`workflow_dispatch`); link its run in the PR.
-- Workflow edits: `actionlint .github/workflows/*.yml` before pushing.
+- Version comparison: add the new shapes to the table and to the corpus `VersionTests` checks for antisymmetry and
+  transitivity.
+- On this Mac, read-only: `make run ARGS="--all"` and `make run ARGS="why <app>"`; check the verdict and evidence
+  for the apps you touched.
+- `ripe pick`: `--dry-run` here. A real run only on a throwaway copy staged with `RIPE_APPLICATIONS_DIR`, or the
+  Pick workflow, which runs on pushes to `main` that touch `Sources/RipeCore/Install/` or `AppcastParser.swift`
+  and can be started by hand. Link its run in the PR.
+- Workflow edits: `actionlint .github/workflows/*.yml`.
 
-## CI workflows
+## Rules
 
-- **CI**: lint, tests, universal build, formula check, on every push.
-- **Accuracy**: installs 80 popular casks (weekly) or 120 more (monthly) on macOS 26, macOS 15 and Intel runners; fails on any false positive. Record notable runs in `docs/accuracy.md`.
-- **Pick**: updates real old apps end to end on clean runners; weekly and on install-code changes.
-- **Demo**: records `assets/demo.gif` on a clean Mac (run it at the release tag). Inspect frames for usernames or home paths before committing.
-- **Release**: on a `vX.Y.Z` tag, following `docs/releasing.md`. Tags are signed and annotated (`git tag -m "ripe X.Y.Z" vX.Y.Z`); `CHANGELOG.md` needs a section for every tag.
-- **Rulesets**: `main` takes PRs with a green `test` check, linear history, no force pushes (admins bypass); `v*` tags can't be deleted or moved, so a wrong tag means a new version.
-
-## orchard (the catalog)
-
-Separate repo ([imrajyavardhan12/orchard](https://github.com/imrajyavardhan12/orchard)), served at https://imrajyavardhan12.github.io/orchard/index.json. Kept curated: entries are added one at a time for a reason (`scripts/import_livecheck.py --only <cask>` for Sparkle feeds, verified with the hidden `ripe feed`). Test an entry with `RIPE_CATALOG_URL=file://…/orchard/dist/index.json ripe why <app>`.
-
-## Constraint: no paid Apple Developer account
-
-Nothing can be notarized, so Ripe ships as a CLI through a Homebrew formula (formula binaries aren't quarantined). Don't depend on notarization or stable TCC grants. A menu bar app is a v1.0+ extra; if built unsigned, sign it with a consistent self-signed certificate so TCC grants survive updates.
-
-## Name and metaphor
-
-Fruit theme; keep new commands and docs consistent with it. orchard is the catalog. The logo (`assets/logo.svg`) is a peach with a leaf-shaped arrow, deliberately not an apple.
-
-```
-ripe              # what's ripe? (apps with updates)
-ripe pick <app>   # update one; --all is the harvest
-ripe skip <app>   # skip a version, or --always
-ripe why <app>    # the evidence behind a verdict
-ripe doctor       # check brew, mas, sources, skips and interrupted updates
-```
+- **Never cry wolf**: when unsure the answer is `unknown`, never `outdated`.
+- **Never write inside an app bundle**: App Management blocks it once an app has launched. Only move whole bundles.
+- Foundation + swift-argument-parser only; no new dependency without a strong reason.
+- No paid Apple Developer account: nothing is notarized, so don't depend on notarization or stable TCC grants.
+- Commit messages: one short line. `main` has a ruleset (PRs, green `test` check, linear history; admins bypass).
+- Releases: signed, annotated `vX.Y.Z` tags (`git tag -m "ripe X.Y.Z" vX.Y.Z`), a `CHANGELOG.md` section per tag.
+  `v*` tags can't be moved or deleted, so a wrong tag means a new version.
+- The Demo workflow records `assets/demo.gif`; inspect its frames for usernames or home paths before committing it.
+- orchard (separate repo, served at https://imrajyavardhan12.github.io/orchard/index.json) stays curated: one entry
+  at a time, for a reason. Test an entry with `RIPE_CATALOG_URL=file://…/orchard/dist/index.json ripe why <app>`.
+- Fruit naming: keep new commands and docs on theme (`ripe`, `pick`, `skip`, `why`, `doctor`; orchard is the
+  catalog). The logo is a peach, deliberately not an apple.
