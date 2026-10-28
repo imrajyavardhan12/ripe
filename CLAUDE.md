@@ -34,6 +34,9 @@ Accuracy log: `docs/accuracy.md`.
 - Foundation + swift-argument-parser only; no new dependency without a strong reason.
 - No paid Apple Developer account: nothing is notarized, so don't depend on notarization or stable TCC grants.
 - Commit messages: one short line. `main` has a ruleset (PRs, green `test` check, linear history; admins bypass).
+  Use the bypass for docs only: `Sources/RipeCore/Install/`, `.github/workflows/`, `scripts/` and `Package.*`
+  always go through a PR.
+- Reviews (yours and `/code-review`) follow `REVIEW.md`.
 - Releases: signed, annotated `vX.Y.Z` tags (`git tag -m "ripe X.Y.Z" vX.Y.Z`), a `CHANGELOG.md` section per tag.
   `v*` tags can't be moved or deleted, so a wrong tag means a new version.
 - The Demo workflow records `assets/demo.gif`; inspect its frames for usernames or home paths before committing it.
