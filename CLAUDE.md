@@ -36,7 +36,8 @@ Accuracy log: `docs/accuracy.md`.
 - Commit messages: one short line. `main` has a ruleset (PRs, green `test` check, linear history; admins bypass).
   Use the bypass for docs only: `Sources/RipeCore/Install/`, `.github/workflows/`, `scripts/` and `Package.*`
   always go through a PR.
-- Reviews (yours and `/code-review`) follow `REVIEW.md`.
+- Reviews follow `REVIEW.md`. After a non-trivial change, run the `ripe-reviewer` agent with a brief: what the
+  change is for, the guarantees it must keep, the round number and the findings already answered.
 - Releases: signed, annotated `vX.Y.Z` tags (`git tag -m "ripe X.Y.Z" vX.Y.Z`), a `CHANGELOG.md` section per tag.
   `v*` tags can't be moved or deleted, so a wrong tag means a new version.
 - The Demo workflow records `assets/demo.gif`; inspect its frames for usernames or home paths before committing it.
