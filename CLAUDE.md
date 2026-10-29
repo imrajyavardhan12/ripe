@@ -23,7 +23,7 @@ Accuracy log: `docs/accuracy.md`.
 - On this Mac, read-only: `make run ARGS="--all"` and `make run ARGS="why <app>"`; check the verdict and evidence
   for the apps you touched.
 - `ripe pick`: `--dry-run` here. A real run only on a throwaway copy staged with `RIPE_APPLICATIONS_DIR`, or the
-  Pick workflow, which runs on pushes to `main` that touch `Sources/RipeCore/Install/` or `AppcastParser.swift`
+  Pick workflow, which runs on pushes to `main` that touch the install path (the `paths:` list in `pick.yml`)
   and can be started by hand. Link its run in the PR.
 - Workflow edits: `actionlint .github/workflows/*.yml`.
 

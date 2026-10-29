@@ -110,6 +110,48 @@ struct SparkleSourceTests {
         #expect(item.operatingSystem == "macos")
     }
 
+    @Test func takesVersionsFromTheChosenEnclosure() throws {
+        // Windows listed first with its own build numbers: keeping them read the installed 2.1 as
+        // outdated by "2.1.0.4521", and offered the 2.1 download.
+        let feed = """
+            <rss><channel><item>
+              <enclosure url="https://example.com/app.msi" sparkle:os="windows" sparkle:version="2.1.0.4521"
+                sparkle:shortVersionString="2.1.0" sparkle:installationType="package"/>
+              <enclosure url="https://example.com/app.zip" sparkle:os="macos" sparkle:version="2.1"
+                sparkle:shortVersionString="2.1"/>
+            </item></channel></rss>
+            """
+        let item = try #require(try AppcastParser.parse(Data(feed.utf8)).first)
+        #expect(item.enclosureURL?.lastPathComponent == "app.zip")
+        #expect(item.version == "2.1")
+        #expect(item.shortVersion == "2.1")
+        #expect(item.installationType == nil)
+    }
+
+    @Test func itemElementsBeatEnclosureAttributes() throws {
+        for (before, after) in [
+            ("<sparkle:version>7</sparkle:version>", ""), ("", "<sparkle:version>7</sparkle:version>"),
+        ] {
+            let feed = """
+                <rss><channel><item>\(before)
+                  <enclosure url="https://example.com/app.zip" sparkle:version="6"/>\(after)
+                </item></channel></rss>
+                """
+            let item = try #require(try AppcastParser.parse(Data(feed.utf8)).first)
+            #expect(item.version == "7")
+        }
+    }
+
+    @Test func anyPackageMarkingMakesItAPackage() throws {
+        let element = "<sparkle:installationType>application</sparkle:installationType>"
+        let enclosure = #"<enclosure url="https://example.com/app.zip" sparkle:installationType="package"/>"#
+        for body in [element + enclosure, enclosure + element] {
+            let feed = "<rss><channel><item>\(body)</item></channel></rss>"
+            let item = try #require(try AppcastParser.parse(Data(feed.utf8)).first)
+            #expect(item.installationType == "package")
+        }
+    }
+
     @Test func doesNotTrustFeedOrder() {
         let items = [AppcastItem(version: "10"), AppcastItem(version: "12"), AppcastItem(version: "11")]
         #expect(SparkleSource.newestEligible(items, on: .test())?.version == "12")

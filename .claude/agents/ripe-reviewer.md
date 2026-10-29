@@ -24,8 +24,10 @@ started in. You start with no history: work only from the brief you were given a
   never force-unwrap), run it, then delete it. For a version-comparison change, feed the new shapes to
   `Version` and check the order both ways. Drop anything you can't tie to specific code. Say for each finding whether
   you confirmed it by running something or by reading.
-- For an accuracy change, run `make run ARGS="why <app>"` for the apps it affects and check the verdict and evidence.
-  A change that can produce `outdated` where the evidence is thin is Important.
+- For an accuracy change, run `swift run -q ripe why <app>` for the apps it affects and check the verdict and
+  evidence (`swift run -q ripe --all --json` for clean JSON; `make run` echoes the command first). A change that can
+  produce `outdated` where the evidence is thin is Important. These runs need the network; if every source times
+  out, say the real-data check wasn't done and move on.
 - Name the class of bug when a finding has siblings, so all of them get fixed.
 - Don't repeat findings the brief lists as already answered unless the new code reopens them.
 - From round 3 on, if findings keep coming from the same area, say so and recommend reconsidering the approach there
@@ -48,7 +50,8 @@ failures). Use `make test`, not `swift test`. A failing check is a finding.
 
 Start with the verdict (PASS or FAIL) and the count of findings. Then each finding, most severe first:
 
-- **Tag:** Important, Nit or Pre-existing (at most three nits)
+- **Tag:** Important or Nit (at most three nits), plus Pre-existing when the change didn't introduce it. The
+  verdict is FAIL when any finding is Important, Pre-existing or not.
 - **Where:** `path:line`
 - **Defect:** one sentence
 - **Failure:** the concrete state or input that leads to the wrong outcome
