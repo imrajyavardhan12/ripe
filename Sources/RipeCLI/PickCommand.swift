@@ -15,7 +15,7 @@ struct PickCommand: AsyncParsableCommand {
             """
     )
 
-    @Argument(help: "Apps to update, by Finder name or bundle ID.")
+    @Argument(help: "Apps to update, by Finder name or bundle ID.", completion: AppCompletion.installed)
     var apps: [String] = []
 
     @Flag(help: "Update every app that has an update (the harvest).")

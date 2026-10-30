@@ -14,7 +14,9 @@ struct SkipCommand: AsyncParsableCommand {
             """
     )
 
-    @Argument(help: ArgumentHelp("App to skip, by Finder name or bundle ID. Quotes are optional.", valueName: "app"))
+    @Argument(
+        help: ArgumentHelp("App to skip, by Finder name or bundle ID. Quotes are optional.", valueName: "app"),
+        completion: AppCompletion.installed)
     var words: [String] = []
 
     var app: String? { words.isEmpty ? nil : words.joined(separator: " ") }
@@ -86,7 +88,8 @@ struct UnskipCommand: ParsableCommand {
     @Argument(
         help: ArgumentHelp(
             "App to unskip, by name as shown in `ripe skip --list`, or its bundle ID. Quotes are optional.",
-            valueName: "app"))
+            valueName: "app"),
+        completion: AppCompletion.skipped)
     var words: [String]
 
     var app: String { words.joined(separator: " ") }
