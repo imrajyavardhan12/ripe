@@ -4,6 +4,9 @@ All notable changes to Ripe. The release workflow publishes each version's secti
 
 ## [Unreleased]
 
+**Fewer false updates**
+- In a Sparkle feed that lists a Windows build before the macOS one, Ripe read the version from the Windows build while downloading the macOS one, so an up-to-date app could show as outdated. Versions now come from the build Ripe would actually download. Found in code review.
+
 ## [0.4.0] - 2026-10-07
 
 Ripe now checks itself in public: a weekly workflow installs the latest version of popular apps on clean Macs (macOS 26, macOS 15, Intel) and fails if Ripe calls any of them outdated, and another updates real apps end to end with `ripe pick`. Most of the fixes below came from those runs.

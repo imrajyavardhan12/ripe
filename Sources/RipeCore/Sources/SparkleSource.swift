@@ -98,7 +98,7 @@ public struct SparkleSource: UpdateSource {
             if let channel = item.channel, !stableChannels.contains(channel.lowercased()) { return false }
             guard !item.isInformational else { return false }
             guard item.version != nil || item.shortVersion != nil else { return false }
-            if let os = item.operatingSystem, !["macos", "osx"].contains(os.lowercased()) { return false }
+            guard AppcastItem.isMac(item.operatingSystem) else { return false }
             if let minimum = item.minimumSystemVersion.flatMap(Version.init),
                 machine.macOSVersion.order(comparedTo: minimum) == .older
             {
