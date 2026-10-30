@@ -83,7 +83,8 @@ struct WhyCommand: AsyncParsableCommand {
 
     @Argument(
         help: ArgumentHelp(
-            "App name as shown in Finder (case-insensitive), or its bundle ID. Quotes are optional.", valueName: "app"))
+            "App name as shown in Finder (case-insensitive), or its bundle ID. Quotes are optional.", valueName: "app"),
+        completion: AppCompletion.explainable)
     var words: [String]
 
     /// `ripe why LM Studio` arrives as two arguments; it names one app.

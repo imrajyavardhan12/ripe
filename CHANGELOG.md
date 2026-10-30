@@ -4,6 +4,8 @@ All notable changes to Ripe. The release workflow publishes each version's secti
 
 ## [Unreleased]
 
+- Tab completion for app names: `ripe pick Pro⇥` completes to `ripe pick Proton\ Pass`, in `pick`, `why`, `skip` (installed apps) and `unskip` (skipped apps). It only looks at the Applications folders, so it's instant and works offline.
+
 ## [0.4.1] - 2026-10-30
 
 **Fewer false updates**

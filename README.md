@@ -11,7 +11,7 @@
 brew install imrajyavardhan12/tap/ripe
 ```
 
-Open source, no account, no telemetry. macOS 14 or later, Apple silicon and Intel.
+Open source, no account, no telemetry. macOS 14 or later, Apple silicon and Intel. Tab completion for commands and app names (`ripe pick Pro⇥`) comes with it, for zsh, bash and fish.
 
 ## Why
 
