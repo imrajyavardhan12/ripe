@@ -4,6 +4,8 @@ All notable changes to Ripe. The release workflow publishes each version's secti
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-10-30
+
 **Fewer false updates**
 - In a Sparkle feed that lists a Windows build before the macOS one, Ripe read the version from the Windows build while downloading the macOS one, so an up-to-date app could show as outdated. Versions now come from the build Ripe would actually download. Found in code review.
 

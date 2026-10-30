@@ -2,6 +2,10 @@
 
 Ripe's headline metric is its false-positive rate: how often it claims an update that isn't real. It's measured two ways: the [Accuracy workflow](../.github/workflows/accuracy.yml) installs the latest version of popular apps on clean Macs every week and fails on any reported update, and each release gets a run on a real, everyday Mac. Notable runs are recorded here, newest first. When a verdict is wrong, the fix lands with a test built from the real case.
 
+## 2026-10-30 · maintainer's Mac (macOS 27, Apple silicon) · pre-release v0.4.1
+
+33 apps: 19 ripe, 7 up to date, 7 unknown, 2.5 s. No false positives: every installed version matches the app's `Info.plist`, and the new updates are upstream releases since the last run (Brave, Cryptomator, Helium, Hopper, KeePassXC 2.8.0, LM Studio, Mullvad Browser 16.0, OnionShare, Postman, Proton Pass, Xcode 27.2, WhatsApp, Zed). New unknown: Holdall (the maintainer's own app, no source). The fix in this release, versions from the enclosure Ripe downloads, changed no verdict here: before and after gave identical results for every app. The Pick workflow passed on both machines after the merge; the scheduled Accuracy runs of 2026-10-19 and 2026-10-26 passed.
+
 ## 2026-10-07 · maintainer's Mac (macOS 27, Apple silicon) · pre-release v0.4.0
 
 29 apps: 12 ripe, 11 up to date, 6 unknown, 1.8 s. No false positives. New since the last run: Claude (cask version carries a commit hash, `2.26454.0,98e3cc1…`) and Tailscale read correctly as up to date; Helium 0.18.3.1 and Obsidian 1.14.4 are new upstream releases. Unknowns unchanged and honest: Ghostty tip (commit-hash version), Codenotch (feed 404), Folio ×2, Proompt, Claude Code URL Handler (no source). The scheduled Accuracy (80 apps, three machines) and Pick runs of 2026-10-05 passed.
